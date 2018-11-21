@@ -1,0 +1,3 @@
+﻿  Player.cpp
+c:\users\nwuser\documents\後期\進級制作\ギャラクシアン var1.2\sorce\player.cpp(65): warning C4805: '==': 演算中の 'int' 型と 'bool' 型の混用は安全ではありません
+  ギャラクシアン　Var1.2.vcxproj -> C:\Users\nwuser\Documents\後期\進級制作\ギャラクシアン Var1.2\Debug\ギャラクシアン　Var1.2.exe
