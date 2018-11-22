@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include"Playershot.h"
 #include"EnemyShot.h"
+#include"UI.h"
 
 static E_Scene Sceneflag = E_Scene_StartMenu;		//今のシーン
 static E_Scene n_Sceneflag = E_Scene_None;			//次のシーン
@@ -41,6 +42,7 @@ void Scene_Mgr_Dpct() {
 		EnemyShot_Dpct();
 		player_Shot();
 		Player_Dpct();
+		UI_Dpct();
 		break;
 	case E_Scene_Result:
 		Result_Dpct();
@@ -65,6 +67,7 @@ void Scene_Mgr_Draw() {
 		Player_Draw();
 		Playershot_Draw();
 		EnemyShot_Draw();
+		UI_Draw();
 
 		DrawFormatString(0, 00, GetColor(255, 255, 255), "ゲーム画面");
 
@@ -100,6 +103,7 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 	
 		Enemy_Init();
 		Player_Init();
+		UI_Init();
 		break;
 	case E_Scene_Result:
 		Result_Init();

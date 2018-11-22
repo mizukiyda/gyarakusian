@@ -1,19 +1,35 @@
 #include "DxLib.h"
 #include "UI.h"
-#include "Player.h"
+#include "Playershot.h"
+#include "EnemyShot.h"
 
+int Score;		//playerからもらったスコアを保存していく
+int Remain;		//Playerの残機の確認
+int PLAYER_HIT_FLG;			//EnemyShotからplayerに当たった時のフラグをもらい、残機を「 1 」減らす作業をする
 
 int UI_Init() {
+
+	Score = 0;		//初期のスコア
+	Remain = 3;		//初期の残機
 
 	return 0;
 }
 
-int UI_Dept() {
+int UI_Dpct() {
 
+	Score = Player_Score();				//playerのPlayer_Score()に入っているスコアをもらう
+	PLAYER_HIT_FLG = Enemy_Hit();		//EnemyShotからもらったフラグを自分のフラグに入れる
+
+	if (PLAYER_HIT_FLG == true) {		//もし true ならPlayerの残機を「　1　」減らす
+		Remain--;
+	}
 	return 0;
 }
 
 int UI_Draw() {
+
+	DrawFormatString(0, 600, GetColor(255, 255, 255), "SCORE:  %d", Score);			//スコアの表示
+	DrawFormatString(0, 700, GetColor(255, 255, 255), "Remain:  %d", Remain);		//playerの残機の表示
 
 	return 0;
 }
