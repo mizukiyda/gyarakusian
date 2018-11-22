@@ -4,7 +4,7 @@
 #include "Result.h"
 #include "Player.h"
 #include "Enemy.h"
-#include"Playershot.h"
+#include"PlayerShot.h"
 #include"EnemyShot.h"
 #include"UI.h"
 
@@ -38,9 +38,8 @@ void Scene_Mgr_Dpct() {
 	case E_Scene_Game:
 		//ÉQÅ[ÉÄâÊñ 
 		Enemy_Move();
-		Playershot_Dpct();
+		PlayerShot_Dpct();
 		EnemyShot_Dpct();
-		player_Shot();
 		Player_Dpct();
 		UI_Dpct();
 		break;
@@ -123,7 +122,7 @@ static void Scene_Mgr_End_Module(E_Scene scene) {
 		break;
 	case E_Scene_Game:
 		//ÉQÅ[ÉÄâÊñ 
-		Enemy_End();
+		//Enemy_End();
 		Player_End();
 
 		break;

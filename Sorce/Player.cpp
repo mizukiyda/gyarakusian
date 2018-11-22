@@ -2,7 +2,7 @@
 #include"Player.h"
 #include"keyboard.h"
 #include"EnemyShot.h"
-#include"Playershot.h"
+#include"PlayerShot.h"
 
 	//プレイヤー
 	S_Player Player;
@@ -11,7 +11,7 @@
 	int remain = 3;
 
 	//攻撃に関するもの
-	bool PlayerShot_Flg;   //発射フラグ
+	bool PlayerShot_Flg = false;   //発射フラグ
 
 	//画像に関するもの
 	int None_Num = 0;      //画像のスタンバイ状態
@@ -37,7 +37,7 @@
 	int Player_Dpct() {
 		//キー入力
 
-		PlayerShot_Flg = player_Shot();
+		PlayerShot_Flg = PlayerShot_Dpct();
 
 		//←
 		if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
@@ -49,7 +49,7 @@
 			Player.x += 1;
 		}
 
-		if (player_Shot() == false) {
+		if (PlayerShot_Flg == false) {
 		//弾を撃つ
 		    if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
 			 PlayerShot_Flg = true;
@@ -68,7 +68,6 @@
 			Player_Remain();
 		}
 
-		
 		return PlayerShot_Flg;
 	}
 

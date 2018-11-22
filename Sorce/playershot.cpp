@@ -1,5 +1,5 @@
 #include"dxlib.h"
-#include"Playershot.h" 
+#include"PlayerShot.h" 
 #include"Enemy.h"
 #include"Player.h"
 
@@ -14,8 +14,8 @@ int Player_Hit_Flg;	//プレイヤーの弾がplayerに当たった時のFlg
 
 /****初期化****/
 
-int Playershot_Init()
-{
+int Playershot_Init(){
+
 	Handle = LoadGraph("Image/Galaxian_OBJ_bullet.png"); // 画像をロード
 	ex = Enemy_Pos_Init_x();
 	ey = Enemy_Pos_Init_y();
@@ -23,42 +23,31 @@ int Playershot_Init()
 }
 
 /****計算****/
-int Playershot_Dpct()
-{
+int PlayerShot_Dpct(){
 
-	Px = Player_Pos_Init_x();
-	Py = Player_Pos_Init_y();
-
-	pbullet.x = Px;
-	pbullet.y = Py;
+	pbullet.x = Player_Pos_Init_x();
+	pbullet.y = Player_Pos_Init_y();
 
 	Player_Shot_Flg = Player_Dpct();
 
 	if (Player_Shot_Flg == true) {
-		player_Shot();
-	}
-	return 0;
-}
+ 		
+	    pbullet.y -= 100;
 
-int player_Shot() {
+		if (pbullet.x == ex && pbullet.y == ey) {
+			Player_Hit();
+			Player_Score();
+			Player_Shot_Flg = false;
+		}
 
-	Player_Shot_Flg = false;
-
-	pbullet.y -= 10;
-
-	if (pbullet.x == ex && pbullet.y == ey) {
-		player_Hit();
-		Player_Score();
-		Player_Shot_Flg = false;
-	}
-
-	if (pbullet.y <= 0) {
-		Player_Shot_Flg = false;
+		if (pbullet.y <= 0) {
+			Player_Shot_Flg = false;
+		}
 	}
 	return Player_Shot_Flg;
 }
 
-int player_Hit() {
+int Player_Hit() {
 	//弾が当たったらEnemy渡す
 	Player_Hit_Flg = true;
 
