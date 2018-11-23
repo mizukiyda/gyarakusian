@@ -16,7 +16,6 @@
 	//画像に関するもの
 	int None_Num = 0;      //画像のスタンバイ状態
 	int Gyallaly[8];   //プレイヤーの画像の変数
-	//bool Player_Image; //画像の順番
 
 	int Player_Init() {
 
@@ -29,7 +28,6 @@
 		LoadDivGraph("Image/Galaxian_OBJ_token.png", 8, 4, 2, 34, 35, Gyallaly);
 
 		None_Num = 0;
-		//Player_Image = 0;
 
 		return 0;
 	}
@@ -37,7 +35,7 @@
 	int Player_Dpct() {
 		//キー入力
 
-		PlayerShot_Flg = PlayerShot_Dpct();
+		//PlayerShot_Flg = PlayerShot_Dpct();
 
 		//←
 		if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
@@ -49,10 +47,11 @@
 			Player.x += 1;
 		}
 
-		if (PlayerShot_Flg == false) {
+		if (PlayerShot_Flg == 0) {
 		//弾を撃つ
 		    if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
-			 PlayerShot_Flg = true;
+			 //PlayerShot_Flg = true;
+				SetPlayer_Shot_Flg(1);
 		    }
 		}
 

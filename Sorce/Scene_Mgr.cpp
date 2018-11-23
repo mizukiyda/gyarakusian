@@ -20,7 +20,6 @@ void Scene_Mgr_Init() {
 	Scene_Mgr_Init_Module(Sceneflag);
 }
 
-
 //Dpct 計算
 void Scene_Mgr_Dpct() {
 	if (n_Sceneflag != E_Scene_None) {		//次のシーンがセットされていたら
@@ -124,6 +123,7 @@ static void Scene_Mgr_End_Module(E_Scene scene) {
 		//ゲーム画面
 		//Enemy_End();
 		Player_End();
+		UI_End();
 
 		break;
 	case E_Scene_Result:

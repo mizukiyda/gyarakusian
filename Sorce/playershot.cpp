@@ -3,7 +3,7 @@
 #include"Enemy.h"
 #include"Player.h"
 
-int Player_Shot_Flg = false;		//プレイヤーが球を打つ時のフラグ
+int Player_Shot_Flg = 0;		//プレイヤーが球を打つ時のフラグ
 int Player_Shotcnt_y;		//弾を動かす
 int Handle;				// データハンドル格納用変数
 int ex, ey;
@@ -25,6 +25,21 @@ int Playershot_Init(){
 /****計算****/
 int PlayerShot_Dpct(){
 
+		if (Player_Shot_Flg == 1) {
+			pbullet.x = Player_Pos_Init_x();
+			pbullet.y = Player_Pos_Init_y();
+			Player_Shot_Flg = 2;
+			//pbullet.y -= 5;
+		}
+
+		if (Player_Shot_Flg == 2) {
+			pbullet.y -= 5;
+			if (pbullet.y <= 0) {
+				Player_Shot_Flg = 0;
+			}
+		}
+
+	/*
 	pbullet.x = Player_Pos_Init_x();
 	pbullet.y = Player_Pos_Init_y();
 
@@ -44,6 +59,8 @@ int PlayerShot_Dpct(){
 			Player_Shot_Flg = false;
 		}
 	}
+	return Player_Shot_Flg;
+	*/
 	return Player_Shot_Flg;
 }
 
@@ -71,14 +88,22 @@ int Player_Score() {
 }
 
 int Playershot_Draw(){
-	if (Player_Shot_Flg == true) {
+	if (Player_Shot_Flg != 0) {
 		DrawGraph(pbullet.x , pbullet.y ,Handle ,true);
+
+		DrawCircle(pbullet.x, pbullet.y, 5, GetColor(255, 255, 255), 10, 10);
 	}
 
 	DrawFormatString(0, 400, GetColor(255, 255, 255), "pbullet.x座標  %d\npbullet.y座標  %d", pbullet.x, pbullet.y);
 
 	return 0;
 }
+
+
+void SetPlayer_Shot_Flg(int flag) {
+	Player_Shot_Flg = flag;
+}
+
 	/**********************************　終了(一回)　******************************************/
 	int PlayerShot_End()
 	{

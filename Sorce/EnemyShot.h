@@ -11,6 +11,8 @@ extern int EnemyShot_Dpct();
 extern int EnemyShot_Draw();
 extern int EnemyShot_End();
 
+extern void SetPlayer_Shot_Flg(int);
+
 extern int Enemy_Shot_Pos(int*, int*,int);
 extern int enemyShot(int);
 extern int Enemy_Hit();
