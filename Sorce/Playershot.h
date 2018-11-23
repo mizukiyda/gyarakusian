@@ -5,6 +5,8 @@ extern int PlayerShot_End();
 
 extern int Player_Hit();
 extern int Player_Score();
+extern void SetPlayer_Shot_Flg(int);
+
 
 typedef struct {
 
