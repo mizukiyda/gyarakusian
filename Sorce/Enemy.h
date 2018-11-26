@@ -8,6 +8,7 @@ extern int Enemy_Move();
 extern int Enemy_Draw();
 extern int Enemy_Pos_Init_x();
 extern int Enemy_Pos_Init_y();
+extern int Enemy_End();
 
 
 struct P_Enemy {

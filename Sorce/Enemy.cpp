@@ -25,6 +25,10 @@ bool cnt_flg = false;
 int a = 0;
 int b = 0;
 int c = 0;
+double i1[50] = { 0 };
+double i2[50] = { 0 };
+double i3[50] = { 0 };
+double i4[50] = { 0 };
 
 int e_count[48] = { 0 };
 int move[16] = { 0,0,1,3,4,4,3,1 ,0,0,-1,-3,-4,-4,-3,-1 };
@@ -182,17 +186,17 @@ int Enemy_Move() {
 			if (cntEnemy == 5) {
 				enemy[0].Attack_Move_Flg = true;
 				enemy[0].Move_Flg = true;
-				cntEnemy = -5;
+				//cntEnemy = -5;
 			}
 			else if (px > 320) { //プレイヤーが画面の右側にいた場合
 
-				for(j=0;j<19;j++){
+				/*for(j=0;j<19;j++){
 					if (enemy[priority_R[j]].Attack_Move_Flg == false&& enemy[priority_R[j]].Move_Flg == false && enemy[i].Draw_Flg == true) {	//見たところがfalseだったら
 						enemy[priority_R[j]].Attack_Move_Flg = true;		//そこをtrueにして、ループを抜ける
 						enemy[priority_R[j]].Move_Flg = true;
 						break;
 					}
-				}
+				}*/
 			}
 			else {
 				if (enemy[27].Move_Flg == false && enemy[27].Attack_Move_Flg == false &&
@@ -242,17 +246,29 @@ int Enemy_Move() {
 
 			if (enemy[i].y >= 750 /*|| enemy[i].x < 0 || enemy[i].x>1280*/&&i!=48&&i!=49) {
 				enemy[i].y = -10;
+				i1[i] = enemy[i].fx - 14 - enemy[i].nx;
+				i2[i] = enemy[i].fx + 18 - enemy[i].nx;
+				i3[i] = enemy[i].fx - 14 + enemy[i].nx;
+				i4[i] = enemy[i].fx + 18 + enemy[i].nx;
+				
 				if (speed == RIGHT) {
 					enemy[i].x = enemy[i].fx + enemy[i].nx;
 				}
-			    //if (enemy[49].x + enemy[i].nx > 1080) {
-					//enemy[i].x = enemy[i].fx - (enemy[49].fx + enemy[i].nx - 1080);
-				//}
+			    if (enemy[49].x + enemy[i].nx > 1080) {
+					enemy[i].x = 1080 - (enemy[i].fx + enemy[i].nx - 1080);
+				}
 				if (speed == LEFT) {  //出来てる(一回目のループのぞき)
 					enemy[i].x = enemy[i].fx - enemy[i].nx;
 				}
-				if ((enemy[48].x - enemy[48].nx) < 200) {
-					enemy[i].x = enemy[i].fx + (200 -  enemy[i].nx);
+				if ((enemy[48].x - enemy[i].nx) < 200) {
+					if (200 - enemy[i].fx - enemy[i].nx > 0) {
+						enemy[i].x = 200 + (200 - enemy[i].fx - enemy[i].nx);
+					}
+					else {
+						enemy[i].x = 200 - (200 - enemy[i].fx - enemy[i].nx);
+					}
+					//enemy[i].x = 200 + enemy[i].nx - enemy[48].fx;
+					//enemy[i].x = 200 + ((enemy[i].fx - enemy[i].nx) - 200);
 				}
 				enemy[i].Attack_Move_Flg = false;
 				if (enemy[27].y == -10) {
@@ -346,7 +362,15 @@ int Enemy_Draw() {
 			if (e_deg >= 90 && e_deg < 180) {
 			}
 		}
-		DrawBox(enemy[i].fx-14, enemy[i].fy-14, enemy[i].fx+18, enemy[i].fy+18, Color, false);
+		//DrawBox(enemy[i].fx-14, enemy[i].fy-14, enemy[i].fx+18, enemy[i].fy+18, Color, false);
+		if (i == 27 || i == 37 || i == 47) {
+			if (speed == LEFT) {
+				DrawBox(i1[i], enemy[i].fy - 14, i2[i], enemy[i].fy + 18, Color, false);
+			}
+			if (speed == RIGHT) {
+				DrawBox(i3[i], enemy[i].fy - 14, i4[i], enemy[i].fy + 18, Color, false);
+			}
+		}
 		DrawLine(182, 0, 182, 480, Color, false);
 		DrawLine(1098, 0, 1098, 480, Color, false);
 		//DrawBox(enemy[i].nx, enemy[i].fy, 18, 18, Color, false);
