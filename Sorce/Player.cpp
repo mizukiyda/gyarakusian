@@ -78,7 +78,8 @@
 
 	int Player_Draw() {
 		
-		DrawGraph(Player.x , Player.y , Gyallaly[None_Num], true);
+		//DrawGraph(Player.x , Player.y , Gyallaly[None_Num], true);
+		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[None_Num], true);
 		DrawFormatString(0, 300, GetColor(255, 255, 255), "xç¿ïW  %d\nyç¿ïW  %d", Player.x , Player.y );
 
 		/*if (PlayerShot_Flg == true)
@@ -101,6 +102,8 @@
 				Player_End();
 			}
 		}*/
+
+
 		return 0;
 	}
 
