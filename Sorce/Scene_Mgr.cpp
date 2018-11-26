@@ -4,8 +4,9 @@
 #include "Result.h"
 #include "Player.h"
 #include "Enemy.h"
-#include"Playershot.h"
+#include"PlayerShot.h"
 #include"EnemyShot.h"
+#include"UI.h"
 
 static E_Scene Sceneflag = E_Scene_StartMenu;		//¡‚ÌƒV[ƒ“
 static E_Scene n_Sceneflag = E_Scene_None;			//Ÿ‚ÌƒV[ƒ“
@@ -18,7 +19,6 @@ static void Scene_Mgr_End_Module(E_Scene scene);	//w’èƒ‚ƒWƒ…[ƒ‹‚ÌI—¹ˆ—‚ğs‚
 void Scene_Mgr_Init() {
 	Scene_Mgr_Init_Module(Sceneflag);
 }
-
 
 //Dpct ŒvZ
 void Scene_Mgr_Dpct() {
@@ -37,10 +37,10 @@ void Scene_Mgr_Dpct() {
 	case E_Scene_Game:
 		//ƒQ[ƒ€‰æ–Ê
 		Enemy_Move();
-		Playershot_Dpct();
+		PlayerShot_Dpct();
 		EnemyShot_Dpct();
-		player_Shot();
 		Player_Dpct();
+		UI_Dpct();
 		break;
 	case E_Scene_Result:
 		Result_Dpct();
@@ -65,6 +65,7 @@ void Scene_Mgr_Draw() {
 		Player_Draw();
 		Playershot_Draw();
 		EnemyShot_Draw();
+		UI_Draw();
 
 		DrawFormatString(0, 00, GetColor(255, 255, 255), "ƒQ[ƒ€‰æ–Ê");
 
@@ -100,6 +101,7 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 	
 		Enemy_Init();
 		Player_Init();
+		UI_Init();
 		break;
 	case E_Scene_Result:
 		Result_Init();
@@ -119,8 +121,9 @@ static void Scene_Mgr_End_Module(E_Scene scene) {
 		break;
 	case E_Scene_Game:
 		//ƒQ[ƒ€‰æ–Ê
-		Enemy_End();
+		//Enemy_End();
 		Player_End();
+		UI_End();
 
 		break;
 	case E_Scene_Result:
