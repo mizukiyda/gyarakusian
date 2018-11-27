@@ -9,7 +9,8 @@ S_EShot ebullet[EnemyCount];		//構造体///主に座標
 
 static int i,j;						//for文用
 int Enemy_Shot_Flg = false;			//エネミーが球を打つ時のフラグ
-int Handles;						// データハンドル格納用変数
+int Enemy_Shot_Gyallaly[2];						// データハンドル格納用変数 画像表示に使用
+int Enemy_None_Num;			// 画像のスタンバイ状態(静止状態)
 int Enemy_Hit_Flg = false;			//エネミーの弾がplayerに当たった時のFlg
 int px;								//player のx座標
 int py;								//player のy座標
@@ -24,8 +25,9 @@ int Enemy_Shot_Pos(int *x, int *y,int num) {
 
 int EnemyShot_Init() {
 	//初期化処理
-
-	Handles = LoadGraph("Image/Galaxian_OBJ_bullet.png");	// 画像をロード
+	Enemy_Shot_Gyallaly[2];
+	LoadDivGraph("Image/Galaxian_OBJ_bullet.png", 2, 2, 1, 11, 6, Enemy_Shot_Gyallaly); // 画像をロード
+	Enemy_None_Num = 1;			// 画像のスタンバイ状態(静止状態)
 
 	for (i = 0;i < EnemyCount;i++) {
 		ebullet[i].x = Enemy_Pos_Init_x();					//enemyから弾が出るｘ座標をもらう
@@ -74,17 +76,19 @@ int Enemy_Hit() {
 	return Enemy_Hit_Flg;
 }
 
+
 int EnemyShot_Draw() {
 	//描写処理
+
 	for (i = 0;i < EnemyCount;i++) {
 		for (j = 0;j < 2;j++) {											//弾を二つ打つ
 			if (Enemy_Shot_Flg == true) {
-				DrawGraph(ebullet[i].x, ebullet[i].y, Handles, TRUE);	// データハンドルを使って画像を描画
+				DrawRotaGraph(ebullet[i].x + 3, ebullet[i].y - 25, 4.0, 0.0, Enemy_Shot_Gyallaly[Enemy_None_Num], true);// データハンドルを使って画像を描画
 			}
 		}
 		if(Enemy_Shot_Flg == false)		
 		{
-			DrawGraph(ebullet[i].x, ebullet[i].y, Handles, FALSE);		// データハンドルを使って画像を描画を消す
+			DrawRotaGraph(ebullet[i].x + 3, ebullet[i].y - 25, 4.0, 0.0, Enemy_Shot_Gyallaly[Enemy_None_Num], false);		// データハンドルを使って画像を描画を消す
 		}
 		DrawFormatString(0, 500, GetColor(255, 255, 255), "ebullet.x座標  %d\nebullet.y座標  %d", ebullet[i].x, ebullet[i].y);
 	}
