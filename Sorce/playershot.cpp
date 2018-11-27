@@ -3,6 +3,7 @@
 #include"Enemy.h"
 #include"Player.h"
 
+int atari = 0;
 int Player_Shot_Flg = 0;		//プレイヤーが球を打つ時のフラグ
 int Player_Shotcnt_y;		//弾を動かす
 int ex, ey;
@@ -44,10 +45,13 @@ int PlayerShot_Dpct(){
 			Player_Shot_Flg = 0;
 		}
 
-		if (pbullet.x == 400 && pbullet.y == 400) {
+		if (300 <= pbullet.x && pbullet.x <= 400 && 
+			pbullet.y >=300 && pbullet.y <= 400) {
 			Player_Hit();
 			Player_Score();
 			Player_Shot_Flg = false;
+			
+
 		}
 	return Player_Shot_Flg;
 }
@@ -55,8 +59,11 @@ int PlayerShot_Dpct(){
 int Player_Hit() {
 	//弾が当たったらEnemy渡す
 	Player_Hit_Flg = true;
-
-	return Player_Hit_Flg;
+	if (Player_Hit_Flg == true) {
+		atari = 1;
+	}
+	
+		return Player_Hit_Flg;
 }
 
 int Player_Score() {
@@ -77,6 +84,16 @@ int Player_Score() {
 }
 
 int Playershot_Draw(){
+
+	if (atari == 1) {
+
+
+		DrawFormatString(300, 400, GetColor(255, 255, 255), "当たり");
+		if (Player_Shot_Flg == true) {
+			atari = 0;
+	}
+	}
+	
 	if (Player_Shot_Flg != 0) {
         //画像の拡大表示
 		DrawRotaGraph(pbullet.x + 3, pbullet.y - 25, 4.0, 0.0, Player_Shot_Gyallaly[Player_None_Num], true);
