@@ -5,18 +5,21 @@
 
 int Player_Shot_Flg = 0;		//プレイヤーが球を打つ時のフラグ
 int Player_Shotcnt_y;		//弾を動かす
-int Handle;				// データハンドル格納用変数
 int ex, ey;
 int Px, Py;
 int score = 0;
 S_PShot pbullet;
 int Player_Hit_Flg;	//プレイヤーの弾がplayerに当たった時のFlg
+int Player_Shot_Gyallaly[2];		// 画像格納変数
+int Player_None_Num;			// 画像のスタンバイ状態(静止状態)
 
 /****初期化****/
 
 int Playershot_Init(){
 
-	Handle = LoadGraph("Image/Galaxian_OBJ_bullet.png"); // 画像をロード
+	Player_Shot_Gyallaly[2];
+	LoadDivGraph("Image/Galaxian_OBJ_bullet.png",2, 2, 1, 11, 6, Player_Shot_Gyallaly); // 画像をロード
+	Player_None_Num = 0;        //スタンバイ状態の向いてる方向を正面へするための画像番号1
 	ex = Enemy_Pos_Init_x();
 	ey = Enemy_Pos_Init_y();
 	return 0;
@@ -46,9 +49,6 @@ int PlayerShot_Dpct(){
 			Player_Score();
 			Player_Shot_Flg = false;
 		}
-
-	
-
 	return Player_Shot_Flg;
 }
 
@@ -78,9 +78,8 @@ int Player_Score() {
 
 int Playershot_Draw(){
 	if (Player_Shot_Flg != 0) {
-		DrawGraph(pbullet.x , pbullet.y ,Handle ,true);
-
-		DrawCircle(pbullet.x, pbullet.y, 5, GetColor(255, 255, 255), 10, 10);
+        //画像の拡大表示
+		DrawRotaGraph(pbullet.x + 3, pbullet.y - 25, 4.0, 0.0, Player_Shot_Gyallaly[Player_None_Num], true);
 	}
 	DrawBox(300, 300, 400, 400, GetColor(255,255,255), false);
 	DrawFormatString(0, 400, GetColor(255, 255, 255), "pbullet.x座標  %d\npbullet.y座標  %d", pbullet.x, pbullet.y);
