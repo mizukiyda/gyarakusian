@@ -31,36 +31,24 @@ int PlayerShot_Dpct(){
 			Player_Shot_Flg = 2;
 			//pbullet.y -= 5;
 		}
-
+		//フラグが2になったら弾を上に撃つ
 		if (Player_Shot_Flg == 2) {
 			pbullet.y -= 5;
-			if (pbullet.y <= 0) {
-				Player_Shot_Flg = 0;
-			}
+			//弾の座標が0まで行ったらふらぐを0にして消す
+			
+		}
+		if (pbullet.y <= 0) {
+			Player_Shot_Flg = 0;
 		}
 
-	/*
-	pbullet.x = Player_Pos_Init_x();
-	pbullet.y = Player_Pos_Init_y();
-
-	Player_Shot_Flg = Player_Dpct();
-
-	if (Player_Shot_Flg == true) {
- 		
-	    pbullet.y -= 100;
-
-		if (pbullet.x == ex && pbullet.y == ey) {
+		if (pbullet.x == 400 && pbullet.y == 400) {
 			Player_Hit();
 			Player_Score();
 			Player_Shot_Flg = false;
 		}
 
-		if (pbullet.y <= 0) {
-			Player_Shot_Flg = false;
-		}
-	}
-	return Player_Shot_Flg;
-	*/
+	
+
 	return Player_Shot_Flg;
 }
 
@@ -72,16 +60,17 @@ int Player_Hit() {
 }
 
 int Player_Score() {
-	/*if () {  //もし緑なら
+	//Enemy_Type 
+	/*if (Enemy_Type = 3) {  //もし	黄色なら
 		score += 10;
 	}
-	else if(){  //もし紫なら
+	else if(Enemy_Type = 2){  //もし紫なら
 		score += 30;
 	}
-	else if() {  //もし赤なら
+	else if(Enemy_Type = 1) {  //もし赤なら
 		score += 60;
 	}
-	else if () {
+	else if (Enemy_Type = 0) {
 		score += 100;
 	}*/
 	return score;
@@ -93,7 +82,7 @@ int Playershot_Draw(){
 
 		DrawCircle(pbullet.x, pbullet.y, 5, GetColor(255, 255, 255), 10, 10);
 	}
-
+	DrawBox(300, 300, 400, 400, GetColor(255,255,255), false);
 	DrawFormatString(0, 400, GetColor(255, 255, 255), "pbullet.x座標  %d\npbullet.y座標  %d", pbullet.x, pbullet.y);
 
 	return 0;
