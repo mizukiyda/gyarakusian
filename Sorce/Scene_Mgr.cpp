@@ -99,6 +99,8 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 	case E_Scene_Game:
 		//ÉQÅ[ÉÄâÊñ 
 	
+		Playershot_Init();
+		EnemyShot_Init();
 		Enemy_Init();
 		Player_Init();
 		UI_Init();
