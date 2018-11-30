@@ -6,11 +6,14 @@
 int Score;		//playerからもらったスコアを保存していく
 int Remain;		//Playerの残機の確認
 int PLAYER_HIT_FLG;			//EnemyShotからplayerに当たった時のフラグをもらい、残機を「 1 」減らす作業をする
-
+int SCORE_Image, REMAIN_Image;
 int UI_Init() {
 
 	Score = 0;		//初期のスコア
 	Remain = 3;		//初期の残機
+
+	SCORE_Image = LoadGraph("Image/SCORE1.png");
+	REMAIN_Image = LoadGraph("Image/REMAIN.png");
 
 	return 0;
 }
@@ -28,8 +31,11 @@ int UI_Dpct() {
 
 int UI_Draw() {
 
-	DrawFormatString(500, 0, GetColor(255, 0, 0), "SCORE:  %d", Score);			//スコアの表示
-	DrawFormatString(900, 700, GetColor(255, 0, 0), "Remain:  %d", Remain);		//playerの残機の表示
+	//DrawFormatString(500, 0, GetColor(255, 0, 0), "SCORE:  %d",  Score);			//スコアの表示
+	//DrawFormatString(900, 700, GetColor(255, 0, 0), "Remain:  %d", Remain);		//playerの残機の表示
+
+	DrawGraph(200, 0, SCORE_Image, TRUE); // データハンドルを使って画像を描画
+	DrawGraph(750, 650, REMAIN_Image, TRUE); // データハンドルを使って画像を描画
 
 	return 0;
 }
