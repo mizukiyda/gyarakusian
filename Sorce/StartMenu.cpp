@@ -8,13 +8,19 @@ MenuElement_t MenuElement[2] = {
 { 100, 200, "Exit" },
 };
 
+Image_t Image;
+
 static int SelectNum;	//選択してる番号
 
 int StartMenu_Init() {
 	//ここで初期化をする
 	
 	 SelectNum = 0; // 現在の選択番号
-	
+	Image.Start = LoadGraph("Image/Start.png");
+    Image.On_Start = LoadGraph("Image/Start2.png");
+	 Image.End = LoadGraph("Image/End.png");
+	 Image.On_End = LoadGraph("Image/End2.png");
+
 	return 0;
 }
 
@@ -58,8 +64,21 @@ int StartMenu_Draw() {
 	//ここで描写
 	//こっちも毎フレーム呼ばれますが計算とは別に書きます
 
-	for (int i = 0; i<2; i++) { // メニュー項目を描画
+	/*for (int i = 0; i<2; i++) { // メニュー項目を描画
 		DrawFormatString(MenuElement[i].x, MenuElement[i].y, GetColor(255, 255, 255), MenuElement[i].name);
+	}*/
+	switch (SelectNum)
+	{
+	case 0:
+		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.On_Start, TRUE);
+		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.End, TRUE);
+		break;
+	case 1:
+	case -1:
+		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.Start, TRUE);
+		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.On_End, TRUE);
+		break;
+
 	}
 	return 0;
 }
