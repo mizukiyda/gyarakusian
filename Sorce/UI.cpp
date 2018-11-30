@@ -28,8 +28,8 @@ int UI_Dpct() {
 
 int UI_Draw() {
 
-	DrawFormatString(0, 600, GetColor(255, 255, 255), "SCORE:  %d", Score);			//スコアの表示
-	DrawFormatString(0, 700, GetColor(255, 255, 255), "Remain:  %d", Remain);		//playerの残機の表示
+	DrawFormatString(500, 0, GetColor(255, 0, 0), "SCORE:  %d", Score);			//スコアの表示
+	DrawFormatString(900, 700, GetColor(255, 0, 0), "Remain:  %d", Remain);		//playerの残機の表示
 
 	return 0;
 }
