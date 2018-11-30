@@ -66,6 +66,7 @@ void Scene_Mgr_Draw() {
 		Playershot_Draw();
 		EnemyShot_Draw();
 		UI_Draw();
+		//StartMenu_Draw();
 
 		DrawFormatString(0, 00, GetColor(255, 255, 255), "ÉQÅ[ÉÄâÊñ ");
 
@@ -104,6 +105,8 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 		Enemy_Init();
 		Player_Init();
 		UI_Init();
+		//StartMenu_Draw();
+
 		break;
 	case E_Scene_Result:
 		Result_Init();
