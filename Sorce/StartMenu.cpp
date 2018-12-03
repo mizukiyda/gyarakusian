@@ -70,13 +70,14 @@ int StartMenu_Draw() {
 	switch (SelectNum)
 	{
 	case 0:
-		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.On_Start, TRUE);
-		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.End, TRUE);
+		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.Start, TRUE);
+		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.On_End, TRUE);
 		break;
 	case 1:
 	case -1:
-		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.Start, TRUE);
-		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.On_End, TRUE);
+		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.On_Start, TRUE);
+		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.End, TRUE);
+
 		break;
 
 	}
