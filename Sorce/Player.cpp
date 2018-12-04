@@ -1,8 +1,9 @@
-#include"Dxlib.h"
-#include"Player.h"
-#include"keyboard.h"
-#include"EnemyShot.h"
-#include"PlayerShot.h"
+#include "Dxlib.h"
+#include "Player.h"
+#include "keyboard.h"
+#include "EnemyShot.h"
+#include "PlayerShot.h"
+#include "Sound.h"
 
 	//ÉvÉåÉCÉÑÅ[
 	S_Player Player;
@@ -40,20 +41,21 @@
 
 		//Å©
 		if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
-			Player.x -= 1;
+			Player.x -= 3;
 		}
 
 		//Å®
 		if (Keyboard_Get(KEY_INPUT_RIGHT) != 0) {
-			Player.x += 1;
+			Player.x += 3;
 		}
 
 		if (PlayerShot_Flg == 0) {
 			i = 0;
 		//íeÇåÇÇ¬
 		    if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
-			   // PlayerShot_Flg = 1;
+				SetGax_Sound(8);
 				SetPlayer_Shot_Flg(1);
+				
 				i = 1;
 		    }
 		}
