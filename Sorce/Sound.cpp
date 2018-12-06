@@ -21,132 +21,90 @@ int StartMenu_Sound;					 // スタートメニューのBGM
 
 int Gax_Sound = 0;						 // 効果音のSwitch
 
-										 /*
-										 int PlaySound_Payer() {					//Prayer
-										 PlaySoundMem(Player_Shot_Sound, DX_PLAYTYPE_BACK);
-										 return 0;
-										 }
-										 */
-
-										 //初期化
+//初期化
 int Sound_Init() {
 	/*
-	switch (){
-
-	case 1:
-
-	// クレジットからゲーム画面に映る時なる時の音
+	LoadSoundMem…メモリにサウンドを入れる
 	*/
-	Credit_Sound = LoadSoundMem("S_Galaxian/gax_CreditSound.wav");			// クレジットSEのパス
-																			/*break;
-																			case 2:
-
-																			// 謎SE*/
-	Enemy_LastOne = LoadSoundMem("S_Galaxian/gax_Enemy_LastOne.wav");		// NAZO
-																			/*break;
-																			case 3:
-
-																			// 謎SE 2*/
-	Enemy_LastTwo = LoadSoundMem("S_Galaxian/gax_Enemy_LastTwo.wav");		// NAZO
-																			/*break;
-																			case 4:
-
-																			// 敵の発射効果音*/
-	Enemy_Attack_Sound = LoadSoundMem("S_Galaxian/gax_EnemyAttack.wav");	// 敵の発射音のパス指定
-																			/*break;
-																			case 5:
-
-																			// 敵のヒット時の効果音*/
-	Enemy_Hit_Sound = LoadSoundMem("S_Galaxian/gax_HitEnemy.wav");			// 敵を倒したときのSEのパス指定
-																			/*break;
-																			case 6:
-
-																			// 謎SE 3*/
-	HitGalaxian_Sound = LoadSoundMem("S_Galaxian/gax_HitGalaxian.wav");		// NAZO
-																			/*break;
-																			case 7:
-
-																			// プレイヤーがやられたときの効果音*/
-	Player_Miss_Sound = LoadSoundMem("S_Galaxian/gax_Miss.wav");			// プレイヤーがやられた時のSEのパス指定
-																			/*break;
-																			case 8:
-
-																			// 発射の効果音*/
-	Player_Shot_Sound = LoadSoundMem("S_Galaxian/gax_Shot.wav");			// 発射音のパス指定
-																			/*break;
-																			case 9:
-
-																			// スタートメニューのBGM*/
-	StartMenu_Sound = LoadSoundMem("S_Galaxian/gax_StartMusic.wav");		// ｽﾀｰﾄﾒﾆｭｰBGMのパス指定
-																			/*break;
-
-																			}*/
+	Credit_Sound       = LoadSoundMem("S_Galaxian/gax_CreditSound.wav");		// クレジットSEのパス
+	Enemy_LastOne      = LoadSoundMem("S_Galaxian/gax_Enemy_LastOne.wav");		// NAZO
+	Enemy_LastTwo      = LoadSoundMem("S_Galaxian/gax_Enemy_LastTwo.wav");		// NAZO
+	Enemy_Attack_Sound = LoadSoundMem("S_Galaxian/gax_EnemyAttack.wav");		// 敵の発射音のパス指定
+	Enemy_Hit_Sound    = LoadSoundMem("S_Galaxian/gax_HitEnemy.wav");			// 敵を倒したときのSEのパス指定
+	HitGalaxian_Sound  = LoadSoundMem("S_Galaxian/gax_HitGalaxian.wav");		// NAZO
+	Player_Miss_Sound  = LoadSoundMem("S_Galaxian/gax_Miss.wav");				// プレイヤーがやられた時のSEのパス指定
+	Player_Shot_Sound  = LoadSoundMem("S_Galaxian/gax_Shot.wav");				// 発射音のパス指定																
+	StartMenu_Sound    = LoadSoundMem("S_Galaxian/gax_StartMusic.wav");			// ｽﾀｰﾄﾒﾆｭｰBGMのパス指定
+																	
 	return 0;
 }
 
 //計算
 int Sound_Dpct() {
-
 	/*
+	PlaySoundMem…メモリに入れたサウンドを再生
+	NORMAL…ノーマル再生
+	BACK……バックグラウンド再生
+	LOOP……ループ再生
+	*/
+	
 	switch (Gax_Sound) {
 
 	case 1:
+		// クレジットからゲーム画面に映る時なる時の音
+		PlaySoundMem(Credit_Sound, DX_PLAYTYPE_BACK);	// 再生
+		Gax_Sound = 0;	// もらった数字を0にしてからreturnする
+		break;
 
-	// クレジットからゲーム画面に映る時なる時の音
-	PlaySoundMem(Credit_Sound, DX_PLAYTYPE_BACK);
-	Gax_Sound = 0;
-	break;
 	case 2:
+		// 謎SE
+		PlaySoundMem(Enemy_LastOne, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
 
-	// 謎SE
-	PlaySoundMem(Enemy_LastOne, DX_PLAYTYPE_BACK);
-	Gax_Sound = 0;
-	break;
 	case 3:
+		// 謎SE 2
+		PlaySoundMem(Enemy_LastTwo, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
 
-	// 謎SE 2
-	PlaySoundMem(Enemy_LastTwo, DX_PLAYTYPE_BACK);
-	Gax_Sound = 0;
-	break;
 	case 4:
+		// 敵の発射効果音
+		PlaySoundMem(Enemy_Attack_Sound, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
 
-	// 敵の発射効果音
-	PlaySoundMem(Enemy_Attack_Sound, DX_PLAYTYPE_BACK);
-	Gax_Sound = 0;
-	break;
 	case 5:
+		// 敵のヒット時の効果音
+		PlaySoundMem(Enemy_Hit_Sound, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
 
-	// 敵のヒット時の効果音
-	PlaySoundMem(Enemy_Hit_Sound, DX_PLAYTYPE_BACK);
-	Gax_Sound = 0;
-	break;
 	case 6:
+		// 謎SE 3
+		PlaySoundMem(HitGalaxian_Sound, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
 
-	// 謎SE 3
-	PlaySoundMem(HitGalaxian_Sound, DX_PLAYTYPE_BACK);
-	Gax_Sound = 0;
-	break;
 	case 7:
+		// プレイヤーがやられたときの効果音
+		PlaySoundMem(Player_Miss_Sound, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
 
-	// プレイヤーがやられたときの効果音
-	PlaySoundMem(Player_Miss_Sound, DX_PLAYTYPE_BACK);
-	Gax_Sound = 0;
-	break;
 	case 8:
+		// 発射の効果音
+		PlaySoundMem(Player_Shot_Sound, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
 
-	// 発射の効果音
-	Gax_Sound = 0;
-	PlaySoundMem(Player_Shot_Sound, DX_PLAYTYPE_BACK);
-	break;
 	case 9:
-
-	// スタートメニューのBGM
-	PlaySoundMem(StartMenu_Sound, DX_PLAYTYPE_BACK);
-	Gax_Sound = 0;
-	break;
+		// スタートメニューのBGM
+		PlaySoundMem(StartMenu_Sound, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
 	}
-	*/
-
+	/*
 	if (Gax_Sound == 1) {
 		PlaySoundMem(Credit_Sound, DX_PLAYTYPE_BACK);
 		Gax_Sound = 0;
@@ -183,6 +141,7 @@ int Sound_Dpct() {
 		PlaySoundMem(StartMenu_Sound, DX_PLAYTYPE_BACK);
 		Gax_Sound = 0;
 	}
+	*/
 	return Gax_Sound;
 }
 
@@ -192,7 +151,6 @@ void SetGax_Sound(int flag) {			// ここに代入したらswitchに入る
 
 //描写
 int Sound_Draw() {
-
 	return 0;
 }
 
