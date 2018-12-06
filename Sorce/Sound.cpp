@@ -30,17 +30,11 @@ int Gax_Sound = 0;						 // 効果音のSwitch
 
 										 //初期化
 int Sound_Init() {
-	/*
-	switch (){
-
-	case 1:
 
 	// クレジットからゲーム画面に映る時なる時の音
-	*/
+	
 	Credit_Sound = LoadSoundMem("S_Galaxian/gax_CreditSound.wav");			// クレジットSEのパス
 																			/*break;
-																			case 2:
-
 																			// 謎SE*/
 	Enemy_LastOne = LoadSoundMem("S_Galaxian/gax_Enemy_LastOne.wav");		// NAZO
 																			/*break;
@@ -87,7 +81,7 @@ int Sound_Init() {
 //計算
 int Sound_Dpct() {
 
-	/*
+	
 	switch (Gax_Sound) {
 
 	case 1:
@@ -137,6 +131,7 @@ int Sound_Dpct() {
 	// 発射の効果音
 	Gax_Sound = 0;
 	PlaySoundMem(Player_Shot_Sound, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	break;
 	case 9:
 
@@ -145,8 +140,8 @@ int Sound_Dpct() {
 	Gax_Sound = 0;
 	break;
 	}
-	*/
-
+	
+	/*
 	if (Gax_Sound == 1) {
 		PlaySoundMem(Credit_Sound, DX_PLAYTYPE_BACK);
 		Gax_Sound = 0;
@@ -183,6 +178,7 @@ int Sound_Dpct() {
 		PlaySoundMem(StartMenu_Sound, DX_PLAYTYPE_BACK);
 		Gax_Sound = 0;
 	}
+	*/
 	return Gax_Sound;
 }
 
