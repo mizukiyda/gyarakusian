@@ -1,6 +1,7 @@
 #include"DxLib.h"
 #include"Enemy.h"
-//#include"Player.h"
+//#include"PlayerShot.h"
+#include"Player.h"
 #include<Math.h>
 
 /********************  変数宣言  ****************************/
@@ -31,6 +32,8 @@ int e_deg = 0;
 //
 int n = 0;
 
+int e_score=0;
+
 //敵の移動スピード
 int speed = 1;
 
@@ -45,6 +48,9 @@ int cntYellow = 0;
 //プレイヤーの位置情報格納用
 int epx;
 int epy;
+
+int pbullet_x;
+int pbullet_y;
 
 //画像格納変数
 int Enemy_Handle[40];
@@ -101,6 +107,7 @@ int Enemy_Init() {
 		enemy[1].Draw_Flg = false;
 		enemy[2].Draw_Flg = false;
 
+
 		if (i < 4) {
 			enemy[i].Type = 0;
 			enemy[i].anime = 0;
@@ -155,6 +162,7 @@ int Enemy_Init() {
 
 	epx = 500;  //debug
 	epy = 600;  //degug
+	e_score = 0;
 
 	return 0;
 }
@@ -162,9 +170,12 @@ int Enemy_Init() {
 int Enemy_Move() {
 
 	//プレイヤーの座標受け取り(真ん中)
-	//epx = Player_Pos_Init_x() + 19;
-	//epy = Player_Pos_Init_y() + 18;
+	epx = Player_Pos_Init_x() + 19;
+	epy = Player_Pos_Init_y() + 18;
+	//pbullet_x = PlayerShot_Pos_Init_x() + 19;
+	//pbullet_y = PlayerShot_Pos_Init_y() + 18;
 
+	Enemy_control();
 	//左右移動
 	if ((enemy[49].x > 1080.0 || enemy[48].x < 200.0)) {
 		speed *= -1;
@@ -181,8 +192,10 @@ int Enemy_Move() {
 		if (enemy[i].Attack_Move_Flg == false) { //攻撃時じゃないとき左右移動
 			enemy[i].x += speed;
 		}
+	    //攻撃時の移動
+		if (enemy[i].Move_Flg == true) {
 
-		if (enemy[i].Move_Flg == true) {	//攻撃時の移動
+			//Enemy_deg(&i);
 
 			Enemy_Attack_Move(&i);
 
@@ -202,6 +215,50 @@ int Enemy_Move() {
 				enemy[i].deg = 0;
 			}
 		}
+	}
+	return 0;
+}
+
+//左右移動で、表示上の敵で切り返す処理
+int Enemy_control() {
+
+	if (enemy[23].Draw_Flg == false && enemy[33].Draw_Flg == false && enemy[43].Draw_Flg == false) {
+		enemy[48].x = enemy[32].fx;
+	}
+	if (enemy[22].Draw_Flg == false && enemy[32].Draw_Flg == false && enemy[42].Draw_Flg == false) {
+		enemy[48].x = enemy[31].fx;
+	}
+	if (enemy[21].Draw_Flg == false && enemy[31].Draw_Flg == false && enemy[41].Draw_Flg == false) {
+		enemy[48].x = enemy[30].fx;
+	}
+	if (enemy[20].Draw_Flg == false && enemy[30].Draw_Flg == false && enemy[40].Draw_Flg == false) {
+		enemy[48].x = enemy[29].fx;
+	}
+	if (enemy[19].Draw_Flg == false && enemy[29].Draw_Flg == false && enemy[39].Draw_Flg == false) {
+		enemy[48].x = enemy[28].fx;
+	}
+	if (enemy[18].Draw_Flg == false && enemy[28].Draw_Flg == false && enemy[38].Draw_Flg == false) {
+		enemy[48].x = enemy[27].fx;
+	}
+
+
+	if (enemy[22].Draw_Flg == false && enemy[32].Draw_Flg == false && enemy[42].Draw_Flg == false) {
+		enemy[49].x = enemy[21].fx;
+	}
+	if (enemy[23].Draw_Flg == false && enemy[33].Draw_Flg == false && enemy[43].Draw_Flg == false) {
+		enemy[49].x = enemy[22].fx;
+	}
+	if (enemy[24].Draw_Flg == false && enemy[34].Draw_Flg == false && enemy[44].Draw_Flg == false) {
+		enemy[49].x = enemy[23].fx;
+	}
+	if (enemy[25].Draw_Flg == false && enemy[35].Draw_Flg == false && enemy[45].Draw_Flg == false) {
+		enemy[49].x = enemy[24].fx;
+	}
+	if (enemy[26].Draw_Flg == false && enemy[36].Draw_Flg == false && enemy[46].Draw_Flg == false) {
+		enemy[49].x = enemy[25].fx;
+	}
+	if (enemy[27].Draw_Flg == false && enemy[37].Draw_Flg == false && enemy[47].Draw_Flg == false) {
+		enemy[49].x = enemy[26].fx;
 	}
 	return 0;
 }
@@ -333,8 +390,7 @@ int Enemy_Attack_Chose() {
 
 int Enemy_Attack_Move(int *num) {
 
-	if (EnemyCount > *num) {
-
+	if (EnemyCount > *num && enemy[*num].Draw_Flg == true) {
 		
 		//下方向に向かって移動
 		enemy[*num].y += 1;	
@@ -360,6 +416,7 @@ int Enemy_Attack_Move(int *num) {
 				e_count[*num] = 0;
 			}
 
+			//enemy[*num].x += (enemy[*num].deg* sin(enemy[*num].x));
 			enemy[*num].x += move[e_count[*num] / 20];
 		}
 		//画面外に行ったら、ぶっ飛ばす
@@ -412,6 +469,46 @@ int EnemyShot_Move() {
 	return 0;
 }
 
+//プレーヤーの弾が当たったかとスコア
+int Player_Hit() {
+	if (pbullet_x + 1 == enemy[i].x + 5 && pbullet_x == enemy[i].x + 16 && pbullet_y == enemy[i].y + 5 && pbullet_y == enemy[i].y + 16) {
+		if (enemy[i].Attack_Move_Flg == false && enemy[i].Move_Flg == false) {
+			switch (enemy[i].Type) {
+			case 0:
+				e_score += 30;
+				break;
+			case 1:
+				e_score += 40;
+				break;
+			case 2:
+				e_score += 50;
+				break;
+			case 3:
+				e_score += 60;
+				break;
+			}
+		}
+		else {
+			switch (enemy[i].Type) {
+			case 0:
+				e_score += 60;
+				break;
+			case 1:
+				e_score += 80;
+				break;
+			case 2:
+				e_score += 100;
+				break;
+			case 3:
+				e_score += 200;
+				break;
+			}
+		}
+		enemy[i].Draw_Flg = false;
+	}
+	return e_score;
+}
+
 //敵の弾の当たり判定
 int Enemy_Hit() {
 
@@ -424,16 +521,29 @@ int Enemy_Hit() {
 
 		}
 	}
-
 	return Enemy_Hit_Flg;
+}
+
+//プレーヤーと敵の角度
+int Enemy_deg(int *num) {
+
+	enemy[*num].deg = atan2(epy - enemy[*num].y, epx - enemy[*num].x);
+
+	if (enemy[*num].deg < 0) {
+		enemy[*num].deg = enemy[*num].deg + 2 * PI;
+	}
+
+	enemy[*num].deg = (enemy[*num].deg * 360 / (2 * PI));
+	return 0;
 }
 
 int Enemy_Draw() {
 
-	//DrawFormatString(30, 30, GetColor(255, 255, 255), "%1.0d", i%cntYellow);
+	
+	//DrawFormatString(10, 20, GetColor(255, 255, 255), "%lf", enemy[37].deg);
+	//DrawBox(epx - 10, epy - 15, epx + 10, epy + 15, GetColor(255, 255, 255), false);
 	for (i = 0; i < EnemyCount; i++) {
 
-		//DrawFormatString(30, 30, GetColor(255, 255, 255), "%1.0d", copy_i);
 		e_deg = enemy[i].deg;
 		e_deg = 0;
 		/*if (e_deg % 360 == 0 || e_deg == 0) {
