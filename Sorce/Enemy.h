@@ -7,11 +7,15 @@
 
 extern int Enemy_Init();
 extern int Enemy_Move();
-extern int Enemy_Move_Flg(int *);
-extern int Enemy_Attack_Chose(int *);
+extern int Enemy_Move_Flg(int);
+extern int Enemy_Attack_Chose();
 extern int Enemy_Attack_Move(int *);
 extern int Enemy_Shot(int,int,int);
+extern int Enemy_Shot_Set(int *);
+extern int EnemyShot_Move();
 extern int Enemy_Draw();
+extern int Enemy_Hit();
+extern int EnemyShot_Draw();
 extern int Enemy_Pos_Init_x();
 extern int Enemy_Pos_Init_y();
 extern int Enemy_End();
@@ -36,7 +40,10 @@ typedef struct {
 	bool enemyshot;
 }A_Enemy;	//Enemy Atack
 
-
+typedef struct {	//\‘¢‘Ì
+	int x;  //enemy‚ÌxÀ•W
+	int y;  //enemy‚ÌyÀ•W
+	bool Draw_Flg;
+} S_EShot;
 
 #endif
-
