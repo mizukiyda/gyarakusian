@@ -4,17 +4,21 @@
 #define LEFT -1
 #define NUMSHOT 4
 #define EnemyCount 48
+#define PI 3.14159265359
 
 extern int Enemy_Init();
 extern int Enemy_Move();
 extern int Enemy_Move_Flg(int);
+extern int Enemy_control();
 extern int Enemy_Attack_Chose();
 extern int Enemy_Attack_Move(int *);
 extern int Enemy_Shot(int,int,int);
 extern int Enemy_Shot_Set(int *);
 extern int EnemyShot_Move();
 extern int Enemy_Draw();
+extern int Player_Hit();
 extern int Enemy_Hit();
+extern int Enemy_deg(int *);
 extern int EnemyShot_Draw();
 extern int Enemy_Pos_Init_x();
 extern int Enemy_Pos_Init_y();
