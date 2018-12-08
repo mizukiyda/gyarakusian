@@ -5,7 +5,6 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "PlayerShot.h"
-#include "EnemyShot.h"
 #include "UI.h"
 #include "Sound.h"
 
@@ -16,7 +15,7 @@ static void Scene_Mgr_Init_Module(E_Scene scene);	//指定モジュールを初期化する
 static void Scene_Mgr_End_Module(E_Scene scene);	//指定モジュールの終了処理を行う
 
 
-//init 初期化
+													//init 初期化
 void Scene_Mgr_Init() {
 	Scene_Mgr_Init_Module(Sceneflag);
 }
@@ -39,7 +38,7 @@ void Scene_Mgr_Dpct() {
 		//ゲーム画面
 		Enemy_Move();
 		PlayerShot_Dpct();
-		EnemyShot_Dpct();
+		EnemyShot_Move();
 		Player_Dpct();
 		UI_Dpct();
 		Sound_Dpct();
@@ -89,7 +88,7 @@ void Scene_Mgr_End() {
 	Scene_Mgr_End_Module(Sceneflag);
 }
 
-void Scene_Mgr_ChangeScene(E_Scene NextScene){
+void Scene_Mgr_ChangeScene(E_Scene NextScene) {
 	n_Sceneflag = NextScene;
 }
 
@@ -102,9 +101,8 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 		break;
 	case E_Scene_Game:
 		//ゲーム画面
-	
+
 		Playershot_Init();
-		EnemyShot_Init();
 		Enemy_Init();
 		Player_Init();
 		UI_Init();
