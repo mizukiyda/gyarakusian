@@ -2,7 +2,6 @@
 #include "Player.h"
 #include "PlayerShot.h"
 #include "Enemy.h"
-#include "EnemyShot.h"
 #include "StartMenu.h"
 #include "Scene_Mgr.h"
 
@@ -21,21 +20,21 @@ int StartMenu_Sound;					 // スタートメニューのBGM
 
 int Gax_Sound = 0;						 // 効果音のSwitch
 
-//初期化
+										 //初期化
 int Sound_Init() {
 	/*
 	LoadSoundMem…メモリにサウンドを入れる
 	*/
-	Credit_Sound       = LoadSoundMem("S_Galaxian/gax_CreditSound.wav");		// クレジットSEのパス
-	Enemy_LastOne      = LoadSoundMem("S_Galaxian/gax_Enemy_LastOne.wav");		// NAZO
-	Enemy_LastTwo      = LoadSoundMem("S_Galaxian/gax_Enemy_LastTwo.wav");		// NAZO
+	Credit_Sound = LoadSoundMem("S_Galaxian/gax_CreditSound.wav");		// クレジットSEのパス
+	Enemy_LastOne = LoadSoundMem("S_Galaxian/gax_Enemy_LastOne.wav");		// NAZO
+	Enemy_LastTwo = LoadSoundMem("S_Galaxian/gax_Enemy_LastTwo.wav");		// NAZO
 	Enemy_Attack_Sound = LoadSoundMem("S_Galaxian/gax_EnemyAttack.wav");		// 敵の発射音のパス指定
-	Enemy_Hit_Sound    = LoadSoundMem("S_Galaxian/gax_HitEnemy.wav");			// 敵を倒したときのSEのパス指定
-	HitGalaxian_Sound  = LoadSoundMem("S_Galaxian/gax_HitGalaxian.wav");		// NAZO
-	Player_Miss_Sound  = LoadSoundMem("S_Galaxian/gax_Miss.wav");				// プレイヤーがやられた時のSEのパス指定
-	Player_Shot_Sound  = LoadSoundMem("S_Galaxian/gax_Shot.wav");				// 発射音のパス指定																
-	StartMenu_Sound    = LoadSoundMem("S_Galaxian/gax_StartMusic.wav");			// ｽﾀｰﾄﾒﾆｭｰBGMのパス指定
-																	
+	Enemy_Hit_Sound = LoadSoundMem("S_Galaxian/gax_HitEnemy.wav");			// 敵を倒したときのSEのパス指定
+	HitGalaxian_Sound = LoadSoundMem("S_Galaxian/gax_HitGalaxian.wav");		// NAZO
+	Player_Miss_Sound = LoadSoundMem("S_Galaxian/gax_Miss.wav");				// プレイヤーがやられた時のSEのパス指定
+	Player_Shot_Sound = LoadSoundMem("S_Galaxian/gax_Shot.wav");				// 発射音のパス指定																
+	StartMenu_Sound = LoadSoundMem("S_Galaxian/gax_StartMusic.wav");			// ｽﾀｰﾄﾒﾆｭｰBGMのパス指定
+
 	return 0;
 }
 
@@ -47,7 +46,7 @@ int Sound_Dpct() {
 	BACK……バックグラウンド再生
 	LOOP……ループ再生
 	*/
-	
+
 	switch (Gax_Sound) {
 
 	case 1:
@@ -106,40 +105,40 @@ int Sound_Dpct() {
 	}
 	/*
 	if (Gax_Sound == 1) {
-		PlaySoundMem(Credit_Sound, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(Credit_Sound, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	if (Gax_Sound == 2) {
-		PlaySoundMem(Enemy_LastOne, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(Enemy_LastOne, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	if (Gax_Sound == 3) {
-		PlaySoundMem(Enemy_LastTwo, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(Enemy_LastTwo, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	if (Gax_Sound == 4) {
-		PlaySoundMem(Enemy_Attack_Sound, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(Enemy_Attack_Sound, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	if (Gax_Sound == 5) {
-		PlaySoundMem(Enemy_Hit_Sound, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(Enemy_Hit_Sound, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	if (Gax_Sound == 6) {
-		PlaySoundMem(HitGalaxian_Sound, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(HitGalaxian_Sound, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	if (Gax_Sound == 7) {
-		PlaySoundMem(Player_Miss_Sound, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(Player_Miss_Sound, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	if (Gax_Sound == 8) {
-		PlaySoundMem(Player_Shot_Sound, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(Player_Shot_Sound, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	if (Gax_Sound == 9) {
-		PlaySoundMem(StartMenu_Sound, DX_PLAYTYPE_BACK);
-		Gax_Sound = 0;
+	PlaySoundMem(StartMenu_Sound, DX_PLAYTYPE_BACK);
+	Gax_Sound = 0;
 	}
 	*/
 	return Gax_Sound;
