@@ -98,8 +98,6 @@ int Playershot_Draw() {
 		//‰æ‘œ‚ÌŠg‘å•\¦
 		DrawRotaGraph(pbullet.x + 3, pbullet.y - 25, 4.0, 0.0, Player_Shot_Gyallaly[Player_None_Num], true);
 	}
-	DrawBox(300, 300, 400, 400, GetColor(255, 255, 255), false);
-	DrawFormatString(0, 400, GetColor(255, 255, 255), "pbullet.xÀ•W  %d\npbullet.yÀ•W  %d", pbullet.x, pbullet.y);
 
 	return 0;
 }
