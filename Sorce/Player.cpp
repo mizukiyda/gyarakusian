@@ -136,13 +136,18 @@ int Player_Draw() {
 			break;
 
 		case 9:
-			Draw_Flg = true;
-			Player.x = 300;
+			//Draw_Flg = true;
+			//Player.x = 300;
+			//Player_Cnt = 0;
 			break;
 
 		}
+		if (Player_Cnt > 35) {		//もしカウントが35を
+			Draw_Flg = true;		//超えたら通常の描写にする
+			Player.x = 300;			//プレイヤーの復活場所をx座標の300にする。
+			Player_Cnt = 0;			//カウントを0にする
+		}
 	}
-
 	return PlayerShot_Flg;
 }
 
