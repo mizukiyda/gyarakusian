@@ -7,6 +7,7 @@
 #include "PlayerShot.h"
 #include "UI.h"
 #include "Sound.h"
+#include"Rule.h"
 
 static E_Scene Sceneflag = E_Scene_StartMenu;		//今のシーン
 static E_Scene n_Sceneflag = E_Scene_None;			//次のシーン
@@ -15,7 +16,7 @@ static void Scene_Mgr_Init_Module(E_Scene scene);	//指定モジュールを初期化する
 static void Scene_Mgr_End_Module(E_Scene scene);	//指定モジュールの終了処理を行う
 
 
-													//init 初期化
+//init 初期化
 void Scene_Mgr_Init() {
 	Scene_Mgr_Init_Module(Sceneflag);
 }
@@ -60,6 +61,10 @@ void Scene_Mgr_Draw() {
 		StartMenu_Draw();
 		DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー");
 		break;
+	case E_Scene_StartMenu2:
+		//エネミーのスコアの確認
+		Rule_Draw();
+		DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー2");
 	case E_Scene_Game:
 		//ゲーム画面
 		Enemy_Draw();

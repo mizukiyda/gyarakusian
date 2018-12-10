@@ -6,6 +6,7 @@ extern void Scene_Mgr_End();
 
 typedef enum {
 	E_Scene_StartMenu,
+	E_Scene_StartMenu2,
 	E_Scene_Game,
 	E_Scene_GameMenu,
 	E_Scene_Result,
