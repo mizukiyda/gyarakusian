@@ -20,6 +20,7 @@ extern int Player_Hit();
 extern int Enemy_Hit();
 extern int Enemy_deg(int *);
 extern int EnemyShot_Draw();
+extern int Enemy_Stage_clear();
 extern int Enemy_Pos_Init_x();
 extern int Enemy_Pos_Init_y();
 extern int Enemy_End();
@@ -33,6 +34,9 @@ struct P_Enemy {
 	double fy;
 	double nx;	//next_x Ÿ‚ÌX‚ÌêŠ	
 	double deg;	//Šp“x
+	double vct;
+	double vct2;
+	double speed;
 	int anime;
 	bool Move_Flg;
 	bool Attack_Move_Flg;
