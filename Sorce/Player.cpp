@@ -3,6 +3,7 @@
 #include"keyboard.h"
 #include"Enemy.h"
 #include"PlayerShot.h"
+#include"Sound.h"
 
 //ÉvÉåÉCÉÑÅ[
 S_Player Player;
@@ -60,6 +61,7 @@ int Player_Dpct() {
 		if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
 			//PlayerShot_Flg = 1;
 			SetPlayer_Shot_Flg(1);
+			SetGax_Sound(9);
 			i = 1;
 		}
 	}
