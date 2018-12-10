@@ -3,10 +3,9 @@ extern int PlayerShot_Dpct();
 extern int Playershot_Draw();
 extern int PlayerShot_End();
 
-extern int Player_HIT();
-extern int Player_Score();
 extern void SetPlayer_Shot_Flg(int);
-
+extern int PlayerShot_Pos_Init_x();
+extern int PlayerShot_Pos_Init_y();
 
 typedef struct {
 

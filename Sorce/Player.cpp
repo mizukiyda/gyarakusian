@@ -1,7 +1,7 @@
 #include"Dxlib.h"
 #include"Player.h"
 #include"keyboard.h"
-#include "Enemy.h"
+#include"Enemy.h"
 #include"PlayerShot.h"
 
 //ƒvƒŒƒCƒ„[

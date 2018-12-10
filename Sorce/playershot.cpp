@@ -47,40 +47,9 @@ int PlayerShot_Dpct() {
 
 	if (300 <= pbullet.x && pbullet.x <= 400 &&
 		pbullet.y >= 300 && pbullet.y <= 400) {
-		Player_Hit();
-		Player_Score();
 		Player_Shot_Flg = false;
-
-
 	}
 	return Player_Shot_Flg;
-}
-
-int Player_HIT() {
-	//’e‚ª“–‚½‚Á‚½‚çEnemy“n‚·
-	Player_Hit_Flg = true;
-	if (Player_Hit_Flg == true) {
-		atari = 1;
-	}
-
-	return Player_Hit_Flg;
-}
-
-int Player_Score() {
-	//Enemy_Type 
-	/*if (Enemy_Type = 3) {  //‚à‚µ	‰©F‚È‚ç
-	score += 10;
-	}
-	else if(Enemy_Type = 2){  //‚à‚µŽ‡‚È‚ç
-	score += 30;
-	}
-	else if(Enemy_Type = 1) {  //‚à‚µÔ‚È‚ç
-	score += 60;
-	}
-	else if (Enemy_Type = 0) {
-	score += 100;
-	}*/
-	return score;
 }
 
 int Playershot_Draw() {
@@ -107,6 +76,15 @@ void SetPlayer_Shot_Flg(int flag) {
 	Player_Shot_Flg = flag;
 }
 
+int PlayerShot_Pos_Init_x() {
+
+	return pbullet.x;
+}
+
+int PlayerShot_Pos_Init_y() {
+
+	return pbullet.y;
+}
 /**********************************@I—¹(ˆê‰ñ)@******************************************/
 int PlayerShot_End()
 {
