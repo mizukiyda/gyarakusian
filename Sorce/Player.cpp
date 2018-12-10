@@ -1,14 +1,14 @@
 #include"Dxlib.h"
 #include"Player.h"
 #include"keyboard.h"
-#include"EnemyShot.h"
+#include "Enemy.h"
 #include"PlayerShot.h"
 
 	//プレイヤー
 	S_Player Player;
 
 	//残機
-	//int remain = 3;
+	int remain = 3;
 	bool Draw_Flg = true;
 
 	//攻撃に関するもの
