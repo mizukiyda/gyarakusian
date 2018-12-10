@@ -142,9 +142,9 @@ int Player_Draw() {
 			break;
 
 		}
-		if (Player_Cnt > 35) {		//もしカウントが35を
+		if (Player_Cnt > 200) {		//もしカウントが35を
 			Draw_Flg = true;		//超えたら通常の描写にする
-			Player.x = 300;			//プレイヤーの復活場所をx座標の300にする。
+			Player.x = 600;			//プレイヤーの復活場所をx座標の300にする。
 			Player_Cnt = 0;			//カウントを0にする
 		}
 	}
