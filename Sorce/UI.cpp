@@ -3,6 +3,8 @@
 #include "Playershot.h"
 #include"Player.h"
 
+//担当　小出
+
 int Score;					//playerからもらったスコアを保存していく
 int Remain;					//Playerの残機の確認
 int PLAYER_HIT_FLG;			//EnemyShotからplayerに当たった時のフラグをもらい、残機を「 1 」減らす作業をする
