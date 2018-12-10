@@ -2,6 +2,7 @@
 #include "UI.h"
 #include "Playershot.h"
 #include"Player.h"
+#include"Enemy.h"
 
 //担当　小出
 
@@ -22,7 +23,7 @@ int UI_Init() {
 
 int UI_Dpct() {
 
-	Score = Player_Score();					//playerのPlayer_Score()に入っているスコアをもらう
+	Score = Player_Hit();					//playerのPlayer_Score()に入っているスコアをもらう
 	PLAYER_HIT_FLG = Player_Remain();		//Playerからもらったフラグを自分のフラグに入れる
 
 	if (PLAYER_HIT_FLG == true) {			//もし true ならPlayerの残機を「　1　」減らす
