@@ -19,7 +19,7 @@
 	int Gyallaly[8];   //プレイヤーの画像の変数
 	int i;       //画像表示用
 	float j;
-	int Player_Image[12] = {4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7}; //画像の順番(アニメーション)
+	int Player_Image[35] = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7 }; //画像の順番(アニメーション)
 	int Player_Cnt;   //画像表示用カウント
 
 	int Player_Init() {
@@ -61,7 +61,7 @@
 			    //PlayerShot_Flg = 1;
 				SetPlayer_Shot_Flg(1);
 				i = 1;
-		    }
+			}
 		}
 
 
@@ -78,58 +78,40 @@
 			Draw_Flg = false;
 		}
 
+
+
 		return PlayerShot_Flg;
 	}
 
 	int Player_Remain() {		//残機の処理
 
-		//if (Enemy_Hit() == true) {
-			//Player_Image = count_x / 8 % 4;
+		if (Enemy_Hit() == true) {
 
-			/*if (remain > 0) {
+			Draw_Flg = false;
+			if (remain > 0) {
 				remain = remain - 1;
 			}
 			else {
 				Player_End();
-			}*/
-		//}
+			}
+		}
 
-	return 0;
+		return 0;//Player_Draw;
 	}
 
 	int Player_Draw() {
 
 		if (Draw_Flg == true) {
 
-			//DrawGraph(Player.x , Player.y , Gyallaly[i], true);
 			DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true); //画像の拡大表示
 			DrawFormatString(0, 300, GetColor(255, 255, 255), "x座標  %d\ny座標  %d", Player.x, Player.y);
 
-			/*	if (PlayerShot_Flg == 1)
-				{
-					i = 1;
-				}
-
-				if (PlayerShot_Flg == 0)
-				{
-					i = 0;
-				}*/
-
 		}
-			/*if (Draw_Flg == false) {
-				Player_Image = Player.x / 1 % 4;
-			}*/
+
 		if (Draw_Flg == false) {
 
-			//for (i = 0; i < 12; i++) {
-			while(Player_Cnt > 12){
-				i = 0;
-				i++;
+			Player_Cnt++;
 
-				if (i > 3) {
-					Player_Cnt += 1;
-					i = 0;
-				}
 				switch (Player_Image[Player_Cnt]) {
 				case 4:
 					DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[4], true);
@@ -148,12 +130,16 @@
 					DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[7], true);
 					break;
 
-					/*case 8:
-						DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[2], true);
-						break;*/
+				case 8:
+					DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[2], true);
+					break;
+
+				case 9:
+					Draw_Flg = true;
+					Player.x = 300;
+					break;
 
 				}
-			}
 		}
 
 		return PlayerShot_Flg;
