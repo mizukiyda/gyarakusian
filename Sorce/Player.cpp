@@ -10,18 +10,20 @@ S_Player Player;
 
 //残機
 int remain = 3;
-bool Draw_Flg = true;
+
+//bool Draw_Flg = true;
 
 //攻撃に関するもの
 bool PlayerShot_Flg = 0;   //発射フラグ
 
-						   //画像に関するもの
-						   //int None_Num = 0;      //画像のスタンバイ状態
-int Gyallaly[8];   //プレイヤーの画像の変数
-int i;       //画像表示用
+//画像に関するもの
+//int None_Num = 0;      //画像のスタンバイ状態
+int Gyallaly[8];				//プレイヤーの画像の変数
+int i;							//画像表示用
 float j;
 int Player_Image[35] = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7 }; //画像の順番(アニメーション)
-int Player_Cnt;   //画像表示用カウント
+int Player_Cnt;					//画像表示用カウント
+int OnActive = true;			//Playerが生きている状態
 
 int Player_Init() {
 
@@ -55,16 +57,18 @@ int Player_Dpct() {
 		Player.x += 1;
 	}
 
-	if (PlayerShot_Flg == 0) {
-		i = 0;
-		//弾を撃つ
-		if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
-			//PlayerShot_Flg = 1;
-			SetPlayer_Shot_Flg(1);
-			SetGax_Sound(9);
-			i = 1;
+	if (OnActive == true){											//playerが生きていなければ撃てない
+		if (PlayerShot_Flg == 0) {
+			i = 0;
+			//弾を撃つ
+			if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
+				//PlayerShot_Flg = 1;
+				SetPlayer_Shot_Flg(1);
+				SetGax_Sound(8);
+				i = 1;
+			}
 		}
-	}
+    }
 
 
 	if (Player.x <= 200) {
@@ -77,10 +81,8 @@ int Player_Dpct() {
 
 	if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
 		//Player_Remain();
-		Draw_Flg = false;
+		OnActive = false;					//playerが死んだとき
 	}
-
-
 
 	return PlayerShot_Flg;
 }
@@ -89,7 +91,7 @@ int Player_Remain() {		//残機の処理
 
 	if (Enemy_Hit() == true) {
 
-		Draw_Flg = false;
+		//Draw_Flg = false;
 		if (remain > 0) {
 			remain = remain - 1;
 		}
@@ -103,13 +105,13 @@ int Player_Remain() {		//残機の処理
 
 int Player_Draw() {
 
-	if (Draw_Flg == true) {
+	if (OnActive == true) {
 
 		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true); //画像の拡大表示
 
 	}
 
-	if (Draw_Flg == false) {
+	if (OnActive == false) {
 
 		Player_Cnt++;
 
@@ -142,10 +144,10 @@ int Player_Draw() {
 			break;
 
 		}
-		if (Player_Cnt > 200) {		//もしカウントが35を
-			Draw_Flg = true;		//超えたら通常の描写にする
+		if (Player_Cnt > 200) {		//もしカウントが200を
 			Player.x = 600;			//プレイヤーの復活場所をx座標の300にする。
 			Player_Cnt = 0;			//カウントを0にする
+			OnActive = true;		//playerが復活した時
 		}
 	}
 	return PlayerShot_Flg;

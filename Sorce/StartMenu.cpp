@@ -2,6 +2,7 @@
 #include "Dxlib.h"
 #include "Keyboard.h"
 #include "Scene_Mgr.h"
+#include"Sound.h"
 
 MenuElement_t MenuElement[2] = {
 { 100, 100, "Strat" }, // タグの中身の順番で格納される。xに100が、yに100が、nameに"ゲームスタート"が
@@ -43,6 +44,7 @@ int StartMenu_Dpct() {
 				switch (i) {
 				case 0:
 					Scene_Mgr_ChangeScene(E_Scene_Game);
+					SetGax_Sound(9);
 					break;
 				case 1:
 					Scene_Mgr_End();
