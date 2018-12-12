@@ -79,9 +79,10 @@ int Player_Dpct() {
 		Player.x = 1000;
 	}
 
-	if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
+	if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {			//エンターキーを押したら爆発をする
 		//Player_Remain();
 		OnActive = false;					//playerが死んだとき
+		SetGax_Sound(7);
 	}
 
 	return PlayerShot_Flg;
