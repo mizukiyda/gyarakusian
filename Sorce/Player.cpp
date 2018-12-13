@@ -17,7 +17,7 @@ int remain = 3;
 bool PlayerShot_Flg = 0;   //発射フラグ
 
 //画像に関するもの
-//int None_Num = 0;      //画像のスタンバイ状態
+//int None_Num = 0;				//画像のスタンバイ状態
 int Gyallaly[8];				//プレイヤーの画像の変数
 int i;							//画像表示用
 float j;
@@ -47,14 +47,16 @@ int Player_Dpct() {
 
 	PlayerShot_Flg = PlayerShot_Dpct();
 
-	//←
-	if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
-		Player.x -= 1;
-	}
+	if (OnActive == true) {											//生きていなければ動けない
+		//←
+		if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
+			Player.x -= 3;
+		}
 
-	//→
-	if (Keyboard_Get(KEY_INPUT_RIGHT) != 0) {
-		Player.x += 1;
+		//→
+		if (Keyboard_Get(KEY_INPUT_RIGHT) != 0) {
+			Player.x += 3;
+		}
 	}
 
 	if (OnActive == true){											//playerが生きていなければ撃てない
@@ -64,12 +66,11 @@ int Player_Dpct() {
 			if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
 				//PlayerShot_Flg = 1;
 				SetPlayer_Shot_Flg(1);
-				SetGax_Sound(8);
+				SetGax_Sound(8);									//発射音を鳴らす
 				i = 1;
 			}
 		}
     }
-
 
 	if (Player.x <= 200) {
 		Player.x = 200;
@@ -78,11 +79,12 @@ int Player_Dpct() {
 	if (Player.x >= 1000) {
 		Player.x = 1000;
 	}
-
-	if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {			//エンターキーを押したら爆発をする
-		//Player_Remain();
-		OnActive = false;					//playerが死んだとき
-		SetGax_Sound(7);
+	if (OnActive == true) {
+		if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {			//エンターキーを押したら爆発をする
+			//Player_Remain();
+			OnActive = false;								//playerが死んだとき
+			SetGax_Sound(7);								//爆発音
+		}
 	}
 
 	return PlayerShot_Flg;
@@ -106,13 +108,13 @@ int Player_Remain() {		//残機の処理
 
 int Player_Draw() {
 
-	if (OnActive == true) {
+	if (OnActive == true) {													//生きている時だけ表示
 
 		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true); //画像の拡大表示
 
 	}
 
-	if (OnActive == false) {
+	if (OnActive == false) {												//破壊された時のアニメーション
 
 		Player_Cnt++;
 
@@ -127,7 +129,6 @@ int Player_Draw() {
 
 		case 6:
 			DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[6], true);
-
 			break;
 
 		case 7:

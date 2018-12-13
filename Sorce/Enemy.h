@@ -21,8 +21,9 @@ extern int Enemy_Hit();
 extern int Enemy_deg(int *);
 extern int EnemyShot_Draw();
 extern int Enemy_Stage_clear();
-extern int Enemy_Pos_Init_x();
-extern int Enemy_Pos_Init_y();
+extern int Enemy_Pos_Init_x(int);
+extern int Enemy_Pos_Init_y(int);
+extern int Enemy_State_Init(int);
 extern int Enemy_End();
 
 

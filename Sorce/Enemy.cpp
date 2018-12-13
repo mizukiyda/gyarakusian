@@ -1,6 +1,6 @@
 #include"DxLib.h"
 #include"Enemy.h"
-//#include"PlayerShot.h"
+#include"PlayerShot.h"
 #include"Player.h"
 #include<Math.h>
 #include<time.h>
@@ -184,9 +184,8 @@ int Enemy_Move() {
 	//プレイヤーの座標受け取り(真ん中)
 	epx = Player_Pos_Init_x() + 19;
 	epy = Player_Pos_Init_y() + 18;
-	//pbullet_x = PlayerShot_Pos_Init_x() + 19;
-	//pbullet_y = PlayerShot_Pos_Init_y() + 18;
-
+	pbullet_x = PlayerShot_Pos_Init_x();// +19;
+	pbullet_y = PlayerShot_Pos_Init_y();// +18;
 	Enemy_control();
 	//左右移動
 	if ((enemy[49].x > 1080.0 || enemy[48].x < 200.0)) {
@@ -569,15 +568,16 @@ int EnemyShot_Move() {
 
 		}
 	}
-
-	Enemy_Hit();
-
+	Enemy_Hit_Flg = Player_HIT();
+	if (Enemy_Hit_Flg == true) {
+		Player_Hit();
+	}
 	return 0;
 }
 
 //プレーヤーの弾が当たったかとスコア
 int Player_Hit() {
-	if (pbullet_x + 1 == enemy[i].x + 5 && pbullet_x == enemy[i].x + 16 && pbullet_y == enemy[i].y + 5 && pbullet_y == enemy[i].y + 16) {
+	//if (pbullet_x + 1 == enemy[i].x + 5 && pbullet_x == enemy[i].x + 16 && pbullet_y == enemy[i].y + 5 && pbullet_y == enemy[i].y + 16) {
 		if (enemy[i].Attack_Move_Flg == false && enemy[i].Move_Flg == false) {
 			switch (enemy[i].Type) {
 			case 0:
@@ -611,7 +611,7 @@ int Player_Hit() {
 			}
 		}
 		enemy[i].Draw_Flg = false;
-	}
+	//}
 	return e_score;
 }
 
@@ -621,7 +621,7 @@ int Enemy_Hit() {
 	for (i = 0; i < EnemyCount; i++) {
 		for (j = 0; j < NUMSHOT; j++) {
 
-			if (epx - 7 >= ebullet[i][j].x && epx + 7 <= ebullet[i][j].x && epy - 8 >= ebullet[i][j].y + 3 && epy +9 <= ebullet[i][j].y) {
+			if (epx - 7 >= ebullet[i][j].x && epx + 7 <= ebullet[i][j].x && epy - 8 >= ebullet[i][j].y + 3 && epy +9 <= ebullet[i][j].y&& enemy[i].Draw_Flg == true) {
 				Enemy_Hit_Flg = true;
 			}
 
@@ -659,9 +659,9 @@ int Enemy_deg(int *num) {
 int Enemy_Draw() {
 
 	
-	DrawFormatString(10, 20, GetColor(255, 255, 255), "%lf", enemy[37].deg);
-	//DrawBox(epx - 10, epy - 15, epx + 10, epy + 15, GetColor(255, 255, 255), false);
-	for (i = 0; i < EnemyCount; i++) {
+	DrawBox(epx-7, epy-8, epx + 7, epy + 9, GetColor(255, 255, 255), false);
+	DrawBox(pbullet_x, pbullet_y, pbullet_x +1, pbullet_y + 3, GetColor(255, 255, 255), false);
+	for (i = 0; i < EnemyCount+2; i++) {
 
 		e_deg = enemy[i].deg;
 		e_deg = 0;
@@ -802,6 +802,8 @@ int Enemy_Draw() {
 		*/
 		if (enemy[i].Draw_Flg == true) {
 			//if (e_deg >= 0 && e_deg < 90) {
+			//DrawBox(enemy[i].x - 7, enemy[i].y - 8, enemy[i].x + 7, enemy[i].y + 9, GetColor(255, 255, 255), false);
+
 			DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[enemy[i].anime], true, 0, 0);
 			//}
 			if (e_deg >= 90 && e_deg < 180) {
@@ -882,12 +884,17 @@ int Enemy_Stage_clear() {
 	return cntYellow;
 }
 
-int Enemy_Pos_Init_x() {
-	return enemy[i].x;
+int Enemy_Pos_Init_x(int num) {
+	
+	return enemy[num].x;
 }
 
-int Enemy_Pos_Init_y() {
-	return enemy[i].y;
+int Enemy_Pos_Init_y(int num) {
+	return enemy[num].y;
+}
+
+int Enemy_State_Init(int num) {
+	return enemy[num].Draw_Flg;
 }
 
 int Enemy_End() {
