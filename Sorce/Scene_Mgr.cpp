@@ -149,7 +149,7 @@ static void Scene_Mgr_End_Module(E_Scene scene) {
 
 	case E_Scene_Game:
 		//ƒQ[ƒ€‰æ–Ê
-		//Enemy_End();
+		Enemy_End();
 		Player_End();
 		UI_End();
 		Sound_End();

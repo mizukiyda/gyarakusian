@@ -5,7 +5,7 @@
 #include<Math.h>
 #include<time.h>
 #include<stdlib.h>
-
+#include"Sound.h"
 
 /********************  •Ï”éŒ¾  ****************************/
 
@@ -551,6 +551,7 @@ int Enemy_Shot(int x,int y,int num) {
 				ebullet[h][k].y = y + 4;
 				ebullet[h][k].Draw_Flg = true;
 				attack_enemy[h][k].enemyshot = false;
+				SetGax_Sound(4);
 			}
 		}
 	}
@@ -571,6 +572,7 @@ int EnemyShot_Move() {
 	Enemy_Hit_Flg = Player_HIT();
 	if (Enemy_Hit_Flg == true) {
 		Player_Hit();
+		SetGax_Sound(5);
 	}
 	return 0;
 }

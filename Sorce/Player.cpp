@@ -16,6 +16,9 @@ int remain = 3;
 //攻撃に関するもの
 bool PlayerShot_Flg = 0;   //発射フラグ
 
+//攻撃を受けたフラグ
+int Enemy_Hit_Flg = false;
+
 //画像に関するもの
 //int None_Num = 0;				//画像のスタンバイ状態
 int Gyallaly[8];				//プレイヤーの画像の変数
@@ -79,11 +82,14 @@ int Player_Dpct() {
 	if (Player.x >= 1000) {
 		Player.x = 1000;
 	}
+
+	/*デバッグ用なので後で書き換える*/
 	if (OnActive == true) {
 		if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {			//エンターキーを押したら爆発をする
-			//Player_Remain();
+			Player_Remain();
 			OnActive = false;								//playerが死んだとき
 			SetGax_Sound(7);								//爆発音
+			remain = remain - 1;
 		}
 	}
 
@@ -92,7 +98,11 @@ int Player_Dpct() {
 
 int Player_Remain() {		//残機の処理
 
-	if (Enemy_Hit() == true) {
+	Enemy_Hit_Flg = Enemy_Hit();			//enemyからの当たり判定を入れるもの
+
+	//remain = remain - 1;
+
+	if (Enemy_Hit_Flg == true) {
 
 		//Draw_Flg = false;
 		if (remain > 0) {
@@ -108,12 +118,13 @@ int Player_Remain() {		//残機の処理
 
 int Player_Draw() {
 
+	
 	if (OnActive == true) {													//生きている時だけ表示
 
 		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true); //画像の拡大表示
 
 	}
-
+	DrawFormatString(0,100, GetColor(255, 255, 255) ,"remain:%d", remain);
 	if (OnActive == false) {												//破壊された時のアニメーション
 
 		Player_Cnt++;
