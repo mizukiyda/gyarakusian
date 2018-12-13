@@ -551,7 +551,7 @@ int Enemy_Shot(int x,int y,int num) {
 				ebullet[h][k].y = y + 4;
 				ebullet[h][k].Draw_Flg = true;
 				attack_enemy[h][k].enemyshot = false;
-				SetGax_Sound(4);
+				//SetGax_Sound(4);				//enemy‚Ì”­Ë‰¹i‚±‚±‚Å‚Í‚È‚©‚Á‚½j
 			}
 		}
 	}
@@ -572,7 +572,7 @@ int EnemyShot_Move() {
 	Enemy_Hit_Flg = Player_HIT();
 	if (Enemy_Hit_Flg == true) {
 		Player_Hit();
-		SetGax_Sound(5);
+		//SetGax_Sound(5);							//enemy‚ª‚â‚ç‚ê‚½‚Ì‰¹(‚±‚±‚Å‚Í‚È‚©‚Á‚½)
 	}
 	return 0;
 }
