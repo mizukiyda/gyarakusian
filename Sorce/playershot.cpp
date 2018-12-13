@@ -13,7 +13,7 @@ bool e_draw[EnemyCount];
 int Px, Py;
 int score = 0;
 S_PShot pbullet;
-int Player_Hit_Flg = false;	//プレイヤーの弾がenemyに当たった時のFlg
+bool Player_Hit_Flg[EnemyCount] = { false };	//プレイヤーの弾がenemyに当たった時のFlg
 int Player_Shot_Gyallaly[2];		// 画像格納変数
 int Player_None_Num;			// 画像のスタンバイ状態(静止状態)
 
@@ -53,19 +53,20 @@ int PlayerShot_Dpct() {
 		if (ex[a] - 25 <= pbullet.x - 10 && pbullet.x + 10 <= ex[a] + 25 &&
 			pbullet.y == ey[a] + 25 && e_draw[a] == true) {
 			Player_Shot_Flg = false;
-			Player_Hit();
+			Player_HIT(a);
 		}
 	}
 
 	return Player_Shot_Flg;
 }
 
-int Player_HIT() {
+int Player_HIT(int num) {
 
-	Player_Hit_Flg = true;
+	Player_Hit_Flg[num] = true;
 
-	return Player_Hit_Flg;
+	return Player_Hit_Flg[num];
 }
+
 int Playershot_Draw() {
 
 	if (atari == 1) {

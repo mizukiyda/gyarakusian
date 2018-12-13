@@ -569,10 +569,12 @@ int EnemyShot_Move() {
 
 		}
 	}
-	Enemy_Hit_Flg = Player_HIT();
-	if (Enemy_Hit_Flg == true) {
-		Player_Hit();
-		//SetGax_Sound(5);							//enemy‚ª‚â‚ç‚ê‚½Žž‚Ì‰¹(‚±‚±‚Å‚Í‚È‚©‚Á‚½)
+	for (int k = 0; k < EnemyCount; k++) {
+		Enemy_Hit_Flg = Player_HIT(k);
+		if (Enemy_Hit_Flg == true) {
+			Player_Hit();
+			//SetGax_Sound(5);							//enemy‚ª‚â‚ç‚ê‚½Žž‚Ì‰¹(‚±‚±‚Å‚Í‚È‚©‚Á‚½)
+		}
 	}
 	return 0;
 }
@@ -612,7 +614,11 @@ int Player_Hit() {
 				break;
 			}
 		}
-		enemy[i].Draw_Flg = false;
+		//for (i = 0;i < EnemyCount;i++) {
+			enemy[i].Draw_Flg = false;
+			Enemy_State_Init(i);
+
+		//}
 	//}
 	return e_score;
 }
