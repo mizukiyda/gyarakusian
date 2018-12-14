@@ -14,35 +14,33 @@ int remain = 3;
 //bool Draw_Flg = true;
 
 //攻撃に関するもの
-bool PlayerShot_Flg = 0;   //発射フラグ
+bool PlayerShot_Flg = 0;				//発射フラグ
 
-bool Remain_Flg = false;
+bool Remain_Flg = false;				//UIにRemain処理を送るフラグ
 
 //攻撃を受けたフラグ
 bool EnemyHit_Flg = false;
 
 //画像に関するもの
-//int None_Num = 0;				//画像のスタンバイ状態
-int Gyallaly[8];				//プレイヤーの画像の変数
-int i;							//画像表示用
+//int None_Num = 0;						//画像のスタンバイ状態
+int Gyallaly[8];						//プレイヤーの画像の変数
+int i;									//画像表示用の変数
 float j;
 int Player_Image[35] = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7 }; //画像の順番(アニメーション)
-int Player_Cnt;					//画像表示用カウント
-int OnActive = true;			//Playerが生きている状態
+int Player_Cnt;							//画像表示用カウント
+int OnActive = true;					//Playerが生きている状態
 
 int Player_Init() {
 
-	//プレイヤーの位置
+	//プレイヤーの初期位置
 	Player.x = 300;
 	Player.y = 600;
 
 	//画像
 	Gyallaly[8] = { 0 };
-	LoadDivGraph("Image/Galaxian_OBJ_token.png", 8, 4, 2, 34, 35, Gyallaly);
+	LoadDivGraph("Image/Galaxian_OBJ_token.png", 8, 4, 2, 34, 35, Gyallaly);				//画像の読み込み
 	i = 0;
 	Player_Cnt = 0;
-	//Player_Image[10] = {4,5,6,7};
-	//None_Num = 0;
 
 	return 0;
 }
@@ -50,9 +48,9 @@ int Player_Init() {
 int Player_Dpct() {
 	//キー入力
 
-	PlayerShot_Flg = PlayerShot_Dpct();
+	PlayerShot_Flg = PlayerShot_Dpct();														//Shotからフラグを受け取る
 
-	if (OnActive == true) {											//生きていなければ動けない
+	if (OnActive == true) {																	//生きていなければ動けない
 		//←
 		if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
 			Player.x -= 3;
@@ -66,38 +64,36 @@ int Player_Dpct() {
 
 	if (OnActive == true){											//playerが生きていなければ撃てない
 		if (PlayerShot_Flg == 0) {
-			i = 0;
+			i = 0;													//弾を所持しているplayerの画像
 			//弾を撃つ
 			if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
-				//PlayerShot_Flg = 1;
-				SetPlayer_Shot_Flg(1);
+				SetPlayer_Shot_Flg(1);								//ポインタで返す
 				SetGax_Sound(8);									//発射音を鳴らす
-				i = 1;
+				i = 1;												//弾を所持していないplayerの画像
 			}
 		}
     }
 
-	if (Player.x <= 200) {
+	if (Player.x <= 200) {											//Playerのxの動きを200で止める
 		Player.x = 200;
 	}
 
-	if (Player.x >= 1000) {
+	if (Player.x >= 1000) {											//Playerのxの動きを1000で止める
 		Player.x = 1000;
 	}
 
 	/*デバッグ用なので後で書き換える*/
 	if (OnActive == true) {
-		if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {			//エンターキーを押したら爆発をする
+		if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {					//エンターキーを押したら爆発をする
 			//Player_Remain();
-			OnActive = false;								//playerが死んだとき
-			//SetGax_Sound(7);								//爆発音
-			//remain = remain - 1;
+			OnActive = false;										//playerが死んだとき
+			SetGax_Sound(7);										//爆発音
 		}
 	}
 
-	/*EnemyHit_Flg = Enemy_Hit();			//enemyからの当たり判定を入れるもの
+	/*EnemyHit_Flg = Enemy_Hit();									//enemyからの当たり判定を入れるもの
 	if (EnemyHit_Flg == true) {
-		Player_Remain();
+		Player_Remain();											//Remainへ飛ぶ
 	}*/
 
 	return PlayerShot_Flg;
@@ -105,25 +101,25 @@ int Player_Dpct() {
 
 int Player_Remain() {		//残機の処理
 	
-	if (OnActive == false) {
-		Remain_Flg = true;
+	if (OnActive == false) {										//死んでいるのなら
+		Remain_Flg = true;											//復活フラグをtrueで渡す
 	}
-	return Remain_Flg;//Player_Draw;
+	return Remain_Flg;
 }
 
 int Player_Draw() {
-
 	
-	if (OnActive == true) {													//生きている時だけ表示
+	if (OnActive == true) {														//生きている時だけ表示
 
-		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true); //画像の拡大表示
+		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true);			//画像の拡大表示
 
 	}
 	DrawFormatString(0,100, GetColor(255, 255, 255) ,"remain:%d", remain);
-	if (OnActive == false) {												//破壊された時のアニメーション
+	if (OnActive == false) {													//破壊された時のアニメーション
 
 		Player_Cnt++;
-
+		
+		//↓爆発のアニメーション
 		switch (Player_Image[Player_Cnt]) {
 		case 4:
 			DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[4], true);
@@ -145,12 +141,6 @@ int Player_Draw() {
 			DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[2], true);
 			break;
 
-		case 9:
-			//Draw_Flg = true;
-			//Player.x = 300;
-			//Player_Cnt = 0;
-			break;
-
 		}
 		if (Player_Cnt > 800){		//もしカウントが200を
 			Player.x = 600;			//プレイヤーの復活場所をx座標の300にする。
@@ -161,12 +151,12 @@ int Player_Draw() {
 	return PlayerShot_Flg;
 }
 
-int Player_Pos_Init_x()
+int Player_Pos_Init_x()				//Playerのｘ座標
 {
 	return Player.x;
 }
 
-int Player_Pos_Init_y()
+int Player_Pos_Init_y()				//Playerのy座標
 {
 	return Player.y;
 }
