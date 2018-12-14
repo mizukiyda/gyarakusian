@@ -1,11 +1,11 @@
 #include"DxLib.h"
 #include"Enemy.h"
-#include"PlayerShot.h"
+//#include"PlayerShot.h"
 #include"Player.h"
 #include<Math.h>
 #include<time.h>
 #include<stdlib.h>
-#include"Sound.h"
+
 
 /********************  変数宣言  ****************************/
 
@@ -14,6 +14,8 @@ P_Enemy enemy[50];
 A_Enemy attack_enemy[48][NUMSHOT];
 
 S_EShot ebullet[EnemyCount][NUMSHOT];
+
+MODE mode;
 
 DATEDATA Date;
 
@@ -33,6 +35,9 @@ int copy_i = 0;
 int e_deg = 0;
 //
 int n = 0;
+
+//次のEnemy
+int ne;
 
 
 //Enemyの攻撃に移るまでのタイマー
@@ -108,8 +113,7 @@ int Enemy_Init() {
 		enemy[i].speed = 1;
 		enemy[i].x = enemy[i].fx;
 		enemy[i].y = enemy[i].fy;
-		enemy[i].Move_Flg = false;
-		enemy[i].Attack_Move_Flg = false;
+		enemy[i].mode = NONE;
 		enemy[i].Draw_Flg = true;
 		enemy[1].Draw_Flg = false;
 		enemy[2].Draw_Flg = false;
@@ -184,8 +188,9 @@ int Enemy_Move() {
 	//プレイヤーの座標受け取り(真ん中)
 	epx = Player_Pos_Init_x() + 19;
 	epy = Player_Pos_Init_y() + 18;
-	pbullet_x = PlayerShot_Pos_Init_x();// +19;
-	pbullet_y = PlayerShot_Pos_Init_y();// +18;
+	//pbullet_x = PlayerShot_Pos_Init_x() + 19;
+	//pbullet_y = PlayerShot_Pos_Init_y() + 18;
+
 	Enemy_control();
 	//左右移動
 	if ((enemy[49].x > 1080.0 || enemy[48].x < 200.0)) {
@@ -200,16 +205,22 @@ int Enemy_Move() {
 		//ここで動く敵の順番を選択
 		Enemy_Attack_Chose();		
 
-		if (enemy[i].Attack_Move_Flg == false) { //攻撃時じゃないとき左右移動
+		if (enemy[i].mode == NONE ) { //攻撃時じゃないとき左右移動
 			enemy[i].x += speed;
 		}
 	    //攻撃時の移動
-		if (enemy[i].Move_Flg == true) {
+		if (enemy[i].mode == ATTACK) {
 
 			//Enemy_deg(&i);
 
 			Enemy_Attack_Move(&i);
 
+		}
+
+		if (enemy[i].mode == MOVE) {
+
+			enemy[i].y += 1;
+			enemy[i].x += speed;
 		}
 
 		if (enemy[i].y <= 280) {
@@ -218,14 +229,9 @@ int Enemy_Move() {
 
 		}
 
-		if (enemy[i].Attack_Move_Flg == false && enemy[i].y == enemy[i].fy) {
-			//一回転
-			//enemy[i].deg += 15;
-			if (enemy[i].deg >= 360) {
-				enemy[i].deg = 0;
-			}
-
-			enemy[i].Move_Flg = false;
+		if (enemy[i].mode == MOVE && enemy[i].y == enemy[i].fy) {
+			
+			enemy[i].mode = NONE;
 		}
 
 		cntYellow = 0;
@@ -288,14 +294,12 @@ int Enemy_control() {
 //黄色の敵が動く時の処理 (たぶん完成)
 int Enemy_Move_Flg(int num_i) {
 
-	enemy[num_i].Attack_Move_Flg = true;
-	enemy[num_i].Move_Flg = true;
+	enemy[num_i].mode = ATTACK;
 	e_count[num_i] = 0;
 
-	for (j = num_i + 4; j < 10; j++) {
+	for (j = num_i + 4; j < num_i + 7; j++) {
 		if (enemy[j].Draw_Flg == true) {
-			enemy[j].Attack_Move_Flg = true;
-			enemy[j].Move_Flg = true;
+			enemy[j].mode = ATTACK;
 			e_count[j] = 0;
 			cntRed++;
 		}
@@ -312,6 +316,8 @@ int Enemy_Move_Flg(int num_i) {
 	   敵の動き出しの処理関数
 ****************************************/
 int Enemy_Attack_Chose() {
+
+	int Attack_Mode = GetRand(2) + 1;
 
 	//敵のモーションタイマー
 	timer--;
@@ -401,91 +407,186 @@ int Enemy_Attack_Chose() {
 			}
 			Enemy_Move_Flg(n);
 		}
-		else if (epx > (enemy[48].x + enemy[49].x + 20) / 2) { //プレイヤーが敵の右側にいた場合
+		else { //プレイヤーが敵の右側にいた場合
 
 			cntEnemy = 0;
+			
+			//二体目を動かし、return　でぬける。
+			if (ne >= 49 && ne < 0) {
+				enemy[ne].mode = ATTACK;
+				ne = 49;
+				timer = (GetRand(8) * 1000 )+ 4000;
+				return 0;
+			}
 
-			for (j = 18; j < 27; j++) {
-				if (GetRand(2) == 0) {
-					if (j == 18 || j == 27) {
-						for (h = 0; h < 3; h++) {
-							if (enemy[j + h * 10].Move_Flg == false && enemy[j + h * 10].Draw_Flg == true) {
-								enemy[j + h * 10].Attack_Move_Flg = true;
-								enemy[j + h * 10].Move_Flg = true;
-								cntEnemy++;
-								if (cntEnemy >= 2) {
+			switch (Attack_Mode) {
+			case MODE_DOWN:
+				//もしONにしたのが、黄色だったら
+				if (enemy[ne].Type == 0) {
+					while (1) {
+						ne = GetRand(1) + 1;
+						if (ne == 1) {
+							for (j = 4; j < 27; j++) {
+								if (j < 10 && cntYellow == 0 && enemy[j].mode == NONE) {
+									enemy[j].mode = ATTACK;
+									ne = j + 7;
+									timer = 3000;
+									break;
+								}
+								else if (j < 18 && enemy[j].mode == NONE) {
+									enemy[j].mode = ATTACK;
+									ne = j + 9;
+									timer = 3000;
+									break;
+								}
+								else {
+									if (enemy[j].mode == NONE) {
+										enemy[j].mode = ATTACK;
+									}
+									else if(enemy[j+10].mode ==NONE){
+										enemy[j+10].mode = ATTACK;
+										ne = j + 10;
+									}
+									else {
+										if (enemy[j + 20].mode == NONE) {
+											enemy[j + 20].mode = ATTACK;
+											ne = 49;
+											timer = (GetRand(8) * 1000) + 4000;
+											break;
+										}
+									}
+									ne = j + 10;
+									timer = 3000;
+									break;
+								}
+							}
+						}
+						else {
+							for (j = 9; j >= 4; j--) {
+								if (cntYellow == 0 && enemy[j].mode == NONE) {
+									enemy[j].mode = ATTACK;
+									ne = j + 7;
+									timer = 3000;
 									goto CHOSE;
 								}
 							}
-						}
-					}
-					else if(j == 19&& j == 17){
-						for (h = 0; h < 5; h++) {
-							if (cntYellow == 0 && h == 0) {
-								if (enemy[j - 16].Move_Flg == false && enemy[j - 16].Draw_Flg == true) {
-									enemy[j - 16].Attack_Move_Flg = true;
-									enemy[j - 16].Move_Flg = true;
-									cntEnemy++;
+							for (j = 17; j >= 10 ; j++) {
+								if (enemy[j].mode == NONE) {
+									enemy[j].mode = ATTACK;
+									ne = j + 9;
+									timer = 3000;
+									goto CHOSE;
 								}
 							}
-							if (h == 1) {
-								if (enemy[j - 9].Move_Flg == false && enemy[j - 9].Draw_Flg == true) {
-									enemy[j - 9].Attack_Move_Flg = true;
-									enemy[j - 9].Move_Flg = true;
-									cntEnemy++;
+							for (j = 27; j >= 18; j--) {
+								if (enemy[j].mode == NONE) {
+									enemy[j].mode = ATTACK;
 								}
-							}
-							else {
-								if (enemy[j + (h - 1) * 10].Move_Flg == false && enemy[j + (h - 1) * 10].Draw_Flg == true) {
-									enemy[j + (h - 1) * 10].Attack_Move_Flg = true;
-									enemy[j + (h - 1) * 10].Move_Flg = true;
-									cntEnemy++;
-									if (cntEnemy >= 2) {
-										goto CHOSE;
+								else if (enemy[j + 10].mode == NONE) {
+									enemy[j + 10].mode = ATTACK;
+									ne = j + 10;
+								}
+								else {
+									if (enemy[j + 20].mode == NONE) {
+										enemy[j + 20].mode = ATTACK;
+										ne = 49;
+										timer = (GetRand(8) * 1000) + 4000;
+										break;
 									}
 								}
-							}
-						}
-					}
-					else {
-						for (h = 0; h < 4; h++) {
-							if (h == 0) {
-								if (enemy[j - 9].Move_Flg == false && enemy[j - 9].Draw_Flg == true) {
-									enemy[j - 9].Attack_Move_Flg = true;
-									enemy[j - 9].Move_Flg = true;
-									cntEnemy++;
-								}
-							}
-							else {
-								if (enemy[j + (h - 1) * 10].Move_Flg == false && enemy[j + (h - 1) * 10].Draw_Flg == true) {
-									enemy[j + (h - 1) * 10].Attack_Move_Flg = true;
-									enemy[j + (h - 1) * 10].Move_Flg = true;
-									cntEnemy++;
-									if (cntEnemy >= 2) {
-										goto CHOSE;
-									}
-								}
+								ne = j + 10;
+								timer = 3000;
+								goto CHOSE;
 							}
 						}
 					}
 				}
 				else {
-					if (j == 18) {
-						if (enemy[j].Move_Flg == false && enemy[j].Draw_Flg == true) {
-							enemy[j].Attack_Move_Flg = true;
-							enemy[j].Move_Flg = true;
-							enemy[j - 10].Attack_Move_Flg = true;
-							enemy[j - 10].Move_Flg = true;
-							cntEnemy++;
+					if (epx > (enemy[48].x + enemy[49].x + 20) / 2) {
+						for (j = 4; j < 27; j++) {
+							if (j < 10 && cntYellow == 0 && enemy[j].mode == NONE) {
+								enemy[j].mode = ATTACK;
+								ne = j + 7;
+								timer = 3000;
+								break;
+							}
+							else if (j < 18 && enemy[j].mode == NONE) {
+								enemy[j].mode = ATTACK;
+								ne = j + 9;
+								timer = 3000;
+								break;
+							}
+							else {
+								if (enemy[j].mode == NONE) {
+									enemy[j].mode = ATTACK;
+								}
+								else if (enemy[j + 10].mode == NONE) {
+									enemy[j + 10].mode = ATTACK;
+									ne = j + 10;
+								}
+								else {
+									if (enemy[j + 20].mode == NONE) {
+										enemy[j + 20].mode = ATTACK;
+										ne = 49;
+										timer = (GetRand(8) * 1000) + 4000;
+										break;
+									}
+								}
+								ne = j + 10;
+								timer = 3000;
+								break;
+							}
+						}
+					}
+					else {
+						for (j = 9; j >= 4; j--) {
+							if (cntYellow == 0 && enemy[j].mode == NONE) {
+								enemy[j].mode = ATTACK;
+								ne = j + 7;
+								timer = 3000;
+								goto CHOSE;
+							}
+						}
+						for (j = 17; j >= 10; j++) {
+							if (enemy[j].mode == NONE) {
+								enemy[j].mode = ATTACK;
+								ne = j + 9;
+								timer = 3000;
+								goto CHOSE;
+							}
+						}
+						for (j = 27; j >= 18; j--) {
+							if (enemy[j].mode == NONE) {
+								enemy[j].mode = ATTACK;
+							}
+							else if (enemy[j + 10].mode == NONE) {
+								enemy[j + 10].mode = ATTACK;
+								ne = j + 10;
+							}
+							else {
+								if (enemy[j + 20].mode == NONE) {
+									enemy[j + 20].mode = ATTACK;
+									ne = 49;
+									timer = (GetRand(8) * 1000) + 4000;
+									break;
+								}
+							}
+							ne = j + 10;
+							timer = 3000;
+							goto CHOSE;
 						}
 					}
 				}
+				break;
+			case MODE_NEXT:
+				if (epx > (enemy[48].x + enemy[49].x + 20) / 2) {
 
+				}
+				else {
 
+				}
+				break;
 			}
-		}
-		else {
-
 		}
 	CHOSE:;
 	}
@@ -515,26 +616,25 @@ int Enemy_Attack_Move(int *num) {
 			}
 		}
 
-		if (enemy[*num].Attack_Move_Flg == true) {
+		if (enemy[*num].mode == ATTACK) {
 			e_count[*num]++;
 			if (e_count[*num] / 20 > 14) {
 				e_count[*num] = 0;
 			}
 
-			//enemy[*num].x += (enemy[*num].deg* sin(enemy[*num].x));
 			enemy[*num].x += move[e_count[*num] / 20];
 		}
-		//画面外に行ったら、ぶっ飛ばす
+		//画面外に行ったら、上に戻す
 		if (enemy[*num].x < 0 || enemy[*num].x>1280) {
 			enemy[*num].x = enemy[*num].fx;
 			enemy[*num].y = -40;
-			enemy[*num].Attack_Move_Flg = false;
+			enemy[*num].mode = MOVE;
 		}
 		//画面下に行ったときの処理
 		if (enemy[*num].y >= 750) {
 			enemy[*num].y = -10;
 			enemy[*num].x = enemy[*num].fx;
-			enemy[*num].Attack_Move_Flg = false;
+			enemy[*num].mode = MOVE;
 		}
 	}
 	return 0;
@@ -551,7 +651,6 @@ int Enemy_Shot(int x,int y,int num) {
 				ebullet[h][k].y = y + 4;
 				ebullet[h][k].Draw_Flg = true;
 				attack_enemy[h][k].enemyshot = false;
-				//SetGax_Sound(4);				//enemyの発射音（ここではなかった）
 			}
 		}
 	}
@@ -569,60 +668,58 @@ int EnemyShot_Move() {
 
 		}
 	}
-	//j = Player_HIT(k);
-	//Player_Hit(j);
+
 	for (int k = 0; k < EnemyCount; k++) {
-		enemy[k].Draw_Flg = Player_HIT(k);
-		//if (enemy[k].Draw_Flg == false) {
+		//enemy[k].Draw_Flg = Player_HIT(k);
+		
 		Enemy_State_Init(k);
 			//SetGax_Sound(5);							//enemyがやられた時の音(ここではなかった)
-		//}
+		
 	}
+
 	return 0;
 }
 
-//プレーヤーの弾が当たったかとスコア
-int Player_Hit() {
-	//if (pbullet_x + 1 == enemy[i].x + 5 && pbullet_x == enemy[i].x + 16 && pbullet_y == enemy[i].y + 5 && pbullet_y == enemy[i].y + 16) {
-		if (enemy[i].Attack_Move_Flg == false && enemy[i].Move_Flg == false) {
-			switch (enemy[i].Type) {
-			case 0:
-				e_score += 30;
-				break;
-			case 1:
-				e_score += 40;
-				break;
-			case 2:
-				e_score += 50;
-				break;
-			case 3:
-				e_score += 60;
-				break;
-			}
+//プレーヤーの弾が当たったかとスコア //使ってない
+int Enemy_Score() {
+	if (enemy[i].mode == NONE) {
+		switch (enemy[i].Type) {
+		case 0:
+			e_score += 30;
+			break;
+		case 1:
+			e_score += 40;
+			break;
+		case 2:
+			e_score += 50;
+			break;
+		case 3:
+			e_score += 60;
+			break;
 		}
-		else {
-			switch (enemy[i].Type) {
-			case 0:
-				e_score += 60;
-				break;
-			case 1:
-				e_score += 80;
-				break;
-			case 2:
-				e_score += 100;
-				break;
-			case 3:
-				e_score += 200;
-				break;
-			}
+	}
+	else {
+		switch (enemy[i].Type) {
+		case 0:
+			e_score += 60;
+			break;
+		case 1:
+			e_score += 80;
+			break;
+		case 2:
+			e_score += 100;
+			break;
+		case 3:
+			e_score += 200;
+			break;
 		}
+	}
 
-		//enemy[Player_HIT(num)].Draw_Flg = false;
-		for (i = 0;i < EnemyCount;i++) {
-			Enemy_State_Init(i);
+	for (i = 0; i < EnemyCount; i++) {
+		Enemy_State_Init(i);
 
-		}
-	//}
+	}
+
 	return e_score;
 }
 
@@ -632,7 +729,7 @@ int Enemy_Hit() {
 	for (i = 0; i < EnemyCount; i++) {
 		for (j = 0; j < NUMSHOT; j++) {
 
-			if (epx - 7 >= ebullet[i][j].x && epx + 7 <= ebullet[i][j].x && epy - 8 >= ebullet[i][j].y + 3 && epy +9 <= ebullet[i][j].y&& enemy[i].Draw_Flg == true) {
+			if (epx - 7 >= ebullet[i][j].x && epx + 7 <= ebullet[i][j].x && epy - 8 >= ebullet[i][j].y + 3 && epy +9 <= ebullet[i][j].y) {
 				Enemy_Hit_Flg = true;
 			}
 
@@ -641,185 +738,14 @@ int Enemy_Hit() {
 	return Enemy_Hit_Flg;
 }
 
-//プレーヤーと敵の角度
-/*int Enemy_deg(int *num) {
-
-	enemy[*num].deg = atan2(epy - enemy[*num].y, epx - enemy[*num].x);
-
-	if (enemy[*num].deg < 0) {
-		enemy[*num].deg = enemy[*num].deg + 2 * PI;
-	}
-
-	enemy[*num].deg = (enemy[*num].deg * 360 / (2 * PI));
-	return 0;
-}*/
-
-//プレーヤーと敵の角度
-int Enemy_deg(int *num) {
-
-	enemy[37].deg = atan2(epy - enemy[37].y, epx - enemy[37].x);
-
-	if (enemy[37].deg < 0) {
-		enemy[37].deg = enemy[37].deg + 2 * PI;
-	}
-
-	enemy[37].deg = (enemy[37].deg * 360 / (2 * PI));
-	return 0;
-}
-
 int Enemy_Draw() {
-	
 
-	//DrawBox(epx-7, epy-8, epx + 7, epy + 9, GetColor(255, 255, 255), false);
-	//DrawBox(pbullet_x, pbullet_y, pbullet_x +1, pbullet_y + 3, GetColor(255, 255, 255), false);
-	
 	for (i = 0; i < EnemyCount; i++) {
-		//DrawFormatString(10, 150,  GetColor(255, 255, 255), "%d", Player_HIT(47));
-		e_deg = enemy[i].deg;
-		e_deg = 0;
-		/*if (e_deg % 360 == 0 || e_deg == 0) {
-			if (enemy[i].Type == 0)enemy[i].anime = 0;
-			if (enemy[i].Type == 1)enemy[i].anime = 6;
-			if (enemy[i].Type == 2)enemy[i].anime = 14;
-			if (enemy[i].Type == 3)enemy[i].anime = 22;
-		}
-		if (e_deg % 360 == 15) {
-			if (enemy[i].Type == 0)enemy[i].anime = 1;
-			if (enemy[i].Type == 1)enemy[i].anime = 7;
-			if (enemy[i].Type == 2)enemy[i].anime = 15;
-			if (enemy[i].Type == 3)enemy[i].anime = 23;
-		}
-		if (e_deg % 360 == 30) {
-			if (enemy[i].Type == 0)enemy[i].anime = 2;
-			if (enemy[i].Type == 1)enemy[i].anime = 8;
-			if (enemy[i].Type == 2)enemy[i].anime = 16;
-			if (enemy[i].Type == 3)enemy[i].anime = 24;
-		}
-		if (e_deg % 360 == 45) {
-			if (enemy[i].Type == 0)enemy[i].anime = 3;
-			if (enemy[i].Type == 1)enemy[i].anime = 9;
-			if (enemy[i].Type == 2)enemy[i].anime = 17;
-			if (enemy[i].Type == 3)enemy[i].anime = 25;
-		}if (e_deg % 360 == 60) {
-			if (enemy[i].Type == 0)enemy[i].anime = 4;
-			if (enemy[i].Type == 1)enemy[i].anime = 10;
-			if (enemy[i].Type == 2)enemy[i].anime = 18;
-			if (enemy[i].Type == 3)enemy[i].anime = 26;
-		}if (e_deg % 360 == 75) {
-			if (enemy[i].Type == 0)enemy[i].anime = 5;
-			if (enemy[i].Type == 1)enemy[i].anime = 11;
-			if (enemy[i].Type == 2)enemy[i].anime = 19;
-			if (enemy[i].Type == 3)enemy[i].anime = 27;
-		}
-		if (e_deg % 360 == 90) {
-			if (enemy[i].Type == 0)enemy[i].anime = 0;
-			if (enemy[i].Type == 1)enemy[i].anime = 6;
-			if (enemy[i].Type == 2)enemy[i].anime = 14;
-			if (enemy[i].Type == 3)enemy[i].anime = 22;
-		}
-		if (e_deg % 360 == 105) {
-			if (enemy[i].Type == 0)enemy[i].anime = 1;
-			if (enemy[i].Type == 1)enemy[i].anime = 7;
-			if (enemy[i].Type == 2)enemy[i].anime = 15;
-			if (enemy[i].Type == 3)enemy[i].anime = 23;
-		}
-		if (e_deg % 360 == 120) {
-			if (enemy[i].Type == 0)enemy[i].anime = 2;
-			if (enemy[i].Type == 1)enemy[i].anime = 8;
-			if (enemy[i].Type == 2)enemy[i].anime = 16;
-			if (enemy[i].Type == 3)enemy[i].anime = 24;
-		}
-		if (e_deg % 360 == 135) {
-			if (enemy[i].Type == 0)enemy[i].anime = 3;
-			if (enemy[i].Type == 1)enemy[i].anime = 9;
-			if (enemy[i].Type == 2)enemy[i].anime = 17;
-			if (enemy[i].Type == 3)enemy[i].anime = 25;
-		}if (e_deg % 360 == 150) {
-			if (enemy[i].Type == 0)enemy[i].anime = 4;
-			if (enemy[i].Type == 1)enemy[i].anime = 10;
-			if (enemy[i].Type == 2)enemy[i].anime = 18;
-			if (enemy[i].Type == 3)enemy[i].anime = 26;
-		}if (e_deg % 360 == 165) {
-			if (enemy[i].Type == 0)enemy[i].anime = 5;
-			if (enemy[i].Type == 1)enemy[i].anime = 11;
-			if (enemy[i].Type == 2)enemy[i].anime = 19;
-			if (enemy[i].Type == 3)enemy[i].anime = 27;
-		}if (e_deg % 360 == 180) {
-			if (enemy[i].Type == 0)enemy[i].anime = 0;
-			if (enemy[i].Type == 1)enemy[i].anime = 6;
-			if (enemy[i].Type == 2)enemy[i].anime = 14;
-			if (enemy[i].Type == 3)enemy[i].anime = 22;
-		}
-		if (e_deg % 360 == 195) {
-			if (enemy[i].Type == 0)enemy[i].anime = 1;
-			if (enemy[i].Type == 1)enemy[i].anime = 7;
-			if (enemy[i].Type == 2)enemy[i].anime = 15;
-			if (enemy[i].Type == 3)enemy[i].anime = 23;
-		}
-		if (e_deg % 360 == 210) {
-			if (enemy[i].Type == 0)enemy[i].anime = 2;
-			if (enemy[i].Type == 1)enemy[i].anime = 8;
-			if (enemy[i].Type == 2)enemy[i].anime = 16;
-			if (enemy[i].Type == 3)enemy[i].anime = 24;
-		}
-		if (e_deg % 360 == 225) {
-			if (enemy[i].Type == 0)enemy[i].anime = 3;
-			if (enemy[i].Type == 1)enemy[i].anime = 9;
-			if (enemy[i].Type == 2)enemy[i].anime = 17;
-			if (enemy[i].Type == 3)enemy[i].anime = 25;
-		}if (e_deg % 360 == 240) {
-			if (enemy[i].Type == 0)enemy[i].anime = 4;
-			if (enemy[i].Type == 1)enemy[i].anime = 10;
-			if (enemy[i].Type == 2)enemy[i].anime = 18;
-			if (enemy[i].Type == 3)enemy[i].anime = 26;
-		}if (e_deg % 360 == 255) {
-			if (enemy[i].Type == 0)enemy[i].anime = 5;
-			if (enemy[i].Type == 1)enemy[i].anime = 11;
-			if (enemy[i].Type == 2)enemy[i].anime = 19;
-			if (enemy[i].Type == 3)enemy[i].anime = 27;
-		}if (e_deg % 360 == 270) {
-			if (enemy[i].Type == 0)enemy[i].anime = 0;
-			if (enemy[i].Type == 1)enemy[i].anime = 6;
-			if (enemy[i].Type == 2)enemy[i].anime = 14;
-			if (enemy[i].Type == 3)enemy[i].anime = 22;
-		}
-		if (e_deg % 360 == 285) {
-			if (enemy[i].Type == 0)enemy[i].anime = 1;
-			if (enemy[i].Type == 1)enemy[i].anime = 7;
-			if (enemy[i].Type == 2)enemy[i].anime = 15;
-			if (enemy[i].Type == 3)enemy[i].anime = 23;
-		}
-		if (e_deg % 360 == 300) {
-			if (enemy[i].Type == 0)enemy[i].anime = 2;
-			if (enemy[i].Type == 1)enemy[i].anime = 8;
-			if (enemy[i].Type == 2)enemy[i].anime = 16;
-			if (enemy[i].Type == 3)enemy[i].anime = 24;
-		}
-		if (e_deg % 360 == 315) {
-			if (enemy[i].Type == 0)enemy[i].anime = 3;
-			if (enemy[i].Type == 1)enemy[i].anime = 9;
-			if (enemy[i].Type == 2)enemy[i].anime = 17;
-			if (enemy[i].Type == 3)enemy[i].anime = 25;
-		}if (e_deg % 360 == 330) {
-			if (enemy[i].Type == 0)enemy[i].anime = 4;
-			if (enemy[i].Type == 1)enemy[i].anime = 10;
-			if (enemy[i].Type == 2)enemy[i].anime = 18;
-			if (enemy[i].Type == 3)enemy[i].anime = 26;
-		}if (e_deg % 360 == 345) {
-			if (enemy[i].Type == 0)enemy[i].anime = 5;
-			if (enemy[i].Type == 1)enemy[i].anime = 11;
-			if (enemy[i].Type == 2)enemy[i].anime = 19;
-			if (enemy[i].Type == 3)enemy[i].anime = 27;
-		}
-		*/
+
 		if (enemy[i].Draw_Flg == true) {
-			//if (e_deg >= 0 && e_deg < 90) {
-			//DrawBox(enemy[i].x - 7, enemy[i].y - 8, enemy[i].x + 7, enemy[i].y + 9, GetColor(255, 255, 255), false);
 
 			DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[enemy[i].anime], true, 0, 0);
-			//}
-			if (e_deg >= 90 && e_deg < 180) {
-			}
+			
 		}
 	}
 
@@ -897,7 +823,6 @@ int Enemy_Stage_clear() {
 }
 
 int Enemy_Pos_Init_x(int num) {
-	
 	return enemy[num].x;
 }
 
