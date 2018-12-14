@@ -4,6 +4,12 @@
 #define LEFT -1
 #define NUMSHOT 4
 #define EnemyCount 48
+
+//選択のモード
+#define MODE_DOWN 1	//選ばれた列をそのまま下に向かってTRUEにしていく
+#define MODE_NEXT 2	//選ばれた列の次の列の上2つをTRUEにする
+
+//π
 #define PI 3.14159265359
 
 extern int Enemy_Init();
@@ -16,9 +22,9 @@ extern int Enemy_Shot(int,int,int);
 extern int Enemy_Shot_Set(int *);
 extern int EnemyShot_Move();
 extern int Enemy_Draw();
-extern int Player_Hit();
+extern int Enemy_Score();
 extern int Enemy_Hit();
-extern int Enemy_deg(int *);
+//extern int Enemy_deg(int *);
 extern int EnemyShot_Draw();
 extern int Enemy_Stage_clear();
 extern int Enemy_Pos_Init_x(int);
@@ -39,8 +45,9 @@ struct P_Enemy {
 	double vct2;
 	double speed;
 	int anime;
-	bool Move_Flg;
-	bool Attack_Move_Flg;
+	int mode;
+	//bool Move_Flg;
+	//bool Attack_Move_Flg;
 	bool Draw_Flg;
 };	//Enemy Position
 
@@ -54,5 +61,13 @@ typedef struct {	//構造体
 	int y;  //enemyのy座標
 	bool Draw_Flg;
 } S_EShot;
+
+typedef enum {
+	//MODE
+	NONE,
+	MOVE,
+	ATTACK,
+	DEL
+}MODE;
 
 #endif
