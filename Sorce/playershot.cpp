@@ -2,6 +2,7 @@
 #include"PlayerShot.h" 
 #include"Enemy.h"
 #include"Player.h"
+#include"Sound.h"
 
 //ショットの構造体
 S_PShot pbullet;
@@ -57,6 +58,8 @@ int PlayerShot_Dpct() {
 			Player_Hit_Flg[a] = false;												//この敵に当たったというフラグ
 			Player_HIT(a);															//個の敵に当たったというポインタを入れる	
 			pbullet.y = 0;															//当たったらPlayerの中に格納される
+			SetGax_Sound(5);							//enemyがやられた時の音(ここではなかった)
+
 		}
 	}
 	return Player_Shot_Flg;

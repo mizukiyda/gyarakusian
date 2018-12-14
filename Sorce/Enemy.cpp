@@ -6,6 +6,7 @@
 #include<time.h>
 #include<stdlib.h>
 
+#include"Sound.h"
 
 /********************  •Ï”éŒ¾  ****************************/
 
@@ -248,7 +249,7 @@ int Enemy_Move() {
 //¶‰EˆÚ“®‚ÅA•\¦ã‚Ì“G‚ÅØ‚è•Ô‚·ˆ— (‚½‚Ô‚ñŠ®¬)
 int Enemy_control() {
 
-	if (enemy[23].Draw_Flg == false && enemy[33].Draw_Flg == false && enemy[43].Draw_Flg == false && enemy[14].Draw_Flg == false && enemy[7].Draw_Flg == false) {
+	/*if (enemy[23].Draw_Flg == false && enemy[33].Draw_Flg == false && enemy[43].Draw_Flg == false && enemy[14].Draw_Flg == false && enemy[7].Draw_Flg == false) {
 		enemy[48].x = enemy[32].fx;
 	}
 	if (enemy[22].Draw_Flg == false && enemy[32].Draw_Flg == false && enemy[42].Draw_Flg == false && enemy[13].Draw_Flg == false && enemy[6].Draw_Flg == false) {
@@ -285,7 +286,7 @@ int Enemy_control() {
 	}
 	if (enemy[27].Draw_Flg == false && enemy[37].Draw_Flg == false && enemy[47].Draw_Flg == false) {
 		enemy[49].x = enemy[26].fx;
-	}
+	}*/
 	return 0;
 }
 
@@ -649,9 +650,12 @@ int Enemy_Shot(int x,int y,int num) {
 				ebullet[h][k].y = y + 4;
 				ebullet[h][k].Draw_Flg = true;
 				attack_enemy[h][k].enemyshot = false;
+				SetGax_Sound(4);							//enemy‚ª”­Ë‚Ì‰¹
+
 			}
 		}
 	}
+
 	return 0;
 }
 
@@ -662,6 +666,7 @@ int EnemyShot_Move() {
 
 			if (ebullet[i][j].y <= 750 && ebullet[i][j].y >= 280) {
 				ebullet[i][j].y += 5;
+
 			}
 
 		}
@@ -671,8 +676,7 @@ int EnemyShot_Move() {
 		enemy[k].Draw_Flg = Player_HIT(k);
 		
 		Enemy_State_Init(k);
-			//SetGax_Sound(5);							//enemy‚ª‚â‚ç‚ê‚½‚Ì‰¹(‚±‚±‚Å‚Í‚È‚©‚Á‚½)
-		
+
 	}
 
 	return 0;
@@ -751,7 +755,6 @@ int Enemy_Draw() {
 }
 
 int EnemyShot_Draw() {
-
 	for (i = 0; i < EnemyCount; i++) {
 		for (j = 0; j < NUMSHOT; j++) {
 			if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
@@ -770,7 +773,7 @@ int Enemy_Shot_Set(int *i) {
 		for (j = 0; j < NUMSHOT; j++) {
 			switch (j) {
 			case 0:
-				attack_enemy[*i][j].timer = 0;
+				attack_enemy[*i][j].timer = 10;
 				break;
 			case 1:
 				attack_enemy[*i][j].timer = 50;
