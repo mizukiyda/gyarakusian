@@ -24,11 +24,11 @@ int Sound_Init() {
 	LoadSoundMem…メモリにサウンドを入れる
 	*/
 	Credit_Sound = LoadSoundMem("S_Galaxian/gax_CreditSound.wav");				// クレジットSEのパス
-	Enemy_LastOne = LoadSoundMem("S_Galaxian/gax_Enemy_LastOne.wav");			// NAZO
-	Enemy_LastTwo = LoadSoundMem("S_Galaxian/gax_Enemy_LastTwo.wav");			// NAZO
+	Enemy_LastOne = LoadSoundMem("S_Galaxian/gax_Enemy_LastOne.wav");			// 敵が減ってくにつれ流す
+	Enemy_LastTwo = LoadSoundMem("S_Galaxian/gax_Enemy_LastTwo.wav");			// 敵が減ってくにつれ流す　こっちが先
 	Enemy_Attack_Sound = LoadSoundMem("S_Galaxian/gax_EnemyAttack.wav");		// 敵の発射音のパス指定
 	Enemy_Hit_Sound = LoadSoundMem("S_Galaxian/gax_HitEnemy.wav");				// 敵を倒したときのSEのパス指定
-	HitGalaxian_Sound = LoadSoundMem("S_Galaxian/gax_HitGalaxian.wav");			// NAZO
+	HitGalaxian_Sound = LoadSoundMem("S_Galaxian/gax_HitGalaxian.wav");			// 黄色い敵を倒した時
 	Player_Miss_Sound = LoadSoundMem("S_Galaxian/gax_Miss.wav");				// プレイヤーがやられた時のSEのパス指定
 	Player_Shot_Sound = LoadSoundMem("S_Galaxian/gax_Shot.wav");				// 発射音のパス指定																
 	StartMenu_Sound = LoadSoundMem("S_Galaxian/gax_StartMusic.wav");			// ｽﾀｰﾄﾒﾆｭｰBGMのパス指定
