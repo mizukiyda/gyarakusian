@@ -86,17 +86,17 @@ int Player_Dpct() {
 	/*デバッグ用なので後で書き換える*/
 	if (OnActive == true) {
 		if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {			//エンターキーを押したら爆発をする
-			Player_Remain();
+			Player_Remain();								//自機の残機数
 			OnActive = false;								//playerが死んだとき
 			SetGax_Sound(7);								//爆発音
-			remain = remain - 1;
+			remain = remain - 1;							//残機数を減らす
 		}
 	}
 
 	return PlayerShot_Flg;
 }
 
-int Player_Remain() {		//残機の処理
+int Player_Remain() {						//残機の処理
 
 	Enemy_Hit_Flg = Enemy_Hit();			//enemyからの当たり判定を入れるもの
 
@@ -105,11 +105,11 @@ int Player_Remain() {		//残機の処理
 	if (Enemy_Hit_Flg == true) {
 
 		//Draw_Flg = false;
-		if (remain > 0) {
-			remain = remain - 1;
+		if (remain > 0) {					//残機が0以上なら
+			remain = remain - 1;			//残機は一つ減った数になる
 		}
 		else {
-			Player_End();
+			Player_End();					//残機がなければゲーム終了
 		}
 	}
 
@@ -124,7 +124,7 @@ int Player_Draw() {
 		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true); //画像の拡大表示
 
 	}
-	DrawFormatString(0,100, GetColor(255, 255, 255) ,"remain:%d", remain);
+	DrawFormatString(0,100, GetColor(255, 255, 255) ,"残機数:%d", remain);      //左側の残機数(文字列)を表示
 	if (OnActive == false) {												//破壊された時のアニメーション
 
 		Player_Cnt++;
@@ -157,7 +157,7 @@ int Player_Draw() {
 			break;
 
 		}
-		if (Player_Cnt > 200) {		//もしカウントが200を
+		if (Player_Cnt > 200) {		//もしカウントが200以上なら
 			Player.x = 600;			//プレイヤーの復活場所をx座標の300にする。
 			Player_Cnt = 0;			//カウントを0にする
 			OnActive = true;		//playerが復活した時
