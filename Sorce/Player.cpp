@@ -16,8 +16,10 @@ int remain = 3;
 //攻撃に関するもの
 bool PlayerShot_Flg = 0;   //発射フラグ
 
+//bool Remain_Flg = ;
+
 //攻撃を受けたフラグ
-int Enemy_Hit_Flg = false;
+bool EnemyHit_Flg = false;
 
 //画像に関するもの
 //int None_Num = 0;				//画像のスタンバイ状態
@@ -93,27 +95,18 @@ int Player_Dpct() {
 		}
 	}
 
+	EnemyHit_Flg = Enemy_Hit();			//enemyからの当たり判定を入れるもの
+	if (EnemyHit_Flg == true) {
+		Player_Remain();
+	}
+
 	return PlayerShot_Flg;
 }
 
 int Player_Remain() {		//残機の処理
-
-	Enemy_Hit_Flg = Enemy_Hit();			//enemyからの当たり判定を入れるもの
-
-	//remain = remain - 1;
-
-	if (Enemy_Hit_Flg == true) {
-
-		//Draw_Flg = false;
-		if (remain > 0) {
-			remain = remain - 1;
-		}
-		else {
-			Player_End();
-		}
-	}
-
-	return 0;//Player_Draw;
+	OnActive = false;
+	//Remain_Flg = true;
+	return OnActive;//Player_Draw;
 }
 
 int Player_Draw() {
@@ -157,7 +150,7 @@ int Player_Draw() {
 			break;
 
 		}
-		if (Player_Cnt > 200) {		//もしカウントが200を
+		if (Player_Cnt > 800){		//もしカウントが200を
 			Player.x = 600;			//プレイヤーの復活場所をx座標の300にする。
 			Player_Cnt = 0;			//カウントを0にする
 			OnActive = true;		//playerが復活した時
