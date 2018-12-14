@@ -36,7 +36,6 @@ void Scene_Mgr_Dpct() {
 		StartMenu_Dpct();
 		break;
 	case E_Scene_StartMenu2:
-		//Rule_Dpct();
 		break;
 	case E_Scene_Game:
 		//ÉQÅ[ÉÄâÊñ 
@@ -79,7 +78,6 @@ void Scene_Mgr_Draw() {
 		EnemyShot_Draw();
 		UI_Draw();
 		Sound_Draw();
-		//StartMenu_Draw();
 
 		DrawFormatString(0, 00, GetColor(255, 255, 255), "ÉQÅ[ÉÄâÊñ ");
 
@@ -112,7 +110,6 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 		break;
 
 	case E_Scene_StartMenu2:
-		//Rule_Init();
 		break;
 
 	case E_Scene_Game:
@@ -123,8 +120,6 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 		Player_Init();
 		UI_Init();
 		Sound_Init();
-		//StartMenu_Draw();
-
 		break;
 	case E_Scene_Result:
 		Result_Init();
@@ -144,7 +139,6 @@ static void Scene_Mgr_End_Module(E_Scene scene) {
 		break;
 
 	case E_Scene_StartMenu2:
-		//Rule_End();
 		break;
 
 	case E_Scene_Game:
