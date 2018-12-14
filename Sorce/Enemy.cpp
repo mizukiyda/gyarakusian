@@ -1,6 +1,6 @@
 #include"DxLib.h"
 #include"Enemy.h"
-//#include"PlayerShot.h"
+#include"PlayerShot.h"
 #include"Player.h"
 #include<Math.h>
 #include<time.h>
@@ -188,8 +188,6 @@ int Enemy_Move() {
 	//プレイヤーの座標受け取り(真ん中)
 	epx = Player_Pos_Init_x() + 19;
 	epy = Player_Pos_Init_y() + 18;
-	//pbullet_x = PlayerShot_Pos_Init_x() + 19;
-	//pbullet_y = PlayerShot_Pos_Init_y() + 18;
 
 	Enemy_control();
 	//左右移動
@@ -670,7 +668,7 @@ int EnemyShot_Move() {
 	}
 
 	for (int k = 0; k < EnemyCount; k++) {
-		//enemy[k].Draw_Flg = Player_HIT(k);
+		enemy[k].Draw_Flg = Player_HIT(k);
 		
 		Enemy_State_Init(k);
 			//SetGax_Sound(5);							//enemyがやられた時の音(ここではなかった)
