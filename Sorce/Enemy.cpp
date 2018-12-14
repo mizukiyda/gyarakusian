@@ -569,12 +569,14 @@ int EnemyShot_Move() {
 
 		}
 	}
+	//j = Player_HIT(k);
+	//Player_Hit(j);
 	for (int k = 0; k < EnemyCount; k++) {
-		Enemy_Hit_Flg = Player_HIT(k);
-		if (Enemy_Hit_Flg == true) {
-			Player_Hit();
+		enemy[k].Draw_Flg = Player_HIT(k);
+		//if (enemy[k].Draw_Flg == false) {
+		Enemy_State_Init(k);
 			//SetGax_Sound(5);							//enemy‚ª‚â‚ç‚ê‚½Žž‚Ì‰¹(‚±‚±‚Å‚Í‚È‚©‚Á‚½)
-		}
+		//}
 	}
 	return 0;
 }
@@ -614,11 +616,12 @@ int Player_Hit() {
 				break;
 			}
 		}
-		//for (i = 0;i < EnemyCount;i++) {
-			enemy[i].Draw_Flg = false;
+
+		//enemy[Player_HIT(num)].Draw_Flg = false;
+		for (i = 0;i < EnemyCount;i++) {
 			Enemy_State_Init(i);
 
-		//}
+		}
 	//}
 	return e_score;
 }
@@ -665,12 +668,13 @@ int Enemy_deg(int *num) {
 }
 
 int Enemy_Draw() {
-
 	
-	DrawBox(epx-7, epy-8, epx + 7, epy + 9, GetColor(255, 255, 255), false);
-	DrawBox(pbullet_x, pbullet_y, pbullet_x +1, pbullet_y + 3, GetColor(255, 255, 255), false);
-	for (i = 0; i < EnemyCount+2; i++) {
 
+	//DrawBox(epx-7, epy-8, epx + 7, epy + 9, GetColor(255, 255, 255), false);
+	//DrawBox(pbullet_x, pbullet_y, pbullet_x +1, pbullet_y + 3, GetColor(255, 255, 255), false);
+	
+	for (i = 0; i < EnemyCount; i++) {
+		//DrawFormatString(10, 150,  GetColor(255, 255, 255), "%d", Player_HIT(47));
 		e_deg = enemy[i].deg;
 		e_deg = 0;
 		/*if (e_deg % 360 == 0 || e_deg == 0) {

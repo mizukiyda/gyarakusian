@@ -13,7 +13,7 @@ bool e_draw[EnemyCount];
 int Px, Py;
 int score = 0;
 S_PShot pbullet;
-bool Player_Hit_Flg[EnemyCount] = { false };	//プレイヤーの弾がenemyに当たった時のFlg
+bool Player_Hit_Flg[EnemyCount] = {true};	//プレイヤーの弾がenemyに当たった時のFlg
 int Player_Shot_Gyallaly[2];		// 画像格納変数
 int Player_None_Num;			// 画像のスタンバイ状態(静止状態)
 
@@ -24,6 +24,10 @@ int Playershot_Init() {
 	Player_Shot_Gyallaly[2];
 	LoadDivGraph("Image/Galaxian_OBJ_bullet.png", 2, 2, 1, 11, 6, Player_Shot_Gyallaly); // 画像をロード
 	Player_None_Num = 0;        //スタンバイ状態の向いてる方向を正面へするための画像番号1
+	for (int i = 0;i < EnemyCount;i++) {
+		Player_Hit_Flg[i] = true;
+	}
+	
 	return 0;
 }
 
@@ -53,7 +57,9 @@ int PlayerShot_Dpct() {
 		if (ex[a] - 25 <= pbullet.x - 10 && pbullet.x + 10 <= ex[a] + 25 &&
 			pbullet.y == ey[a] + 25 && e_draw[a] == true) {
 			Player_Shot_Flg = false;
+			Player_Hit_Flg[a] = false;
 			Player_HIT(a);
+			pbullet.y = 0;
 		}
 	}
 
@@ -62,7 +68,7 @@ int PlayerShot_Dpct() {
 
 int Player_HIT(int num) {
 
-	Player_Hit_Flg[num] = true;
+	//Player_Hit_Flg[num] = false;
 
 	return Player_Hit_Flg[num];
 }
