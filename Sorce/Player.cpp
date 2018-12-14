@@ -16,7 +16,7 @@ int remain = 3;
 //攻撃に関するもの
 bool PlayerShot_Flg = 0;   //発射フラグ
 
-//bool Remain_Flg = ;
+bool Remain_Flg = false;
 
 //攻撃を受けたフラグ
 bool EnemyHit_Flg = false;
@@ -88,25 +88,27 @@ int Player_Dpct() {
 	/*デバッグ用なので後で書き換える*/
 	if (OnActive == true) {
 		if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {			//エンターキーを押したら爆発をする
-			Player_Remain();
+			//Player_Remain();
 			OnActive = false;								//playerが死んだとき
-			SetGax_Sound(7);								//爆発音
-			remain = remain - 1;
+			//SetGax_Sound(7);								//爆発音
+			//remain = remain - 1;
 		}
 	}
 
-	EnemyHit_Flg = Enemy_Hit();			//enemyからの当たり判定を入れるもの
+	/*EnemyHit_Flg = Enemy_Hit();			//enemyからの当たり判定を入れるもの
 	if (EnemyHit_Flg == true) {
 		Player_Remain();
-	}
+	}*/
 
 	return PlayerShot_Flg;
 }
 
 int Player_Remain() {		//残機の処理
-	OnActive = false;
-	//Remain_Flg = true;
-	return OnActive;//Player_Draw;
+	
+	if (OnActive == false) {
+		Remain_Flg = true;
+	}
+	return Remain_Flg;//Player_Draw;
 }
 
 int Player_Draw() {
