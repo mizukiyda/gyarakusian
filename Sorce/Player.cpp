@@ -5,6 +5,7 @@
 #include"PlayerShot.h"
 #include"Sound.h"
 
+
 //プレイヤー
 S_Player Player;
 
@@ -102,6 +103,7 @@ int Player_Remain() {		//残機の処理
 			remain--;
 			HitFlg = false;
 	}
+	
 	return remain;
 }
 

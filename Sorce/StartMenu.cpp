@@ -36,16 +36,17 @@ int StartMenu_Dpct() {
 	if (Keyboard_Get(KEY_INPUT_DOWN) == 1) {
 		SelectNum = (SelectNum + 1) % 2;											// 現在の選択項目を一つ下にずらす
 	}
-	for (int i = 0; i<2; i++) {														// メニュー項目数である5個ループ処理
+	for (int i = 0; i<3; i++) {														// メニュー項目数である5個ループ処理
 		if (i == SelectNum) {														// 今処理しているのが、選択番号と同じ要素なら
 			MenuElement[i].x = 80;													// 座標を80にする
 			if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {								//座標が80になっている項目でスペースキーを押すと
 																					//その項目の中に入る
 				switch (i) {
 				case 0:
-					Scene_Mgr_ChangeScene(E_Scene_Game);
+					Scene_Mgr_ChangeScene(E_Scene_StartMenu2);
 					SetGax_Sound(9);
 					break;
+				
 				case 1:
 					Scene_Mgr_End();
 					DxLib_End(); // DXライブラリ終了処理
