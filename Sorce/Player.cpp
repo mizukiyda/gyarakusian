@@ -4,8 +4,7 @@
 #include"Enemy.h"
 #include"PlayerShot.h"
 #include"Sound.h"
-#include"Scene_Mgr.h"
-#include"StartMenu.h"
+
 
 //プレイヤー
 S_Player Player;
@@ -104,9 +103,7 @@ int Player_Remain() {		//残機の処理
 			remain--;
 			HitFlg = false;
 	}
-	if (remain == 0) {
-		Scene_Mgr_ChangeScene(E_Scene_StartMenu);
-	}
+	
 	return remain;
 }
 
