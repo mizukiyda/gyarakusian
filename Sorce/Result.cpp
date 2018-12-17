@@ -3,27 +3,24 @@
 #include "StartMenu.h"
 #include "Keyboard.h"
 #include "Scene_Mgr.h"
-#include "Player.h"
 
 MenuElement_t ResultMenuElement[MENU_ELEMENT_MAX]{
-{ 100 , 200 , "Retry" },
-{ 100 , 300 , "Title"  },
-{ 100 , 400 , "Exit "}
+{ 100 , 200 , "Next" },
+{ 100 , 300 , "Title" },
+{ 100 , 400 , "Exit" }
 };
 
 //ここで変数を宣言（C++を使わないのでグローバル変数）
 
 
 static int SelectNum;
-int reborn;
+
 
 // Init 初期化
 int Result_Init() {
 	//ここで初期化をする
 	//step_count = UI_StepCount();			UIができたらコメントをはずす
 	SelectNum = 0;
-	reborn = 3;
-
 	return 0;
 }
 
@@ -47,9 +44,24 @@ int Result_Dpct() {
 														//その項目の中に入る
 				int tmp;
 				switch (i) {
-				case 0:
+				/*case 0:
+					// 次のステージへ
+					// 次のステージの敵の配列を入れる
+
 					Scene_Mgr_ChangeScene(E_Scene_Game);
-					break;
+
+
+
+
+					tmp = MAP_GetHandleflag();
+						//Scene_Mgr_ChangeScene(E_Scene_StartMenu);
+					else {
+						MAP_SetHandleflag(tmp + 1);
+						Scene_Mgr_ChangeScene(E_Scene_Game);
+					}
+
+
+					break;	*/
 				case 1:
 					Scene_Mgr_ChangeScene(E_Scene_StartMenu);
 					break;
@@ -66,7 +78,7 @@ int Result_Dpct() {
 		}
 	}
 
-	return reborn;
+	return 0;
 }
 
 int Result_Draw() {
@@ -76,7 +88,7 @@ int Result_Draw() {
 	DrawFormatString(100, 100, GetColor(255, 255, 255), "りざると");
 
 	for (int i = 0; i<MENU_ELEMENT_MAX; i++) { // メニュー項目を描画
-		DrawFormatString(ResultMenuElement[i].x, ResultMenuElement[i].y, GetColor(355, 355, 355), ResultMenuElement[i].name);
+		DrawFormatString(ResultMenuElement[i].x, ResultMenuElement[i].y, GetColor(255, 255, 255), ResultMenuElement[i].name);
 	}
 
 	return 0;
