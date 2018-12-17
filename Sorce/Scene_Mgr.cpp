@@ -7,7 +7,7 @@
 #include "PlayerShot.h"
 #include "UI.h"
 #include "Sound.h"
-//#include"Rule.h"
+#include "Rule.h"
 
 static E_Scene Sceneflag = E_Scene_StartMenu;		//今のシーン
 static E_Scene n_Sceneflag = E_Scene_None;			//次のシーン
@@ -34,6 +34,7 @@ void Scene_Mgr_Dpct() {
 	case E_Scene_StartMenu:
 		//スタートメニュー
 		StartMenu_Dpct();
+		
 		break;
 	case E_Scene_StartMenu2:
 		break;
@@ -45,6 +46,7 @@ void Scene_Mgr_Dpct() {
 		Player_Dpct();
 		UI_Dpct();
 		Sound_Dpct();
+		Player_Remain();
 		break;
 	case E_Scene_Result:
 		Result_Dpct();

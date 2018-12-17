@@ -1,15 +1,17 @@
-#include"Dxlib.h"
-#include"Player.h"
-#include"keyboard.h"
-#include"Enemy.h"
-#include"PlayerShot.h"
-#include"Sound.h"
+#include "Dxlib.h"
+#include "Player.h"
+#include "keyboard.h"
+#include "Enemy.h"
+#include "PlayerShot.h"
+#include "Sound.h"
+#include "Scene_Mgr.h"
+#include "Result.h"
 
 //プレイヤー
 S_Player Player;
 
 //残機
-int remain = 123;
+int remain = 3;
 
 //bool Draw_Flg = true;
 int HitFlg = false;
@@ -84,7 +86,6 @@ int Player_Dpct() {
 	}
 
 	EnemyHit_Flg = EnemyShot_Move();									//enemyからの当たり判定を入れるもの
-	//if (OnActive == true) {
 		if (EnemyHit_Flg == true) {
 			Player_Remain();	//Remainへ飛ぶ
 			OnActive = false;										//playerが死んだとき
@@ -92,15 +93,20 @@ int Player_Dpct() {
 			Player_Hit();
 			HitFlg = true;
 		}
-	//}
+
+		remain = 0;
 
 	return PlayerShot_Flg;
 }
 
 int Player_Remain() {		//残機の処理
 	if (HitFlg == true) {
-			remain--;
+			remain -- ;
 			HitFlg = false;
+	}
+
+	if ( (int) remain < 1) {
+		Scene_Mgr_ChangeScene(E_Scene_Result);
 	}
 	return remain;
 }
@@ -118,7 +124,7 @@ int Player_Draw() {
 		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true);			//画像の拡大表示
 
 	}
-	DrawFormatString(0,100, GetColor(255, 255, 255) ,"remain:%d", remain / 41);
+	DrawFormatString(0,100, GetColor(255, 255, 255) ,"remain:%d", remain);
 	if (OnActive == false) {													//破壊された時のアニメーション
 
 		Player_Cnt++;

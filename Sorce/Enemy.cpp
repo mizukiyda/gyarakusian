@@ -669,7 +669,7 @@ int EnemyShot_Move() {
 				ebullet[i][j].y += 3;
 
 			}
-			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy - 20 >= ebullet[i][j].y) {//+ 3 && epy  <= ebullet[i][j].y) {
+			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy == ebullet[i][j].y) {//+ 3 && epy  <= ebullet[i][j].y) {
 				Enemy_Hit_Flg = true;
 				ebullet[i][j].Draw_Flg = false;
 			}
