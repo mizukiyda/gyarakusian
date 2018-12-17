@@ -5,7 +5,6 @@
 #include<Math.h>
 #include<time.h>
 #include<stdlib.h>
-
 #include"Sound.h"
 
 /********************  変数宣言  ****************************/
@@ -177,8 +176,6 @@ int Enemy_Init() {
 
 	SRand(GetDateTime(&Date));
 
-	epx = 500;  //debug
-	epy = 600;  //degug
 	e_score = 0;
 
 	return 0;
@@ -187,10 +184,11 @@ int Enemy_Init() {
 int Enemy_Move() {
 
 	//プレイヤーの座標受け取り(真ん中)
-	epx = Player_Pos_Init_x() + 19;
-	epy = Player_Pos_Init_y() + 18;
+	epx = Player_Pos_Init_x() ;
+	epy = Player_Pos_Init_y() ;
 
 	Enemy_control();
+
 	//左右移動
 	if ((enemy[49].x > 1080.0 || enemy[48].x < 200.0)) {
 		speed *= -1;
@@ -239,7 +237,6 @@ int Enemy_Move() {
 				cntYellow++;
 			}
 		}
-
 	}
 
 	Enemy_Stage_clear();
@@ -298,6 +295,7 @@ int Enemy_Move_Flg(int num_i) {
 
 	for (j = num_i + 4; j < num_i + 7; j++) {
 		if (enemy[j].Draw_Flg == true) {
+			SetGax_Sound(4);
 			enemy[j].mode = ATTACK;
 			e_count[j] = 0;
 			cntRed++;
@@ -651,7 +649,6 @@ int Enemy_Shot(int x,int y,int num) {
 				ebullet[h][k].Draw_Flg = true;
 				attack_enemy[h][k].enemyshot = false;
 				SetGax_Sound(4);							//enemyが発射の音
-
 			}
 		}
 	}
@@ -669,6 +666,10 @@ int EnemyShot_Move() {
 
 			}
 
+			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy - 20 >= ebullet[i][j].y) {//+ 3 && epy  <= ebullet[i][j].y) {
+				Enemy_Hit_Flg = true;
+				ebullet[i][j].Draw_Flg = false;
+			}
 		}
 	}
 
@@ -678,7 +679,6 @@ int EnemyShot_Move() {
 		Enemy_State_Init(k);
 
 	}
-
 	return 0;
 }
 
@@ -728,15 +728,14 @@ int Enemy_Score() {
 //敵の弾の当たり判定
 int Enemy_Hit() {
 
-	for (i = 0; i < EnemyCount; i++) {
+	/*for (i = 0; i < EnemyCount; i++) {
 		for (j = 0; j < NUMSHOT; j++) {
-
-			if (epx - 7 >= ebullet[i][j].x && epx + 7 <= ebullet[i][j].x && epy - 8 >= ebullet[i][j].y + 3 && epy +9 <= ebullet[i][j].y) {
+			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy - 20  >= ebullet[i][j].y ){//+ 3 && epy  <= ebullet[i][j].y) {
 				Enemy_Hit_Flg = true;
+				ebullet[i][j].Draw_Flg = false;
 			}
-
 		}
-	}
+	}*/
 	return Enemy_Hit_Flg;
 }
 
@@ -755,13 +754,20 @@ int Enemy_Draw() {
 }
 
 int EnemyShot_Draw() {
-	for (i = 0; i < EnemyCount; i++) {
-		for (j = 0; j < NUMSHOT; j++) {
-			if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
-				DrawRotaGraph(ebullet[i][j].x , ebullet[i][j].y , 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
+	if (ebullet[i][j].Draw_Flg = true) {
+		for (i = 0; i < EnemyCount; i++) {
+			for (j = 0; j < NUMSHOT; j++) {
+				if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
+					DrawRotaGraph(ebullet[i][j].x, ebullet[i][j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
+				}
+				DrawBox(ebullet[i][j].x, ebullet[i][j].y, ebullet[i][j].x + 5, ebullet[i][j].y + 5, GetColor(255, 255, 255), true);
+
 			}
 		}
 	}
+	//DrawBox(epx-10, epy-20, epx + 20, epy, GetColor(255, 255, 255), true);
+	//DrawLine(epx, 0, epx, 1080, GetColor(255, 255, 255), true);
+	//DrawLine(0, epy, 820, epy, GetColor(255, 255, 255), true);
 	return 0;
 }
 
@@ -793,6 +799,9 @@ int Enemy_Shot_Set(int *i) {
 				else {
 					attack_enemy[*i][j].timer = 10000;
 				}
+				break;
+			case 4:
+				attack_enemy[*i][j].timer = 10000;
 				break;
 			}
 		}
