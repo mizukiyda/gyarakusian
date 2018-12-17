@@ -47,6 +47,9 @@ int Result_Dpct() {
 				int tmp;
 				switch (i) {
 				
+				case 0:
+					Scene_Mgr_ChangeScene(E_Scene_Game);
+					break;
 				case 1:
 					Scene_Mgr_ChangeScene(E_Scene_StartMenu);
 					break;
