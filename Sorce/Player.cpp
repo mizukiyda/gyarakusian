@@ -5,6 +5,7 @@
 #include "PlayerShot.h"
 #include "Sound.h"
 #include "Scene_Mgr.h"
+#include"Result.h"
 
 
 //プレイヤー
@@ -34,7 +35,7 @@ int Player_Cnt;							//画像表示用カウント
 int OnActive = true;					//Playerが生きている状態
 
 int Player_Init() {
-
+	remain = Result_Dpct();
 	//プレイヤーの初期位置
 	Player.x = 300;
 	Player.y = 600;
