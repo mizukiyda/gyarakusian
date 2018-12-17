@@ -23,7 +23,9 @@ int Rule_Dpct() {
 }
 
 int Rule_Draw() {
-	DrawGraph(0, 0,Rule,TRUE);
+	//DrawGraph(0, 0,Rule,TRUE);
+	DrawRotaGraph(600, 370, 3.5, 0,Rule, TRUE);
+
 	return 0;
 
 }
