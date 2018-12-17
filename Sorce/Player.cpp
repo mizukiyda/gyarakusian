@@ -9,9 +9,10 @@
 S_Player Player;
 
 //残機
-int remain = 3;
+int remain = 123;
 
 //bool Draw_Flg = true;
+int HitFlg = false;
 
 //攻撃に関するもの
 bool PlayerShot_Flg = 0;				//発射フラグ
@@ -82,29 +83,32 @@ int Player_Dpct() {
 		Player.x = 1000;
 	}
 
-	/*デバッグ用なので後で書き換える*/
-	if (OnActive == true) {
-		if (Keyboard_Get(KEY_INPUT_RETURN) == 1) {					//エンターキーを押したら爆発をする
-			//Player_Remain();
+	EnemyHit_Flg = EnemyShot_Move();									//enemyからの当たり判定を入れるもの
+	//if (OnActive == true) {
+		if (EnemyHit_Flg == true) {
+			Player_Remain();	//Remainへ飛ぶ
 			OnActive = false;										//playerが死んだとき
 			SetGax_Sound(7);										//爆発音
+			Player_Hit();
+			HitFlg = true;
 		}
-	}
-
-	/*EnemyHit_Flg = Enemy_Hit();									//enemyからの当たり判定を入れるもの
-	if (EnemyHit_Flg == true) {
-		Player_Remain();											//Remainへ飛ぶ
-	}*/
+	//}
 
 	return PlayerShot_Flg;
 }
 
 int Player_Remain() {		//残機の処理
-	
-	if (OnActive == false) {										//死んでいるのなら
-		Remain_Flg = true;											//復活フラグをtrueで渡す
+	if (HitFlg == true) {
+			remain--;
+			HitFlg = false;
 	}
-	return Remain_Flg;
+	return remain;
+}
+
+int Player_Hit() {
+
+	EnemyHit_Flg = false;
+	return EnemyHit_Flg;
 }
 
 int Player_Draw() {
@@ -114,7 +118,7 @@ int Player_Draw() {
 		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true);			//画像の拡大表示
 
 	}
-	DrawFormatString(0,100, GetColor(255, 255, 255) ,"remain:%d", remain);
+	DrawFormatString(0,100, GetColor(255, 255, 255) ,"remain:%d", remain / 41);
 	if (OnActive == false) {													//破壊された時のアニメーション
 
 		Player_Cnt++;
@@ -142,7 +146,7 @@ int Player_Draw() {
 			break;
 
 		}
-		if (Player_Cnt > 800){		//もしカウントが200を
+		if (Player_Cnt > 400){		//もしカウントが200を
 			Player.x = 600;			//プレイヤーの復活場所をx座標の300にする。
 			Player_Cnt = 0;			//カウントを0にする
 			OnActive = true;		//playerが復活した時

@@ -22,7 +22,7 @@ extern int Enemy_Shot(int,int,int);
 extern int Enemy_Shot_Set(int *);
 extern int EnemyShot_Move();
 extern int Enemy_Draw();
-extern int Enemy_Score();
+extern int Enemy_Score(int);
 extern int Enemy_Hit();
 //extern int Enemy_deg(int *);
 extern int EnemyShot_Draw();
@@ -48,7 +48,7 @@ struct P_Enemy {
 	int mode;
 	//bool Move_Flg;
 	//bool Attack_Move_Flg;
-	bool Draw_Flg;
+	int Draw_Flg;
 };	//Enemy Position
 
 typedef struct {

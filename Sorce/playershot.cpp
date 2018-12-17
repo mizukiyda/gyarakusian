@@ -7,13 +7,16 @@
 //ショットの構造体
 S_PShot pbullet;
 
+//どのタイプの敵を倒したかの判別
+S_EnemyType Mode;
+
 int a;
 int Player_Shot_Flg = 0;					//プレイヤーが球を打つ時のフラグ
 int Player_Shotcnt_y;						//弾を動かす
 int ex[EnemyCount];							//enemyの数分のｘ座標
 int ey[EnemyCount];							//enemyの数分のｙ座標
 bool e_draw[EnemyCount];					//enmeyの生存確認
-bool Player_Hit_Flg[EnemyCount] = {true};	//enmeyの生存確認で当たっていない状態
+bool Player_Hit_Flg[EnemyCount] = {Draw_ON};	//enmeyの生存確認で当たっていない状態
 int Player_Shot_Gyallaly[2];				// 画像格納変数
 int Player_None_Num;						// 画像のスタンバイ状態(静止状態)
 
@@ -24,8 +27,9 @@ int Playershot_Init() {
 	LoadDivGraph("Image/Galaxian_OBJ_bullet.png", 2, 2, 1, 11, 6, Player_Shot_Gyallaly);		// 画像をロード
 	Player_None_Num = 0;																		//スタンバイ状態の向いてる方向を正面へするための画像番号1
 	for (int i = 0;i < EnemyCount;i++) {														
-		Player_Hit_Flg[i] = true;																//初期化処理として全員当たっていない
+		Player_Hit_Flg[i] = Draw_ON;																//初期化処理として全員当たっていない
 	}
+
 	return 0;
 }
 
@@ -53,9 +57,9 @@ int PlayerShot_Dpct() {
 
 	for (a = 0;a < EnemyCount;a++) {
 		if (ex[a] - 25 <= pbullet.x - 10 && pbullet.x + 10 <= ex[a] + 25 &&			//enemyとの当たり判定
-			pbullet.y == ey[a] + 25 && e_draw[a] == true) {
+			pbullet.y == ey[a] + 25 && e_draw[a] == Draw_ON) {
 			Player_Shot_Flg = false;												//弾を消す
-			Player_Hit_Flg[a] = false;												//この敵に当たったというフラグ
+			Player_Hit_Flg[a] = Draw_OFF;												//この敵に当たったというフラグ
 			Player_HIT(a);															//個の敵に当たったというポインタを入れる	
 			pbullet.y = 0;															//当たったらPlayerの中に格納される
 			SetGax_Sound(5);							//enemyがやられた時の音(ここではなかった)

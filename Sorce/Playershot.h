@@ -13,3 +13,10 @@ typedef struct {
 	int y;  //プレイヤーのy座標
 
 }S_PShot;
+
+typedef enum {
+
+	Draw_ON,		//表示
+	Draw_OFF,		//非表示	
+	Breaken			//破壊された
+} S_EnemyType;
