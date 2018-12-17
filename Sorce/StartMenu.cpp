@@ -16,11 +16,11 @@ static int SelectNum;								//選択してる番号
 int StartMenu_Init() {
 	//ここで初期化をする
 	
-	 SelectNum = 0; // 現在の選択番号
-	Image.Start = LoadGraph("Image/Start.png");								//スタートを選択している画像
-    Image.On_Start = LoadGraph("Image/Start2.png");							//スタートを選択していない画像
-	 Image.End = LoadGraph("Image/End.png");								//エンドを選択している画像
-	 Image.On_End = LoadGraph("Image/End2.png");							//エンドを選択していない画像
+	SelectNum      = 0; // 現在の選択番号
+	Image.Start    = LoadGraph("Image/Start.png");				//スタートを選択している画像
+    Image.On_Start = LoadGraph("Image/Start2.png");				//スタートを選択していない画像
+	Image.End      = LoadGraph("Image/End.png");				//エンドを選択している画像
+	Image.On_End   = LoadGraph("Image/End2.png");				//エンドを選択していない画像
 
 	return 0;
 }
@@ -72,6 +72,7 @@ int StartMenu_Draw() {
 		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.On_End, TRUE);
 		break;
 	case 1:
+
 	case -1://エンド項目
 		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.On_Start, TRUE);
 		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.End, TRUE);
