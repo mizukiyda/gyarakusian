@@ -7,7 +7,7 @@
 #include "PlayerShot.h"
 #include "UI.h"
 #include "Sound.h"
-//#include"Rule.h"
+#include"rule.h"
 
 static E_Scene Sceneflag = E_Scene_StartMenu;		//今のシーン
 static E_Scene n_Sceneflag = E_Scene_None;			//次のシーン
@@ -36,6 +36,7 @@ void Scene_Mgr_Dpct() {
 		StartMenu_Dpct();
 		break;
 	case E_Scene_StartMenu2:
+		Rule_Dpct();
 		break;
 	case E_Scene_Game:
 		//ゲーム画面
@@ -43,6 +44,7 @@ void Scene_Mgr_Dpct() {
 		PlayerShot_Dpct();
 		EnemyShot_Move();
 		Player_Dpct();
+
 		UI_Dpct();
 		Sound_Dpct();
 		break;
@@ -66,7 +68,7 @@ void Scene_Mgr_Draw() {
 
 	case E_Scene_StartMenu2:
 		//エネミーのスコアの確認
-		//Rule_Draw();
+		Rule_Draw();
 		DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー2");
 		break;
 
@@ -110,6 +112,7 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 		break;
 
 	case E_Scene_StartMenu2:
+		Rule_Init();
 		break;
 
 	case E_Scene_Game:
@@ -139,6 +142,7 @@ static void Scene_Mgr_End_Module(E_Scene scene) {
 		break;
 
 	case E_Scene_StartMenu2:
+		Rule_End();
 		break;
 
 	case E_Scene_Game:
