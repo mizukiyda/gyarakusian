@@ -727,9 +727,9 @@ int Enemy_Hit() {
 
 	for (i = 0; i < EnemyCount; i++) {
 		for (j = 0; j < NUMSHOT; j++) {
-			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy  == ebullet[i][j].y ){//+ 3 && epy  <= ebullet[i][j].y) {
+			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy-10  >= ebullet[i][j].y ){//+ 3 && epy  <= ebullet[i][j].y) {
 				Enemy_Hit_Flg = true;
-				Enemy_Shot_Draw = false;
+				ebullet[i][j].Draw_Flg = false;
 			}
 		}
 	}
@@ -751,18 +751,19 @@ int Enemy_Draw() {
 }
 
 int EnemyShot_Draw() {
-	if (Enemy_Shot_Draw = true) {
-		for (i = 0; i < EnemyCount; i++) {
-			for (j = 0; j < NUMSHOT; j++) {
-				if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
-					DrawRotaGraph(ebullet[i][j].x, ebullet[i][j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
-				}
-				DrawBox(ebullet[i][j].x, ebullet[i][j].y, ebullet[i][j].x + 5, ebullet[i][j].y + 5, GetColor(255, 255, 255), true);
-
+	
+	for (i = 0; i < EnemyCount; i++) {
+		for (j = 0; j < NUMSHOT; j++) {
+			if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
+				DrawRotaGraph(ebullet[i][j].x, ebullet[i][j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
 			}
+			DrawBox(ebullet[i][j].x, ebullet[i][j].y, ebullet[i][j].x + 5, ebullet[i][j].y + 5, GetColor(255, 255, 255), true);
+
 		}
 	}
-	DrawBox(epx-10, epy-10, epx + 20, epy + 20, GetColor(255, 255, 255), true);
+	DrawBox(epx, epy, epx + 20, epy + 20, GetColor(255, 255, 255), true);
+	DrawLine(epx, 0, epx, 1080, GetColor(255, 255, 255), false);
+	DrawLine(0, epy, 820, epy, GetColor(255, 255, 255), false);
 	return 0;
 }
 
