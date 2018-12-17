@@ -2,7 +2,7 @@
 #define INCLUDE_ENEMY
 #define RIGHT 1
 #define LEFT -1
-#define NUMSHOT 4
+#define NUMSHOT 5
 #define EnemyCount 48
 
 //‘I‘ğ‚Ìƒ‚[ƒh

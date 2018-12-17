@@ -66,9 +66,6 @@ int Enemy_None_Num;
 //Enemyが当てられたフラグ
 bool Enemy_Hit_Flg;
 
-//EnemyがPlayerにあてたときに描写を消すフラグ
-bool Enemy_Shot_Draw = true;
-
 //Enemyで数えたスコア
 int e_score;
 
@@ -298,6 +295,7 @@ int Enemy_Move_Flg(int num_i) {
 
 	for (j = num_i + 4; j < num_i + 7; j++) {
 		if (enemy[j].Draw_Flg == true) {
+			SetGax_Sound(4);
 			enemy[j].mode = ATTACK;
 			e_count[j] = 0;
 			cntRed++;
@@ -667,6 +665,11 @@ int EnemyShot_Move() {
 				ebullet[i][j].y += 5;
 
 			}
+
+			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy - 20 >= ebullet[i][j].y) {//+ 3 && epy  <= ebullet[i][j].y) {
+				Enemy_Hit_Flg = true;
+				ebullet[i][j].Draw_Flg = false;
+			}
 		}
 	}
 
@@ -725,14 +728,14 @@ int Enemy_Score() {
 //敵の弾の当たり判定
 int Enemy_Hit() {
 
-	for (i = 0; i < EnemyCount; i++) {
+	/*for (i = 0; i < EnemyCount; i++) {
 		for (j = 0; j < NUMSHOT; j++) {
-			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy-10  >= ebullet[i][j].y ){//+ 3 && epy  <= ebullet[i][j].y) {
+			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy - 20  >= ebullet[i][j].y ){//+ 3 && epy  <= ebullet[i][j].y) {
 				Enemy_Hit_Flg = true;
 				ebullet[i][j].Draw_Flg = false;
 			}
 		}
-	}
+	}*/
 	return Enemy_Hit_Flg;
 }
 
@@ -751,19 +754,20 @@ int Enemy_Draw() {
 }
 
 int EnemyShot_Draw() {
-	
-	for (i = 0; i < EnemyCount; i++) {
-		for (j = 0; j < NUMSHOT; j++) {
-			if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
-				DrawRotaGraph(ebullet[i][j].x, ebullet[i][j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
-			}
-			DrawBox(ebullet[i][j].x, ebullet[i][j].y, ebullet[i][j].x + 5, ebullet[i][j].y + 5, GetColor(255, 255, 255), true);
+	if (ebullet[i][j].Draw_Flg = true) {
+		for (i = 0; i < EnemyCount; i++) {
+			for (j = 0; j < NUMSHOT; j++) {
+				if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
+					DrawRotaGraph(ebullet[i][j].x, ebullet[i][j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
+				}
+				DrawBox(ebullet[i][j].x, ebullet[i][j].y, ebullet[i][j].x + 5, ebullet[i][j].y + 5, GetColor(255, 255, 255), true);
 
+			}
 		}
 	}
-	DrawBox(epx, epy, epx + 20, epy + 20, GetColor(255, 255, 255), true);
-	DrawLine(epx, 0, epx, 1080, GetColor(255, 255, 255), false);
-	DrawLine(0, epy, 820, epy, GetColor(255, 255, 255), false);
+	//DrawBox(epx-10, epy-20, epx + 20, epy, GetColor(255, 255, 255), true);
+	//DrawLine(epx, 0, epx, 1080, GetColor(255, 255, 255), true);
+	//DrawLine(0, epy, 820, epy, GetColor(255, 255, 255), true);
 	return 0;
 }
 
@@ -795,6 +799,9 @@ int Enemy_Shot_Set(int *i) {
 				else {
 					attack_enemy[*i][j].timer = 10000;
 				}
+				break;
+			case 4:
+				attack_enemy[*i][j].timer = 10000;
 				break;
 			}
 		}
