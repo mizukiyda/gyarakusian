@@ -2,7 +2,7 @@
 #define INCLUDE_ENEMY
 #define RIGHT 1
 #define LEFT -1
-#define NUMSHOT 5
+#define NUMSHOT 30
 #define EnemyCount 48
 
 //選択のモード
@@ -18,14 +18,18 @@ extern int Enemy_Move_Flg(int);
 extern int Enemy_control();
 extern int Enemy_Attack_Chose();
 extern int Enemy_Attack_Move(int *);
-extern int Enemy_Shot(int,int,int);
-extern int Enemy_Shot_Set(int *);
-extern int EnemyShot_Move();
 extern int Enemy_Draw();
 extern int Enemy_Score(int);
 extern int Enemy_Hit();
 //extern int Enemy_deg(int *);
+
+//敵の弾関連の定義
+extern int EnemyShot_Mgr();
+extern int EnemyShot();
+extern int EnemyShot_Move();
+extern int EnemyShot_Move();
 extern int EnemyShot_Draw();
+
 extern int Enemy_Stage_clear();
 extern int Enemy_Pos_Init_x(int);
 extern int Enemy_Pos_Init_y(int);
@@ -45,22 +49,18 @@ struct P_Enemy {
 	double vct2;
 	double speed;
 	int anime;
+	int anime_cnt;
 	int mode;
-	//bool Move_Flg;
-	//bool Attack_Move_Flg;
 	int Draw_Flg;
 };	//Enemy Position
-
-typedef struct {
-	int timer;
-	bool enemyshot;
-}A_Enemy;	//Enemy Atack
 
 typedef struct {	//構造体
 	int x;  //enemyのx座標
 	int y;  //enemyのy座標
 	bool Draw_Flg;
 } S_EShot;
+
+
 
 typedef enum {
 	//MODE
@@ -69,5 +69,30 @@ typedef enum {
 	ATTACK,
 	DEL
 }MODE;
+
+
+//敵のタイプ
+typedef enum {
+	YELLOW,
+	RED,
+	PURPLE,
+	BLUE
+}TYPE;
+
+//
+typedef enum {
+	SHOT_POINT_FIRST = 280,
+	SHOT_POINT_SECOND  = 290,
+	SHOT_POINT_THIRD  = 300,
+	SHOT_POINT_FOURTH  = 310
+}SHOTPOINT;
+
+typedef enum {
+
+	Draw_ON,		//表示
+	Draw_OFF,		//非表示	
+	Draw_Anime,
+	Breaken			//破壊された
+} S_EnemyType;
 
 #endif

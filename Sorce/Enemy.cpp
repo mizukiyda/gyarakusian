@@ -11,13 +11,15 @@
 
 P_Enemy enemy[50];
 
-A_Enemy attack_enemy[48][NUMSHOT];
-
-S_EShot ebullet[EnemyCount][NUMSHOT];
+S_EShot ebullet[NUMSHOT];
 
 MODE mode;
 
 S_EnemyType E_State;
+
+TYPE type;
+
+SHOTPOINT S_Point;
 
 DATEDATA Date;
 
@@ -71,6 +73,8 @@ bool Enemy_Hit_Flg = false;
 //Enemyで数えたスコア
 int e_score;
 
+static int Shot_Set = 0;
+
 int timerEnemy = 0;
 int cntAttack = 0;
 
@@ -115,6 +119,7 @@ int Enemy_Init() {
 		enemy[i].speed = 1;
 		enemy[i].x = enemy[i].fx;
 		enemy[i].y = enemy[i].fy;
+		enemy[i].anime_cnt = 0;
 		enemy[i].mode = NONE;
 		enemy[i].Draw_Flg = Draw_ON;
 		enemy[1].Draw_Flg = Draw_OFF;
@@ -155,15 +160,12 @@ int Enemy_Init() {
 	timerEnemy = 0;
 	cntRed = 0;
 
-	for (i = 0; i < EnemyCount; i++) {
-		for (j = 0; j < NUMSHOT; j++) {
-			attack_enemy[i][j].timer = 300;
-			attack_enemy[i][j].enemyshot = false;
+	for (i = 0; i < NUMSHOT; i++) {
 
-			ebullet[i][j].x = 10;
-			ebullet[i][j].y = 750;
-			ebullet[i][j].Draw_Flg = false;
-		}
+		ebullet[i].x = 10;
+		ebullet[i].y = 750;
+		ebullet[i].Draw_Flg = false;
+
 	}
 
 	for (i = 0; i < 4; i++) {
@@ -203,36 +205,29 @@ int Enemy_Move() {
 
 		//ここで動く敵の順番を選択
 		Enemy_Attack_Chose();		
+		if (enemy[i].Draw_Flg == Draw_ON) {
+			switch (enemy[i].mode) {
 
-		if (enemy[i].mode == NONE ) { //攻撃時じゃないとき左右移動
-			enemy[i].x += speed;
-		}
-	    //攻撃時の移動
-		if (enemy[i].mode == ATTACK) {
+			case NONE:
+				enemy[i].x += speed;
+				break;
 
-			//Enemy_deg(&i);
+			case ATTACK:
+				Enemy_Attack_Move(&i);
+				break;
 
-			Enemy_Attack_Move(&i);
-
-		}
-
-		if (enemy[i].mode == MOVE) {
-
-			enemy[i].y += 1;
-			enemy[i].x += speed;
-		}
-
-		if (enemy[i].y <= 280) {
-
-			Enemy_Shot_Set(&i);
-
+			case MOVE:
+				enemy[i].y += 1;
+				enemy[i].x += speed;
+				if (enemy[i].mode == MOVE && enemy[i].y == enemy[i].fy) {
+					enemy[i].mode = NONE;
+				}
+				break;
+			}
 		}
 
-		if (enemy[i].mode == MOVE && enemy[i].y == enemy[i].fy) {
-			
-			enemy[i].mode = NONE;
-		}
-
+		EnemyShot_Mgr();
+		
 		cntYellow = 0;
 		for (j = 0; j < 4; j++) {
 			if (enemy[j].Draw_Flg == Draw_ON) {
@@ -466,7 +461,7 @@ int Enemy_Attack_Chose() {
 									enemy[j].mode = ATTACK;
 									ne = j + 7;
 									timer = 3000;
-									goto CHOSE;
+									return 0;
 								}
 							}
 							for (j = 17; j >= 10 ; j++) {
@@ -474,7 +469,7 @@ int Enemy_Attack_Chose() {
 									enemy[j].mode = ATTACK;
 									ne = j + 9;
 									timer = 3000;
-									goto CHOSE;
+									return 0;
 								}
 							}
 							for (j = 27; j >= 18; j--) {
@@ -495,7 +490,7 @@ int Enemy_Attack_Chose() {
 								}
 								ne = j + 10;
 								timer = 3000;
-								goto CHOSE;
+								return 0;
 							}
 						}
 					}
@@ -543,7 +538,7 @@ int Enemy_Attack_Chose() {
 								enemy[j].mode = ATTACK;
 								ne = j + 7;
 								timer = 3000;
-								goto CHOSE;
+								return 0;
 							}
 						}
 						for (j = 17; j >= 10; j++) {
@@ -551,7 +546,7 @@ int Enemy_Attack_Chose() {
 								enemy[j].mode = ATTACK;
 								ne = j + 9;
 								timer = 3000;
-								goto CHOSE;
+								return 0;
 							}
 						}
 						for (j = 27; j >= 18; j--) {
@@ -572,7 +567,7 @@ int Enemy_Attack_Chose() {
 							}
 							ne = j + 10;
 							timer = 3000;
-							goto CHOSE;
+							return 0;
 						}
 					}
 				}
@@ -587,7 +582,6 @@ int Enemy_Attack_Chose() {
 				break;
 			}
 		}
-	CHOSE:;
 	}
 
 	return 0;
@@ -599,22 +593,11 @@ int Enemy_Attack_Move(int *num) {
 		
 		//下方向に向かって移動
 		enemy[*num].y += 1;	
-		
-		for (j = 0; j < NUMSHOT; j++) {
-			//攻撃のタイマー
-			attack_enemy[*num][j].timer--;
-			if (attack_enemy[*num][j].timer <= 0) {
 
-				//あとで動き出しのときに設定するように変える
-				attack_enemy[*num][j].timer = 40000;
-
-				attack_enemy[*num][j].enemyshot = true;
-
-				Enemy_Shot(enemy[*num].x, enemy[*num].y, *num);
-
-			}
+		if (enemy[*num].y == 280) {
+			EnemyShot();
 		}
-
+		
 		if (enemy[*num].mode == ATTACK) {
 			e_count[*num]++;
 			if (e_count[*num] / 20 > 14) {
@@ -639,22 +622,32 @@ int Enemy_Attack_Move(int *num) {
 	return 0;
 }
 
-/**********************************
-		敵のショット関数
-***********************************/
-int Enemy_Shot(int x,int y,int num) {
-	for (h = 0; h < EnemyCount; h++) {
-		for (k = 0; k < NUMSHOT; k++) {
-			if (attack_enemy[h][k].enemyshot == true) {
-				ebullet[h][k].x = x + 4;
-				ebullet[h][k].y = y + 4;
-				ebullet[h][k].Draw_Flg = true;
-				attack_enemy[h][k].enemyshot = false;
-				SetGax_Sound(4);							//enemyが発射の音
-			}
-		}
+int EnemyShot_Mgr() {
+
+	if (enemy[i].y == SHOT_POINT_FIRST &&
+		enemy[i].y == SHOT_POINT_SECOND &&
+		enemy[i].y == SHOT_POINT_THIRD &&
+		enemy[i].y == SHOT_POINT_FOURTH) {
+		Shot_Set++;
 	}
 
+	for (int l = 0; l < NUMSHOT; l++) {
+		if (ebullet[l].Draw_Flg == false && Shot_Set > 0) {
+			ebullet[l].Draw_Flg = true;
+			ebullet[l].x = enemy[i].x;
+			ebullet[l].y = enemy[i].y;
+			SetGax_Sound(4);							//enemyが発射の音
+			Shot_Set--;
+		}
+		EnemyShot_Move();
+
+		EnemyShot_Draw();
+
+	}
+	return 0;
+}
+
+int EnemyShot() {
 	return 0;
 }
 
@@ -662,22 +655,18 @@ int EnemyShot_Move() {
 
 	Enemy_Hit_Flg = Player_Hit();
 
-	for (i = 0; i < EnemyCount; i++) {
-		for (j = 0; j < NUMSHOT; j++) {
+	for (j = 0; j < NUMSHOT; j++) {
+		ebullet[j].y += 3;
 
-			if (ebullet[i][j].y <= 750 && ebullet[i][j].y >= 280) {
-				ebullet[i][j].y += 3;
-
-			}
-			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy == ebullet[i][j].y) {//+ 3 && epy  <= ebullet[i][j].y) {
-				Enemy_Hit_Flg = true;
-				ebullet[i][j].Draw_Flg = false;
-			}
+		if (epx - 10 <= ebullet[j].x && epx + 20 >= ebullet[j].x && epy == ebullet[j].y) {
+			Enemy_Hit_Flg = true;
+			ebullet[j].Draw_Flg = false;
 		}
+		
 	}
 
 	for (int k = 0; k < EnemyCount; k++) {
-		if (enemy[k].Draw_Flg_Flg == true) {
+		if (enemy[k].Draw_Flg == true) {
 			enemy[k].Draw_Flg = Player_HIT(k);
 		}
 		Enemy_Score(k);
@@ -730,7 +719,6 @@ int Enemy_Score(int killed) {
 
 	for (i = 0; i < EnemyCount; i++) {
 		Enemy_State_Init(i);
-
 	}
 
 	return e_score;
@@ -755,70 +743,55 @@ int Enemy_Draw() {
 
 	for (i = 0; i < EnemyCount; i++) {
 
-		if (enemy[i].Draw_Flg == Draw_ON) {
+		switch (enemy[i].Draw_Flg) {
+		case Draw_ON:
 
 			DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[enemy[i].anime], true, 0, 0);
-			
+
+			break;
+		case Draw_OFF:
+				break;
+
+		case Draw_Anime:
+			enemy[i].anime_cnt++;
+			switch (enemy[i].anime_cnt / 10) {
+				case 0:
+					DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[33], true, 0, 0);
+					break;
+				case 1:
+					DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[34], true, 0, 0);
+					break;
+				case 2:
+					DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[35], true, 0, 0);
+					break;
+				case 3:
+				case 4:
+					DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[32], true, 0, 0);
+					break;
+				case 5:
+					enemy[i].Draw_Flg = Breaken;
+					enemy[i].anime_cnt = 0;
+					break;
+			}
+			break;
+		case Breaken:
+			break;
 		}
+
 	}
 
 	return 0;
 }
 
 int EnemyShot_Draw() {
-	if (ebullet[i][j].Draw_Flg = true) {
-		for (i = 0; i < EnemyCount; i++) {
-			for (j = 0; j < NUMSHOT; j++) {
-				if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
-					DrawRotaGraph(ebullet[i][j].x, ebullet[i][j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
-				}
-				DrawBox(ebullet[i][j].x, ebullet[i][j].y, ebullet[i][j].x + 5, ebullet[i][j].y + 5, GetColor(255, 255, 255), true);
 
-			}
+	for (j = 0; j < NUMSHOT; j++) {
+
+		if(ebullet[j].Draw_Flg == true){
+			DrawRotaGraph(ebullet[j].x, ebullet[j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
 		}
 	}
 	DrawFormatString(300, 20, GetColor(255, 255, 255), "%d", e_score);
-	//DrawBox(epx-10, epy-20, epx + 20, epy, GetColor(255, 255, 255), true);
-	//DrawLine(epx, 0, epx, 1080, GetColor(255, 255, 255), true);
-	//DrawLine(0, epy, 820, epy, GetColor(255, 255, 255), true);
-	return 0;
-}
-
-//敵の球を打つタイマーのセット関数
-int Enemy_Shot_Set(int *i) {
-
-	if (*i != 48 && *i != 49) {
-
-		for (j = 0; j < NUMSHOT; j++) {
-			switch (j) {
-			case 0:
-				attack_enemy[*i][j].timer = 10;
-				break;
-			case 1:
-				attack_enemy[*i][j].timer = 50;
-				break;
-			case 2:
-				if (enemy[*i].Type != 3) {
-					attack_enemy[*i][j].timer = 100;
-				}
-				else {
-					attack_enemy[*i][j].timer = 10000;
-				}
-				break;
-			case 3:
-				if (enemy[*i].Type != 3 && enemy[*i].Type != 2) {
-					attack_enemy[*i][j].timer = 150;
-				}
-				else {
-					attack_enemy[*i][j].timer = 10000;
-				}
-				break;
-			case 4:
-				attack_enemy[*i][j].timer = 10000;
-				break;
-			}
-		}
-	}
 	return 0;
 }
 
