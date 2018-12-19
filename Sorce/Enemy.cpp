@@ -666,7 +666,7 @@ int EnemyShot_Move() {
 	}
 
 	for (int k = 0; k < EnemyCount; k++) {
-		if (enemy[k].Draw_Flg == true) {
+		if (enemy[k].Draw_Flg == Draw_ON) {
 			enemy[k].Draw_Flg = Player_HIT(k);
 		}
 		Enemy_Score(k);

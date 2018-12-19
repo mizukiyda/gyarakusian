@@ -1,3 +1,6 @@
+#ifndef INCLUDE_PLAYER
+#define INCLUDE_PLAYER
+
 extern int Playershot_Init();
 extern int PlayerShot_Dpct();
 extern int Playershot_Draw();
@@ -13,3 +16,13 @@ typedef struct {
 	int y;  //プレイヤーのy座標
 
 }S_PShot;
+
+typedef enum {
+
+	Draw_ON,		//表示
+	Draw_OFF,		//非表示	
+	Draw_Anime,
+	Breaken			//破壊された
+} S_EnemyType;
+
+#endif
