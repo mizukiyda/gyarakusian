@@ -6,11 +6,10 @@
 #include "keyboard.h"
 #include "Scene_Mgr.h"
 
-
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SetMainWindowText("ギャラクシアン");
-	SetWindowSize(1280, 720);
-	SetGraphMode(1280,720,32);
+	SetWindowSize(800, 650);
+	SetGraphMode(1280,700,32);
 	ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK); //ウィンドウモード変更と初期化と裏画面設定
 
 	//初期化管理関数の呼び出し
@@ -26,10 +25,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//Dpct_Mgr();		//計算処理
 		Scene_Mgr_Draw();
 		//Drow_Mgr();		//描写処理
-
-
-
-
 
 	}
 	Scene_Mgr_End();

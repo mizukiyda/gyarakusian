@@ -10,5 +10,5 @@ extern int Result_Dpct();
 extern int Result_Draw();
 extern int Result_End();
 
-
+extern int Result_Reborn();
 #endif
