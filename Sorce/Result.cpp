@@ -13,7 +13,6 @@ MenuElement_t ResultMenuElement[MENU_ELEMENT_MAX]{
 
 //ここで変数を宣言（C++を使わないのでグローバル変数）
 
-
 static int SelectNum;
 int reborn;
 
@@ -48,11 +47,14 @@ int Result_Dpct() {
 				switch (i) {
 				
 				case 0:
+					Result_Reborn();
 					Scene_Mgr_ChangeScene(E_Scene_Game);
 					break;
+
 				case 1:
 					Scene_Mgr_ChangeScene(E_Scene_StartMenu);
 					break;
+
 				case 2:
 					Scene_Mgr_End();
 					DxLib_End(); // DXライブラリ終了処理
@@ -65,6 +67,11 @@ int Result_Dpct() {
 			ResultMenuElement[i].x = 100;// 座標を100にする
 		}
 	}
+
+	return 0;
+}
+
+int Result_Reborn() {
 
 	return reborn;
 }

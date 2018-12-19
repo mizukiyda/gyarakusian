@@ -35,7 +35,8 @@ int Player_Cnt;							//画像表示用カウント
 int OnActive = true;					//Playerが生きている状態
 
 int Player_Init() {
-	remain = Result_Dpct();
+	remain = Result_Reborn();
+
 	//プレイヤーの初期位置
 	Player.x = 300;
 	Player.y = 600;
@@ -78,12 +79,12 @@ int Player_Dpct() {
 		}
     }
 
-	if (Player.x <= 200) {											//Playerのxの動きを200で止める
-		Player.x = 200;
+	if (Player.x <= 300) {											//Playerのxの動きを200で止める
+		Player.x = 300;
 	}
 
-	if (Player.x >= 1000) {											//Playerのxの動きを1000で止める
-		Player.x = 1000;
+	if (Player.x >= 900) {											//Playerのxの動きを1000で止める
+		Player.x = 900;
 	}
 
 	EnemyHit_Flg = EnemyShot_Move();									//enemyからの当たり判定を入れるもの
