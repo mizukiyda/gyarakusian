@@ -19,7 +19,7 @@ extern int Enemy_control();
 extern int Enemy_Attack_Chose();
 extern int Enemy_Attack_Move(int *);
 extern int Enemy_Draw();
-extern int Enemy_Score(int);
+extern int Enemy_Score();
 extern int Enemy_Hit();
 //extern int Enemy_deg(int *);
 

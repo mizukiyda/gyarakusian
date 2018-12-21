@@ -669,7 +669,7 @@ int EnemyShot_Move() {
 		if (enemy[k].Draw_Flg == Draw_ON) {
 			enemy[k].Draw_Flg = Player_HIT(k);
 		}
-		Enemy_Score(k);
+		Enemy_Score();
 
 	}
 	if (Enemy_Hit_Flg == true) {
@@ -680,41 +680,44 @@ int EnemyShot_Move() {
 }
 
 //プレーヤーの弾が当たったかとスコア
-int Enemy_Score(int killed) {
-	if (enemy[killed].Draw_Flg == Draw_OFF) {
-		if (enemy[killed].mode == NONE) {
-			switch (enemy[killed].Type) {
-			case 0:
-				e_score += 30;
-				break;
-			case 1:
-				e_score += 40;
-				break;
-			case 2:
-				e_score += 50;
-				break;
-			case 3:
-				e_score += 60;
-				break;
+int Enemy_Score() {
+
+	for (int l = 0; l < EnemyCount; l++) {
+		if (enemy[l].Draw_Flg == Draw_OFF) {
+			if (enemy[l].mode == NONE) {
+				switch (enemy[l].Type) {
+				case YELLOW:
+					e_score += 60;
+					break;
+				case RED:
+					e_score += 50;
+					break;
+				case PURPLE:
+					e_score += 40;
+					break;
+				case BLUE:
+					e_score += 30;
+					break;
+				}
 			}
-		}
-		else {
-			switch (enemy[killed].Type) {
-			case 0:
-				e_score += 60;
-				break;
-			case 1:
-				e_score += 80;
-				break;
-			case 2:
-				e_score += 100;
-				break;
-			case 3:
-				e_score += 200;
-				break;
+			else {
+				switch (enemy[l].Type) {
+				case YELLOW:
+					e_score += 200;
+					break;
+				case RED:
+					e_score += 100;
+					break;
+				case PURPLE:
+					e_score += 80;
+					break;
+				case BLUE:
+					e_score += 60;
+					break;
+				}
 			}
+			enemy[l].Draw_Flg = Breaken;
 		}
-		enemy[killed].Draw_Flg = Breaken;
 	}
 
 	for (i = 0; i < EnemyCount; i++) {
