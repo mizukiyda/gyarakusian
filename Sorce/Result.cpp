@@ -6,9 +6,9 @@
 #include "Player.h"
 
 MenuElement_t ResultMenuElement[MENU_ELEMENT_MAX]{
-{ 100 , 200 , "Restart" },
-{ 100 , 300 , "Title" },
-{ 100 , 400 , "Exit" }
+	{ 100 , 200 , "Restart" },
+{ 100 , 400 , "Title" },
+{ 100 , 600 , "Exit" }
 };
 
 //ここで変数を宣言（C++を使わないのでグローバル変数）
@@ -16,12 +16,29 @@ MenuElement_t ResultMenuElement[MENU_ELEMENT_MAX]{
 static int SelectNum;
 int reborn;
 
+int Restart;
+int On_Restart;
+int Title;
+int On_Title;
+int End;
+int On_End;
+int Result;
+
 // Init 初期化
 int Result_Init() {
 	//ここで初期化をする
 	//step_count = UI_StepCount();			UIができたらコメントをはずす
 	SelectNum = 0;
-	reborn = 3;
+	reborn = 2;
+
+	Restart = LoadGraph("Image/RESTART1.png");				//スタートを選択している画像
+	On_Restart = LoadGraph("Image/RESTART.png");				//スタートを選択していない画像
+	Title = LoadGraph("Image/Title1.png");
+	On_Title = LoadGraph("Image/Title.png");
+	End = LoadGraph("Image/End.png");				//エンドを選択している画像
+	On_End = LoadGraph("Image/End2.png");				//エンドを選択していない画像
+
+	Result = LoadGraph("Image/りざると.png");
 	return 0;
 }
 
@@ -45,7 +62,7 @@ int Result_Dpct() {
 														//その項目の中に入る
 				int tmp;
 				switch (i) {
-				
+
 				case 0:
 					Result_Reborn();
 					Scene_Mgr_ChangeScene(E_Scene_Game);
@@ -80,12 +97,33 @@ int Result_Draw() {
 	//ここで描写
 	//こっちも毎フレーム呼ばれますが計算とは別に書きます
 
-	DrawFormatString(100, 100, GetColor(255, 255, 255), "りざると");
+	//DrawFormatString(100, 100, GetColor(255, 255, 255), "りざると");
+	DrawGraph(100, 100, Result, TRUE);
 
+	/*
 	for (int i = 0; i<MENU_ELEMENT_MAX; i++) { // メニュー項目を描画
-		DrawFormatString(ResultMenuElement[i].x, ResultMenuElement[i].y, GetColor(255, 255, 255), ResultMenuElement[i].name);
-	}
+	DrawFormatString(ResultMenuElement[i].x, ResultMenuElement[i].y, GetColor(255, 255, 255), ResultMenuElement[i].name);
+	}*/
 
+	switch (SelectNum)
+	{
+	case 0://スタート項目
+		DrawGraph(ResultMenuElement[0].x, ResultMenuElement[0].y, Restart, TRUE);
+		DrawGraph(ResultMenuElement[1].x, ResultMenuElement[1].y, On_Title, TRUE);
+		DrawGraph(ResultMenuElement[2].x, ResultMenuElement[2].y, On_End, TRUE);
+		break;
+	case 1:
+		DrawGraph(ResultMenuElement[0].x, ResultMenuElement[0].y, On_Restart, TRUE);
+		DrawGraph(ResultMenuElement[1].x, ResultMenuElement[1].y, Title, TRUE);
+		DrawGraph(ResultMenuElement[2].x, ResultMenuElement[2].y, On_End, TRUE);
+		break;
+	case 2://エンド項目
+		DrawGraph(ResultMenuElement[0].x, ResultMenuElement[0].y, On_Restart, TRUE);
+		DrawGraph(ResultMenuElement[1].x, ResultMenuElement[1].y, On_Title, TRUE);
+		DrawGraph(ResultMenuElement[2].x, ResultMenuElement[2].y, End, TRUE);
+
+		break;
+	}
 	return 0;
 }
 

@@ -1,18 +1,16 @@
 #include "DxLib.h"
-//#include "Init_Mgr.h"
-//#include "Dpct_Mgr.h"
-//#include "Drow_Mgr.h"
-//#include "End_Mgr.h"
 #include "keyboard.h"
 #include "Scene_Mgr.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SetMainWindowText("ギャラクシアン");
-	SetWindowSize(800, 650);
-	SetGraphMode(1280,700,32);
+	SetWindowSize(1280, 700);
+	SetGraphMode(1280, 700, 32);
+	//SetWindowSize(1900, 1000);
+	//SetGraphMode(1920, 1080, 32);
 	ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK); //ウィンドウモード変更と初期化と裏画面設定
 
-	//初期化管理関数の呼び出し
+																		 //初期化管理関数の呼び出し
 	Scene_Mgr_Init();
 	//Init_Mgr();
 
