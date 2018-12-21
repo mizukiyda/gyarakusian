@@ -11,15 +11,11 @@
 
 P_Enemy enemy[50];
 
-S_EShot ebullet[NUMSHOT];
+A_Enemy attack_enemy[48][NUMSHOT];
+
+S_EShot ebullet[EnemyCount][NUMSHOT];
 
 MODE mode;
-
-S_EnemyType E_State;
-
-TYPE type;
-
-SHOTPOINT S_Point;
 
 DATEDATA Date;
 
@@ -68,12 +64,13 @@ int Enemy_Shot_Gyallaly[2];
 int Enemy_None_Num;
 
 //Enemyが当てられたフラグ
-bool Enemy_Hit_Flg = false;
+bool Enemy_Hit_Flg;
+
+//EnemyがPlayerにあてたときに描写を消すフラグ
+bool Enemy_Shot_Draw = true;
 
 //Enemyで数えたスコア
 int e_score;
-
-static int Shot_Set = 0;
 
 int timerEnemy = 0;
 int cntAttack = 0;
@@ -83,8 +80,8 @@ int cntRed = 0;
 int cntYellow = 0;
 
 //初期位置(x座標)
-static double first_x[50] = { 590,630,670,710					//3
-										, 550,590,630,670,710,750				//9
+static double first_x[50] = {                 590,630,670,710					//3
+								        , 550,590,630,670,710,750				//9
 								   , 510, 550,590,630,670,710,750,790			//17
 							  , 470, 510, 550,590,630,670,710,750,790,830		//27
 							  , 470, 510, 550,590,630,670,710,750,790,830		//37
@@ -92,7 +89,7 @@ static double first_x[50] = { 590,630,670,710					//3
 							  , 470, 830 };
 
 //初期位置(y座標)
-static double first_y[50] = { 80, 80, 80, 80
+static double first_y[50] = {               80, 80, 80, 80
 									  ,110,110,110,110,110,110
 								  ,140,140,140,140,140,140,140,140
 							  ,170,170,170,170,170,170,170,170,170,170
@@ -106,7 +103,7 @@ int Enemy_Init() {
 	//画像読み込み
 	LoadDivBmpToGraph("Image/Galaxian_OBJ_enemy.png", 40, 8, 5, 18, 18, Enemy_Handle, true, false);
 
-	LoadDivBmpToGraph("Image/Galaxian_OBJ_bullet.png", 2, 2, 1, 11, 12, Enemy_Shot_Gyallaly, true, false);
+	LoadDivBmpToGraph("Image/Galaxian_OBJ_bullet.png", 2, 2, 1, 11, 12, Enemy_Shot_Gyallaly,true,false);
 	Enemy_None_Num = 1;
 
 
@@ -119,11 +116,10 @@ int Enemy_Init() {
 		enemy[i].speed = 1;
 		enemy[i].x = enemy[i].fx;
 		enemy[i].y = enemy[i].fy;
-		enemy[i].anime_cnt = 0;
 		enemy[i].mode = NONE;
-		enemy[i].Draw_Flg = Draw_ON;
-		enemy[1].Draw_Flg = Draw_OFF;
-		enemy[2].Draw_Flg = Draw_OFF;
+		enemy[i].Draw_Flg = true;
+		enemy[1].Draw_Flg = false;
+		enemy[2].Draw_Flg = false;
 
 
 		if (i < 4) {
@@ -160,16 +156,19 @@ int Enemy_Init() {
 	timerEnemy = 0;
 	cntRed = 0;
 
-	for (i = 0; i < NUMSHOT; i++) {
+	for (i = 0; i < EnemyCount; i++) {
+		for (j = 0; j < NUMSHOT; j++) {
+			attack_enemy[i][j].timer = 300;
+			attack_enemy[i][j].enemyshot = false;
 
-		ebullet[i].x = 10;
-		ebullet[i].y = 750;
-		ebullet[i].Draw_Flg = false;
-
+			ebullet[i][j].x = 10;
+			ebullet[i][j].y = 750;
+			ebullet[i][j].Draw_Flg = false;
+		}
 	}
 
 	for (i = 0; i < 4; i++) {
-		if (enemy[i].Draw_Flg == Draw_ON) {
+		if (enemy[i].Draw_Flg == true) {
 			cntYellow++;
 		}
 	}
@@ -180,7 +179,7 @@ int Enemy_Init() {
 
 	SRand(GetDateTime(&Date));
 
-	e_score = -60;
+	e_score = 0;
 
 	return 0;
 }
@@ -188,8 +187,8 @@ int Enemy_Init() {
 int Enemy_Move() {
 
 	//プレイヤーの座標受け取り(真ん中)
-	epx = Player_Pos_Init_x();
-	epy = Player_Pos_Init_y();
+	epx = Player_Pos_Init_x() ;
+	epy = Player_Pos_Init_y() ;
 
 	Enemy_control();
 
@@ -198,39 +197,46 @@ int Enemy_Move() {
 		speed *= -1;
 	}
 
-	for (i = 0; i < EnemyCount + 2; i++) {
+	for (i = 0; i < EnemyCount+2; i++) {
 
 		//常に左右移動
 		enemy[i].fx += speed;
 
 		//ここで動く敵の順番を選択
-		Enemy_Attack_Chose();
-		if (enemy[i].Draw_Flg == Draw_ON) {
-			switch (enemy[i].mode) {
+		Enemy_Attack_Chose();		
 
-			case NONE:
-				enemy[i].x += speed;
-				break;
+		if (enemy[i].mode == NONE ) { //攻撃時じゃないとき左右移動
+			enemy[i].x += speed;
+		}
+	    //攻撃時の移動
+		if (enemy[i].mode == ATTACK) {
 
-			case ATTACK:
-				Enemy_Attack_Move(&i);
-				break;
+			//Enemy_deg(&i);
 
-			case MOVE:
-				enemy[i].y += 1;
-				enemy[i].x += speed;
-				if (enemy[i].mode == MOVE && enemy[i].y == enemy[i].fy) {
-					enemy[i].mode = NONE;
-				}
-				break;
-			}
+			Enemy_Attack_Move(&i);
+
 		}
 
-		//EnemyShot_Mgr();
+		if (enemy[i].mode == MOVE) {
+
+			enemy[i].y += 1;
+			enemy[i].x += speed;
+		}
+
+		if (enemy[i].y <= 280) {
+
+			Enemy_Shot_Set(&i);
+
+		}
+
+		if (enemy[i].mode == MOVE && enemy[i].y == enemy[i].fy) {
+			
+			enemy[i].mode = NONE;
+		}
 
 		cntYellow = 0;
 		for (j = 0; j < 4; j++) {
-			if (enemy[j].Draw_Flg == Draw_ON) {
+			if (enemy[j].Draw_Flg == true) {
 				cntYellow++;
 			}
 		}
@@ -291,8 +297,7 @@ int Enemy_Move_Flg(int num_i) {
 	e_count[num_i] = 0;
 
 	for (j = num_i + 4; j < num_i + 7; j++) {
-		if (enemy[j].Draw_Flg == Draw_ON) {
-			SetGax_Sound(4);
+		if (enemy[j].Draw_Flg == true) {
 			enemy[j].mode = ATTACK;
 			e_count[j] = 0;
 			cntRed++;
@@ -330,14 +335,14 @@ int Enemy_Attack_Chose() {
 			//黄色の敵の選択
 			switch (cntYellow) {
 			case 1:
-				if (epx < enemy[32].fx - 20 || enemy[0].Draw_Flg == Draw_OFF) {
+				if (epx < enemy[32].fx - 20 || enemy[0].Draw_Flg == false) {
 					n = 3;
 				}
 				else {
 					n = 0;
 				}
 			case 2:
-				if (epx < enemy[32].fx - 20 || enemy[3].Draw_Flg == Draw_OFF) {
+				if (epx < enemy[32].fx - 20 || enemy[3].Draw_Flg == false) {
 					n = 0;
 				}
 				else {
@@ -346,54 +351,54 @@ int Enemy_Attack_Chose() {
 				break;
 			case 3:
 				if (epx < enemy[32].fx - 20) {
-					if (enemy[0].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false) {
 						n = 3;
 					}
-					if (enemy[3].Draw_Flg == Draw_OFF) {
+					if (enemy[3].Draw_Flg == false) {
 						n = 0;
 					}
-					if (enemy[0].Draw_Flg == Draw_OFF && enemy[3].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false && enemy[3].Draw_Flg == false) {
 						n = 1;
 					}
 				}
 				else {
-					if (enemy[3].Draw_Flg == Draw_OFF) {
+					if (enemy[3].Draw_Flg == false) {
 						n = 0;
 					}
-					if (enemy[0].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false) {
 						n = 3;
 					}
-					if (enemy[3].Draw_Flg == Draw_OFF && enemy[0].Draw_Flg == Draw_OFF) {
+					if (enemy[3].Draw_Flg == false && enemy[0].Draw_Flg == false) {
 						n = 1;
 					}
 				}
 				break;
 			case 4:
 				if (epx < enemy[32].fx - 20) {
-					if (enemy[0].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false) {
 						n = 3;
 					}
-					if (enemy[3].Draw_Flg == Draw_OFF) {
+					if (enemy[3].Draw_Flg == false) {
 						n = 0;
 					}
-					if (enemy[0].Draw_Flg == Draw_OFF && enemy[3].Draw_Flg == Draw_OFF && enemy[2].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false && enemy[3].Draw_Flg == false && enemy[2].Draw_Flg == false) {
 						n = 1;
 					}
-					if (enemy[0].Draw_Flg == Draw_OFF && enemy[3].Draw_Flg == Draw_OFF && enemy[1].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false && enemy[3].Draw_Flg == false && enemy[1].Draw_Flg == false) {
 						n = 2;
 					}
 				}
 				else {
-					if (enemy[3].Draw_Flg == Draw_OFF) {
+					if (enemy[3].Draw_Flg == false) {
 						n = 0;
 					}
-					if (enemy[0].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false) {
 						n = 3;
 					}
-					if (enemy[0].Draw_Flg == Draw_OFF && enemy[3].Draw_Flg == Draw_OFF && enemy[1].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false && enemy[3].Draw_Flg == false && enemy[1].Draw_Flg == false) {
 						n = 2;
 					}
-					if (enemy[0].Draw_Flg == Draw_OFF && enemy[3].Draw_Flg == Draw_OFF && enemy[2].Draw_Flg == Draw_OFF) {
+					if (enemy[0].Draw_Flg == false && enemy[3].Draw_Flg == false && enemy[2].Draw_Flg == false) {
 						n = 1;
 					}
 				}
@@ -404,12 +409,12 @@ int Enemy_Attack_Chose() {
 		else { //プレイヤーが敵の右側にいた場合
 
 			cntEnemy = 0;
-
+			
 			//二体目を動かし、return　でぬける。
 			if (ne >= 49 && ne < 0) {
 				enemy[ne].mode = ATTACK;
 				ne = 49;
-				timer = (GetRand(8) * 1000) + 4000;
+				timer = (GetRand(8) * 1000 )+ 4000;
 				return 0;
 			}
 
@@ -437,8 +442,8 @@ int Enemy_Attack_Chose() {
 									if (enemy[j].mode == NONE) {
 										enemy[j].mode = ATTACK;
 									}
-									else if (enemy[j + 10].mode == NONE) {
-										enemy[j + 10].mode = ATTACK;
+									else if(enemy[j+10].mode ==NONE){
+										enemy[j+10].mode = ATTACK;
 										ne = j + 10;
 									}
 									else {
@@ -461,15 +466,15 @@ int Enemy_Attack_Chose() {
 									enemy[j].mode = ATTACK;
 									ne = j + 7;
 									timer = 3000;
-									return 0;
+									goto CHOSE;
 								}
 							}
-							for (j = 17; j >= 10; j++) {
+							for (j = 17; j >= 10 ; j++) {
 								if (enemy[j].mode == NONE) {
 									enemy[j].mode = ATTACK;
 									ne = j + 9;
 									timer = 3000;
-									return 0;
+									goto CHOSE;
 								}
 							}
 							for (j = 27; j >= 18; j--) {
@@ -490,7 +495,7 @@ int Enemy_Attack_Chose() {
 								}
 								ne = j + 10;
 								timer = 3000;
-								return 0;
+								goto CHOSE;
 							}
 						}
 					}
@@ -538,7 +543,7 @@ int Enemy_Attack_Chose() {
 								enemy[j].mode = ATTACK;
 								ne = j + 7;
 								timer = 3000;
-								return 0;
+								goto CHOSE;
 							}
 						}
 						for (j = 17; j >= 10; j++) {
@@ -546,7 +551,7 @@ int Enemy_Attack_Chose() {
 								enemy[j].mode = ATTACK;
 								ne = j + 9;
 								timer = 3000;
-								return 0;
+								goto CHOSE;
 							}
 						}
 						for (j = 27; j >= 18; j--) {
@@ -567,7 +572,7 @@ int Enemy_Attack_Chose() {
 							}
 							ne = j + 10;
 							timer = 3000;
-							return 0;
+							goto CHOSE;
 						}
 					}
 				}
@@ -582,6 +587,7 @@ int Enemy_Attack_Chose() {
 				break;
 			}
 		}
+	CHOSE:;
 	}
 
 	return 0;
@@ -589,13 +595,24 @@ int Enemy_Attack_Chose() {
 
 int Enemy_Attack_Move(int *num) {
 
-	if (EnemyCount > *num && enemy[*num].Draw_Flg == Draw_ON) {
-
+	if (EnemyCount > *num && enemy[*num].Draw_Flg == true) {
+		
 		//下方向に向かって移動
-		enemy[*num].y += 1;
+		enemy[*num].y += 1;	
+		
+		for (j = 0; j < NUMSHOT; j++) {
+			//攻撃のタイマー
+			attack_enemy[*num][j].timer--;
+			if (attack_enemy[*num][j].timer <= 0) {
 
-		if (enemy[*num].y == 280) {
-			EnemyShot();
+				//あとで動き出しのときに設定するように変える
+				attack_enemy[*num][j].timer = 40000;
+
+				attack_enemy[*num][j].enemyshot = true;
+
+				Enemy_Shot(enemy[*num].x, enemy[*num].y, *num);
+
+			}
 		}
 
 		if (enemy[*num].mode == ATTACK) {
@@ -622,103 +639,84 @@ int Enemy_Attack_Move(int *num) {
 	return 0;
 }
 
-int EnemyShot_Mgr() {
-
-	if (enemy[i].y == SHOT_POINT_FIRST &&
-		enemy[i].y == SHOT_POINT_SECOND &&
-		enemy[i].y == SHOT_POINT_THIRD &&
-		enemy[i].y == SHOT_POINT_FOURTH) {
-		Shot_Set++;
-	}
-
-	for (int l = 0; l < NUMSHOT; l++) {
-		if (ebullet[l].Draw_Flg == false && Shot_Set > 0) {
-			ebullet[l].Draw_Flg = true;
-			ebullet[l].x = enemy[i].x;
-			ebullet[l].y = enemy[i].y;
-			SetGax_Sound(4);							//enemyが発射の音
-			Shot_Set--;
+/**********************************
+		敵のショット関数
+***********************************/
+int Enemy_Shot(int x,int y,int num) {
+	for (h = 0; h < EnemyCount; h++) {
+		for (k = 0; k < NUMSHOT; k++) {
+			if (attack_enemy[h][k].enemyshot == true) {
+				ebullet[h][k].x = x + 4;
+				ebullet[h][k].y = y + 4;
+				ebullet[h][k].Draw_Flg = true;
+				attack_enemy[h][k].enemyshot = false;
+				SetGax_Sound(4);							//enemyが発射の音
+			}
 		}
-		EnemyShot_Move();
-
-		EnemyShot_Draw();
-
 	}
-	return 0;
-}
 
-int EnemyShot() {
 	return 0;
 }
 
 int EnemyShot_Move() {
 
-	Enemy_Hit_Flg = Player_Hit();
+	for (i = 0; i < EnemyCount; i++) {
+		for (j = 0; j < NUMSHOT; j++) {
 
-	for (j = 0; j < NUMSHOT; j++) {
-		ebullet[j].y += 3;
+			if (ebullet[i][j].y <= 750 && ebullet[i][j].y >= 280) {
+				ebullet[i][j].y += 5;
 
-		if (epx - 10 <= ebullet[j].x && epx + 20 >= ebullet[j].x && epy == ebullet[j].y) {
-			Enemy_Hit_Flg = true;
-			ebullet[j].Draw_Flg = false;
+			}
 		}
-
 	}
 
 	for (int k = 0; k < EnemyCount; k++) {
-		if (enemy[k].Draw_Flg == Draw_ON) {
-			enemy[k].Draw_Flg = Player_HIT(k);
-		}
-		Enemy_Score(k);
+		enemy[k].Draw_Flg = Player_HIT(k);
+		
+		Enemy_State_Init(k);
 
 	}
-	if (Enemy_Hit_Flg == true) {
-		Enemy_Hit_Flg = false;
-		return true;
-	}
-	return false;
+	return 0;
 }
 
-//プレーヤーの弾が当たったかとスコア
-int Enemy_Score(int killed) {
-	if (enemy[killed].Draw_Flg == Draw_OFF) {
-		if (enemy[killed].mode == NONE) {
-			switch (enemy[killed].Type) {
-			case 0:
-				e_score += 30;
-				break;
-			case 1:
-				e_score += 40;
-				break;
-			case 2:
-				e_score += 50;
-				break;
-			case 3:
-				e_score += 60;
-				break;
-			}
+//プレーヤーの弾が当たったかとスコア //使ってない
+int Enemy_Score() {
+	if (enemy[i].mode == NONE) {
+		switch (enemy[i].Type) {
+		case 0:
+			e_score += 30;
+			break;
+		case 1:
+			e_score += 40;
+			break;
+		case 2:
+			e_score += 50;
+			break;
+		case 3:
+			e_score += 60;
+			break;
 		}
-		else {
-			switch (enemy[killed].Type) {
-			case 0:
-				e_score += 60;
-				break;
-			case 1:
-				e_score += 80;
-				break;
-			case 2:
-				e_score += 100;
-				break;
-			case 3:
-				e_score += 200;
-				break;
-			}
+	}
+	else {
+		switch (enemy[i].Type) {
+		case 0:
+			e_score += 60;
+			break;
+		case 1:
+			e_score += 80;
+			break;
+		case 2:
+			e_score += 100;
+			break;
+		case 3:
+			e_score += 200;
+			break;
 		}
-		enemy[killed].Draw_Flg = Breaken;
 	}
 
 	for (i = 0; i < EnemyCount; i++) {
 		Enemy_State_Init(i);
+
 	}
 
 	return e_score;
@@ -727,15 +725,14 @@ int Enemy_Score(int killed) {
 //敵の弾の当たり判定
 int Enemy_Hit() {
 
-	/*Enemy_Hit_Flg = Player_Hit();
 	for (i = 0; i < EnemyCount; i++) {
 		for (j = 0; j < NUMSHOT; j++) {
-			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy - 20  >= ebullet[i][j].y ){//+ 3 && epy  <= ebullet[i][j].y) {
+			if (epx - 10 <= ebullet[i][j].x && epx + 20 >= ebullet[i][j].x && epy-10  >= ebullet[i][j].y ){//+ 3 && epy  <= ebullet[i][j].y) {
 				Enemy_Hit_Flg = true;
 				ebullet[i][j].Draw_Flg = false;
 			}
 		}
-	}*/
+	}
 	return Enemy_Hit_Flg;
 }
 
@@ -743,55 +740,65 @@ int Enemy_Draw() {
 
 	for (i = 0; i < EnemyCount; i++) {
 
-		switch (enemy[i].Draw_Flg) {
-		case Draw_ON:
+		if (enemy[i].Draw_Flg == true) {
 
 			DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[enemy[i].anime], true, 0, 0);
-
-			break;
-		case Draw_OFF:
-			break;
-
-		case Draw_Anime:
-			enemy[i].anime_cnt++;
-			switch (enemy[i].anime_cnt / 10) {
-			case 0:
-				DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[33], true, 0, 0);
-				break;
-			case 1:
-				DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[34], true, 0, 0);
-				break;
-			case 2:
-				DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[35], true, 0, 0);
-				break;
-			case 3:
-			case 4:
-				DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[32], true, 0, 0);
-				break;
-			case 5:
-				enemy[i].Draw_Flg = Breaken;
-				enemy[i].anime_cnt = 0;
-				break;
-			}
-			break;
-		case Breaken:
-			break;
+			
 		}
-
 	}
 
 	return 0;
 }
 
 int EnemyShot_Draw() {
+	
+	for (i = 0; i < EnemyCount; i++) {
+		for (j = 0; j < NUMSHOT; j++) {
+			if (ebullet[i][j].Draw_Flg == true && ebullet[i][j].y > 260) {
+				DrawRotaGraph(ebullet[i][j].x, ebullet[i][j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
+			}
+			DrawBox(ebullet[i][j].x, ebullet[i][j].y, ebullet[i][j].x + 5, ebullet[i][j].y + 5, GetColor(255, 255, 255), true);
 
-	for (j = 0; j < NUMSHOT; j++) {
-
-		if (ebullet[j].Draw_Flg == true) {
-			DrawRotaGraph(ebullet[j].x, ebullet[j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
 		}
 	}
-	DrawFormatString(300, 20, GetColor(255, 255, 255), "%d", e_score);
+	DrawBox(epx, epy, epx + 20, epy + 20, GetColor(255, 255, 255), true);
+	DrawLine(epx, 0, epx, 1080, GetColor(255, 255, 255), false);
+	DrawLine(0, epy, 820, epy, GetColor(255, 255, 255), false);
+	return 0;
+}
+
+//敵の球を打つタイマーのセット関数
+int Enemy_Shot_Set(int *i) {
+
+	if (*i != 48 && *i != 49) {
+
+		for (j = 0; j < NUMSHOT; j++) {
+			switch (j) {
+			case 0:
+				attack_enemy[*i][j].timer = 10;
+				break;
+			case 1:
+				attack_enemy[*i][j].timer = 50;
+				break;
+			case 2:
+				if (enemy[*i].Type != 3) {
+					attack_enemy[*i][j].timer = 100;
+				}
+				else {
+					attack_enemy[*i][j].timer = 10000;
+				}
+				break;
+			case 3:
+				if (enemy[*i].Type != 3 && enemy[*i].Type != 2) {
+					attack_enemy[*i][j].timer = 150;
+				}
+				else {
+					attack_enemy[*i][j].timer = 10000;
+				}
+				break;
+			}
+		}
+	}
 	return 0;
 }
 
@@ -799,7 +806,7 @@ int Enemy_Stage_clear() {
 
 	//まだ撃破されてなかったら、returnで-1を返す。
 	for (i = 4; i < EnemyCount; i++) {
-		if (enemy[i].Draw_Flg == Draw_ON) {
+		if (enemy[i].Draw_Flg == true) {
 			return -1;
 		}
 	}
@@ -807,7 +814,7 @@ int Enemy_Stage_clear() {
 	//黄色以外が全部撃破されてたら…
 	cntYellow = 0;
 	for (i = 0; i < 4; i++) {
-		if (enemy[i].Draw_Flg == Draw_ON) {
+		if (enemy[i].Draw_Flg == true) {
 			cntYellow++;
 		}
 	}
