@@ -39,5 +39,5 @@ Image/Rule.png
 .vs/ギャラクシアン　Var1.2/v15/ipch/AutoPCH/6d09e641811ef637/GAMEMENU.ipch
 .vs/ギャラクシアン　Var1.2/v15/ipch/AutoPCH/677d2ce79681f160/ENEMY.ipch
 .vs/ギャラクシアン　Var1.2/v15/ipch/AutoPCH/5eae8de72664cc2b/UI.ipch
-*.filters
-*.user
+ギャラクシアン　Var1.2.vcxproj.user
+ギャラクシアン　Var1.2.vcxproj.filters
