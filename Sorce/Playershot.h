@@ -1,3 +1,6 @@
+#ifndef INCLUDE_PLAYERSHOT
+#define INCLUDE_PLAYERSHOT
+
 extern int Playershot_Init();
 extern int PlayerShot_Dpct();
 extern int Playershot_Draw();
@@ -18,5 +21,8 @@ typedef enum {
 
 	Draw_ON,		//•\Ž¦
 	Draw_OFF,		//”ñ•\Ž¦	
+	Draw_Anime,
 	Breaken			//”j‰ó‚³‚ê‚½
 } S_EnemyType;
+
+#endif
