@@ -3,7 +3,11 @@
 #define RIGHT 1
 #define LEFT -1
 #define NUMSHOT 30
+#define REMITBLOW 10
 #define EnemyCount 48
+
+#define PUSH_BLOW(i,E_X,E_Y) 	tmpBlow[i].x = E_X; tmpBlow[i].y = E_Y; blow[i].Blow_Cnt = 0; tmpBlow[i].onActive = true;
+#define PUSH_SHOT(i,E_X,E_Y)    tmpEnemyShot[i].x = E_X; tmpEnemyShot[i].y = E_Y; tmpEnemyShot[i].onActive = true;
 
 //選択のモード
 #define MODE_DOWN 1	//選ばれた列をそのまま下に向かってTRUEにしていく
@@ -19,9 +23,9 @@ extern int Enemy_control();
 extern int Enemy_Attack_Chose();
 extern int Enemy_Attack_Move(int *);
 extern int Enemy_Draw();
-extern int Enemy_Score();
+extern int Enemy_Score(int);
 extern int Enemy_Hit();
-//extern int Enemy_deg(int *);
+extern int Enemy_deg(int *);
 
 //敵の弾関連の定義
 extern int EnemyShot_Mgr();
@@ -35,6 +39,8 @@ extern int Enemy_Pos_Init_x(int);
 extern int Enemy_Pos_Init_y(int);
 extern int Enemy_State_Init(int);
 extern int Enemy_End();
+
+extern int Create_Blow();
 
 
 struct P_Enemy {
@@ -54,11 +60,18 @@ struct P_Enemy {
 	int Draw_Flg;
 };	//Enemy Position
 
-typedef struct {	//構造体
-	int x;  //enemyのx座標
-	int y;  //enemyのy座標
-	bool Draw_Flg;
-} S_EShot;
+typedef struct {
+	int x;
+	int y;
+	bool onActive;
+}POS;
+
+typedef struct {
+	int x;
+	int y;
+	int Blow_Cnt;
+	bool onActive;
+}Blow;
 
 
 
@@ -82,9 +95,12 @@ typedef enum {
 //
 typedef enum {
 	SHOT_POINT_FIRST = 280,
-	SHOT_POINT_SECOND  = 290,
-	SHOT_POINT_THIRD  = 300,
-	SHOT_POINT_FOURTH  = 310
+	SHOT_POINT_SECOND = 300,
+	SHOT_POINT_THIRD = 320,
+	SHOT_POINT_FOURTH = 340
 }SHOTPOINT;
+
+
+
 
 #endif
