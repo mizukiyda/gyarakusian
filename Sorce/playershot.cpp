@@ -21,7 +21,7 @@ int Player_Shot_Gyallaly[2];				// 画像格納変数
 int Player_None_Num;						// 画像のスタンバイ状態(静止状態)
 
 /****初期化****/
-int Playershot_Init() {
+int Playershot_Init() {   //あいうえお
 
 	Player_Shot_Gyallaly[2];
 	LoadDivGraph("Image/Galaxian_OBJ_bullet.png", 2, 2, 1, 11, 6, Player_Shot_Gyallaly);		// 画像をロード
