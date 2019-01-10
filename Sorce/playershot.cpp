@@ -56,7 +56,7 @@ int PlayerShot_Dpct() {
 	}
 
 	for (a = 0;a < EnemyCount;a++) {
-		if (ex[a] - 25 <= pbullet.x - 10 && pbullet.x + 10 <= ex[a] + 25 &&			//enemy‚Æ‚Ì“–‚½‚è”»’è
+		if (ex[a] - 40 <= pbullet.x - 10 && pbullet.x + 10 <= ex[a] + 40 &&			//enemy‚Æ‚Ì“–‚½‚è”»’è
 			pbullet.y == ey[a] + 25 && e_draw[a] == Draw_ON) {
 			Player_Shot_Flg = false;												//’e‚ðÁ‚·
 			Player_Hit_Flg[a] = Draw_OFF;												//‚±‚Ì“G‚É“–‚½‚Á‚½‚Æ‚¢‚¤ƒtƒ‰ƒO

@@ -111,7 +111,6 @@ static double first_y[50] = { 80, 80, 80, 80
 							  ,230,230,230,230,230,230,230,230,230,230
 							  ,80,80 };
 
-
 int Enemy_Init() {
 
 	//‰æ‘œ“Ç‚İ‚İ
@@ -133,9 +132,8 @@ int Enemy_Init() {
 		enemy[i].anime_cnt = 0;
 		enemy[i].mode = NONE;
 		enemy[i].Draw_Flg = Draw_ON;
-		enemy[1].Draw_Flg = Draw_OFF;
-		enemy[2].Draw_Flg = Draw_OFF;
-
+		enemy[1].Draw_Flg = Breaken;
+		enemy[2].Draw_Flg = Breaken;
 
 		if (i < 4) {
 			enemy[i].Type = YELLOW;
