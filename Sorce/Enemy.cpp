@@ -5,6 +5,7 @@
 #include<Math.h>
 #include<time.h>
 #include<stdlib.h>
+#include "Scene_Mgr.h"
 #include"Sound.h"
 
 /********************  変数宣言  ****************************/
@@ -635,13 +636,14 @@ int Enemy_Attack_Move(int *num) {
 int EnemyShot_Mgr() {
 
 	for (int l = 0; l < EnemyCount; l++) {
-		if (enemy[l].y == SHOT_POINT_FIRST ||
+		if ((enemy[l].y == SHOT_POINT_FIRST ||
 			enemy[l].y == SHOT_POINT_SECOND ||
 			enemy[l].y == SHOT_POINT_THIRD ||
-			enemy[l].y == SHOT_POINT_FOURTH) {
+			enemy[l].y == SHOT_POINT_FOURTH) &&
+			enemy[l].Draw_Flg == Draw_ON) {
 			cntShot++;
 			if (cntShot > NUMSHOT)cntShot = 0;
-
+			
 			PUSH_SHOT(cntShot, enemy[l].x, enemy[l].y);
 		}
 	}
@@ -673,7 +675,6 @@ int EnemyShot_Mgr() {
 		}
 	}
 
-
 	EnemyShot_Move();
 
 	EnemyShot_Draw();
@@ -687,15 +688,15 @@ int EnemyShot() {
 
 int EnemyShot_Move() {
 
-	//Enemy_Hit_Flg = Player_Hit();
+	Enemy_Hit_Flg = Player_Hit();
 
 	for (j = 0; j < NUMSHOT; j++) {
 		enemy_shot[j].y += 3;
 
-		if (epx - 10 <= enemy_shot[j].x && epx + 20 >= enemy_shot[j].x && epy == enemy_shot[j].y) {
+		/*if (epx - 10 <= enemy_shot[j].x && epx + 20 >= enemy_shot[j].x && epy == enemy_shot[j].y) {
 			Enemy_Hit_Flg = true;
 			enemy_shot[j].onActive = false;
-		}
+		}*/
 
 		if (enemy_shot[j].y >= 820) {
 			enemy_shot[j].onActive = false;
@@ -832,7 +833,6 @@ int Enemy_Draw() {
 		}
 
 	}
-
 	return 0;
 }
 
@@ -882,11 +882,12 @@ int EnemyShot_Draw() {
 int Enemy_Stage_clear() {
 
 	//まだ撃破されてなかったら、returnで-1を返す。
-	for (i = 4; i < EnemyCount; i++) {
+	for (i = 0; i < EnemyCount; i++) {
 		if (enemy[i].Draw_Flg == Draw_ON) {
 			return -1;
-		}
+		}	
 	}
+	Scene_Mgr_ChangeScene(E_Scene_Result);
 
 	//黄色以外が全部撃破されてたら…
 	cntYellow = 0;

@@ -44,7 +44,7 @@ void Scene_Mgr_Dpct() {
 		PlayerShot_Dpct();
 		EnemyShot_Move();
 		Player_Dpct();
-
+		Enemy_Stage_clear();
 		UI_Dpct();
 		Sound_Dpct();
 		Player_Remain();
@@ -111,6 +111,7 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 	case E_Scene_StartMenu:
 		//スタートメニュー
 		StartMenu_Init();
+		Result_Init();
 		break;
 
 	case E_Scene_StartMenu2:
@@ -127,7 +128,7 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 		Sound_Init();
 		break;
 	case E_Scene_Result:
-		Result_Init();
+		//Result_Init();
 		break;
 	case E_Scene_GameMenu:
 		//ゲームメニュー
