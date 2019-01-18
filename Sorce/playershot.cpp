@@ -48,7 +48,7 @@ int PlayerShot_Dpct() {
 	}
 	//フラグが2になったら弾を上に撃つ
 	if (Player_Shot_Flg == 2) {
-		pbullet.y -= 5;														//弾の座標が0まで行ったらフラグを0にして消す		
+		pbullet.y -= 3;														//弾の座標が0まで行ったらフラグを0にして消す		
 	}
 
 	if (pbullet.y <= 0) {													//もし弾が画面外に行ったらfalsreにする

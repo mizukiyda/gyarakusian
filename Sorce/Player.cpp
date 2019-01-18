@@ -61,12 +61,12 @@ int Player_Dpct() {
 	if (OnActive == true) {																	//ê∂Ç´ÇƒÇ¢Ç»ÇØÇÍÇŒìÆÇØÇ»Ç¢
 																							//Å©
 		if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
-			Player.x -= 3;
+			Player.x -= 2;
 		}
 
 		//Å®
 		if (Keyboard_Get(KEY_INPUT_RIGHT) != 0) {
-			Player.x += 3;
+			Player.x += 2;
 		}
 	}
 
