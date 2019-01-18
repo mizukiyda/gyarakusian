@@ -8,9 +8,9 @@ typedef struct {	//ç\ë¢ëÃ
 typedef struct {
 	
 	int Start;
-	int On_Start;
-	int End;
-	int On_End;
+	int CREDIT;
+	int HIGH_SCORE;
+	int ONE_UP;
 
 } Image_t;
 
