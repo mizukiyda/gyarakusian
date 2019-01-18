@@ -301,6 +301,8 @@ int Enemy_Move_Flg(int num_i) {
 	enemy[num_i].mode = ATTACK;
 	e_count[num_i] = 0;
 
+	SetGax_Sound(4);
+
 	for (j = num_i + 4; j < num_i + 7; j++) {
 		if (enemy[j].Draw_Flg == Draw_ON) {
 			//SetGax_Sound(4);
@@ -628,6 +630,7 @@ int Enemy_Attack_Move(int *num) {
 			enemy[*num].y = -10;
 			enemy[*num].x = enemy[*num].fx;
 			enemy[*num].mode = MOVE;
+			SetGax_Sound(10);
 		}
 	}
 	return 0;

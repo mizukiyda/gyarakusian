@@ -23,6 +23,7 @@ int StartMenu_Dpct() {
 
 	if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
 		Scene_Mgr_ChangeScene(E_Scene_StartMenu2);							//スペースキーを押したら次のシーンへ
+		SetGax_Sound(1);
 	}
 	return 0;
 }

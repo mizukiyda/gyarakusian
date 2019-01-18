@@ -17,6 +17,9 @@ int Rule_Init(){
 int Rule_Dpct() {
 	if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
 		Scene_Mgr_ChangeScene(E_Scene_Game);
+		SetGax_Sound(9);
+		//SetGax_Sound(2);
+		//SetGax_Sound(3);
 	}
 	return 0;
 
