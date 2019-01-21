@@ -54,16 +54,18 @@ int Sound_Dpct() {
 	case 2:
 		// “G‚ªŒ¸‚Á‚Ä‚­‚É‚Â‚ê—¬‚·	‚±‚Á‚¿‚ªæ
 		PlaySoundMem(Enemy_LastOne, DX_PLAYTYPE_LOOP);
+		ChangeVolumeSoundMem(150, Enemy_LastOne);
 		Gax_Sound = 0;
 		break;
 	case 3:
 		// “G‚ªŒ¸‚Á‚Ä‚­‚É‚Â‚ê—¬‚·
 		PlaySoundMem(Enemy_LastTwo, DX_PLAYTYPE_LOOP);
+		ChangeVolumeSoundMem(150,Enemy_LastTwo);
 		Gax_Sound = 0;
 		break;
 	case 4:
 		// “G‚ª~‚Á‚Ä‚«‚Ä‚¢‚éŒø‰Ê‰¹
-		PlaySoundMem(Enemy_Attack_Sound, DX_PLAYTYPE_NORMAL);
+		PlaySoundMem(Enemy_Attack_Sound, DX_PLAYTYPE_BACK);
 		Gax_Sound = 0;
 		break;
 	case 5:
@@ -89,6 +91,11 @@ int Sound_Dpct() {
 	case 9:
 		// ƒXƒ^[ƒgƒƒjƒ…[‚ÌBGM
 		PlaySoundMem(StartMenu_Sound, DX_PLAYTYPE_BACK);
+		Gax_Sound = 0;
+		break;
+	case 10:
+		// “G‚ª~‚Á‚Ä‚­‚é‰¹‚ğ~‚ß‚é
+		StopSoundMem(Enemy_Attack_Sound);
 		Gax_Sound = 0;
 		break;
 	}
