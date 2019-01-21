@@ -37,6 +37,7 @@ int UI_Dpct() {
 
 	return 0;
 
+	//スコアが5000点以上になったら残機を一機増やす
 }
 
 int UI_Draw() {	
