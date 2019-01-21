@@ -12,7 +12,7 @@
 S_Player Player;
 
 //残機
-int remain = 3;
+int remain = 500;
 
 //bool Draw_Flg = true;
 int HitFlg = false;
@@ -91,12 +91,15 @@ int Player_Dpct() {
 	}
 
 	EnemyHit_Flg = EnemyShot_Move();									//enemyからの当たり判定を入れるもの
-	if (EnemyHit_Flg == true) {
-		Player_Remain();	//Remainへ飛ぶ
-		OnActive = false;										//playerが死んだとき
-		SetGax_Sound(7);										//爆発音
-		Player_Hit();
-		HitFlg = true;
+	if (OnActive == true) {
+		if (EnemyHit_Flg == true) {
+			HitFlg = true;
+			OnActive = false;
+			SetGax_Sound(7);									//playerが死んだとき
+			Player_Remain();	//Remainへ飛ぶ
+								//爆発音
+			Player_Hit();
+		}
 	}
 
 	return PlayerShot_Flg;
@@ -117,6 +120,7 @@ int Player_Remain() {		//残機の処理
 int Player_Hit() {
 
 	EnemyHit_Flg = false;
+
 	return EnemyHit_Flg;
 }
 
