@@ -301,9 +301,10 @@ int Enemy_Move_Flg(int num_i) {
 	enemy[num_i].mode = ATTACK;
 	e_count[num_i] = 0;
 
+	SetGax_Sound(4);
+
 	for (j = num_i + 4; j < num_i + 7; j++) {
 		if (enemy[j].Draw_Flg == Draw_ON) {
-			//SetGax_Sound(4);
 			enemy[j].mode = ATTACK;
 			e_count[j] = 0;
 			cntRed++;
@@ -607,6 +608,8 @@ int Enemy_Attack_Move(int *num) {
 
 		if (enemy[*num].y == 280) {
 			EnemyShot();
+			SetGax_Sound(4);
+
 		}
 
 		if (enemy[*num].mode == ATTACK) {
@@ -628,6 +631,7 @@ int Enemy_Attack_Move(int *num) {
 			enemy[*num].y = -10;
 			enemy[*num].x = enemy[*num].fx;
 			enemy[*num].mode = MOVE;
+			SetGax_Sound(10);
 
 		}
 	}
@@ -734,6 +738,8 @@ int Enemy_Score(int killed) {
 			switch (enemy[killed].Type) {
 			case 0:
 				e_score += 30;
+				SetGax_Sound(6);
+
 				break;
 			case 1:
 				e_score += 40;
@@ -750,6 +756,8 @@ int Enemy_Score(int killed) {
 			switch (enemy[killed].Type) {
 			case 0:
 				e_score += 60;
+				SetGax_Sound(6);
+
 				break;
 			case 1:
 				e_score += 80;
