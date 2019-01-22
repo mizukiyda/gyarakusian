@@ -6,6 +6,8 @@
 
 Image_t Image;
 int star;
+int count = 0;
+int starcount = 0;
 
 int StartMenu_Init() {
 
@@ -21,8 +23,12 @@ int StartMenu_Init() {
 int StartMenu_Dpct() {
 	//Dqctは毎フレーム呼ばれる
 
+	count = (count + 1) % 100;											//文字の点滅させる	
+
+	starcount = (starcount + 1) % 100;									//背景の点滅
+
 	if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {
-		Scene_Mgr_ChangeScene(E_Scene_StartMenu2);							//スペースキーを押したら次のシーンへ
+		Scene_Mgr_ChangeScene(E_Scene_Game);							//スペースキーを押したら次のシーンへ
 		//SetGax_Sound(1);
 	}
 	return 0;
@@ -31,9 +37,17 @@ int StartMenu_Dpct() {
 int StartMenu_Draw() {
 	//ここで描写
 
-	DrawRotaGraph(600, 370, 3.5, 0, star, TRUE);							//背景を一番最初に呼ぶことで一番後ろに表示される
+	if (starcount > 50) {
+		DrawRotaGraph(550, 370, 3.5, 0, star, TRUE);					//交互に表示する
+	}
 
-	DrawGraph(200, 500, Image.Start, TRUE);
+	if (starcount < 50) {
+		DrawRotaGraph(600, 370, 3.5, 0, star, TRUE);					//交互に表示する
+	}
+
+	if (count < 50) {
+		DrawGraph(200, 500, Image.Start, TRUE);							//点滅
+	}
 	DrawGraph(50, 650, Image.CREDIT, TRUE);
 	DrawGraph(350, 0, Image.HIGH_SCORE, TRUE);
 	DrawGraph(250, 0, Image.ONE_UP, TRUE);
