@@ -15,6 +15,9 @@ int Stock[3];
 int cnt =0;              //自機表示のループ用カウント
 //int InputHandle;      //キー入力用
 
+int HIGH_SCORE;
+int ONE_UP;
+
 int UI_Init() {
 
 	Score = 0;		//初期のスコア
@@ -27,6 +30,8 @@ int UI_Init() {
 	LoadDivGraph("Image/Galaxian_OBJ_other.png", 3, 3, 1, 18, 20, Stock, true); //自機１
 	
 
+	HIGH_SCORE = LoadGraph("Image/HIGH SCORE.png");
+	ONE_UP = LoadGraph("Image/1UP.png");
 	LoadDivGraph("Image/Galaxian_OBJ_other.png", 3, 3, 1, 18, 20, Stock, true); //旗
 	//自機画像の分割読み込み　画像名　分割総数　横の分割数　縦の分割数　分割した画像のx,y
 	//分割読み込みして得たグラフィックハンドルを保存するint型の配列へのポインタ　透明の反映
@@ -38,7 +43,7 @@ int UI_Init() {
 
 int UI_Dpct() {
 
-	Score = Enemy_Score();					//playerのPlayer_Score()に入っているスコアをもらう
+	//Score = Enemy_Score();					//playerのPlayer_Score()に入っているスコアをもらう
 	tmp_Remain = Player_Remain();		//Playerからもらったフラグを自分のフラグに入れる
 
 	/*if (Keyboard_Get(KEY_INPUT_RETURN) != 1) {
@@ -57,8 +62,8 @@ int UI_Draw() {
 	int Ry = 0;
 
 
-	DrawGraph(200, 0, SCORE_Image, TRUE);			 // データハンドルを使って画像を描画
-	DrawGraph(750, 650, REMAIN_Image, TRUE);		 // データハンドルを使って画像を描画
+	//DrawGraph(200, 0, SCORE_Image, TRUE);			 // データハンドルを使って画像を描画
+	//DrawGraph(750, 650, REMAIN_Image, TRUE);		 // データハンドルを使って画像を描画
 
 	//左上頂点の座標x,y,右下頂点x,y ＋１の座標 グラフィックハンドル、透明化の有無
 	    x = 280;
@@ -74,7 +79,8 @@ int UI_Draw() {
 		cnt++;
 	};
 
-	
+	DrawGraph(350, 0, HIGH_SCORE, TRUE);
+	DrawGraph(250, 0, ONE_UP, TRUE);
 	
 	DrawExtendGraph(800, 635, 850, 680, Stock[1], true);   //右のステージ数に応じて増える旗
 	//Extendを付けると拡大表示できる サイズは指定する必要がある

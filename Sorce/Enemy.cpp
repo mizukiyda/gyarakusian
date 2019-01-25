@@ -1049,41 +1049,11 @@ int EnemyShot_Mgr() {
 
 int EnemyShot_Move() {
 
-	//Enemy_Hit_Flg = Player_Hit();
-
 	for (j = 0; j < NUMSHOT; j++) {
-		enemy_shot[j].y += 3;
-
-		if (epx - 9 <= enemy_shot[j].x && epx + 18 >= enemy_shot[j].x - 4 &&
-			epy - 17 <= enemy_shot[j].y - 5 && epy + 15 >= enemy_shot[j].y + 3 &&
-			enemy_shot[j].onActive == true && Enemy_Hit_Flg == false) {
-			Enemy_Hit_Flg = true;
-			enemy_shot[j].onActive = false;
-		}
-
-
+		enemy_shot[j].y += 5;
 
 		if (enemy_shot[j].y >= 820) {
 			enemy_shot[j].onActive = false;
-		}
-
-	}
-
-	for (int k = 0;k < EnemyCount;k++) {
-		if (enemy[k].mode != ATTACK) {
-			continue;
-		}
-	    if (epx - 9 <= enemy[k].x + 20 && epx + 18 >= enemy[k].x - 10 &&
-			epy - 17 <= enemy[k].y + 20 && epy + 15 >= enemy[k].y - 10 &&
-			enemy[k].Draw_Flg == Draw_ON && Enemy_Hit_Flg == false) {
-			//Enemy_Hit_Flg = true;
-			enemy[k].Draw_Flg = Draw_Anime;
-
-			cntBlow++;
-			if (cntBlow > REMITBLOW)cntBlow = 0;
-			PUSH_BLOW(cntBlow, enemy[k].x, enemy[k].y);
-
-			return true;
 		}
 	}
 
@@ -1100,11 +1070,7 @@ int EnemyShot_Move() {
 		Enemy_Score(k);
 	}
 
-	if (Enemy_Hit_Flg == true) {
-		Enemy_Hit_Flg = false;
-		return true;
-	}
-	return false;
+	return 0;
 }
 
 
@@ -1156,8 +1122,37 @@ int Enemy_Score(int killed) {
 //“G‚Ì’e‚Ì“–‚½‚è”»’è
 int Enemy_Hit() {
 
-	Enemy_Hit_Flg = true;
-	return Enemy_Hit_Flg;
+	for (j = 0; j < NUMSHOT; j++) {
+
+		if (epx - 9 <= enemy_shot[j].x && epx + 18 >= enemy_shot[j].x - 4 &&
+			epy - 17 <= enemy_shot[j].y - 5 && epy + 15 >= enemy_shot[j].y + 3 &&
+			enemy_shot[j].onActive == true && Enemy_Hit_Flg == false) {
+			Enemy_Hit_Flg = true;
+			enemy_shot[j].onActive = false;
+		}
+	}
+	for (j = 0; j < EnemyCount; j++) {
+		if (enemy[j].mode != ATTACK) {
+			continue;
+		}
+		if (epx - 9 <= enemy[j].x + 20 && epx + 18 >= enemy[j].x - 10 &&
+			epy - 17 <= enemy[j].y + 20 && epy + 15 >= enemy[j].y - 10 &&
+			enemy[j].Draw_Flg == Draw_ON && Enemy_Hit_Flg == false) {
+			Enemy_Hit_Flg = true;
+			enemy[j].Draw_Flg = Draw_Anime;
+
+			cntBlow++;
+			if (cntBlow > REMITBLOW)cntBlow = 0;
+			PUSH_BLOW(cntBlow, enemy[j].x, enemy[j].y);
+		}
+	}
+
+	if (Enemy_Hit_Flg == true) {
+		Enemy_Hit_Flg = false;
+		return true;
+	}
+	return false;
+
 }
 
 /**********************************
@@ -1264,7 +1259,7 @@ int EnemyShot_Draw() {
 			}
 		}
 	}
-	DrawFormatString(300, 20, GetColor(255, 255, 255), "%d", e_score);
+	DrawFormatString(375, 40, GetColor(255, 0, 0), "%d", e_score);
 	return 0;
 }
 
