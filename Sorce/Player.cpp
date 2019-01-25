@@ -34,6 +34,7 @@ int Player_Image[35] = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6
 int Player_Cnt;							//画像表示用カウント
 int OnActive = true;					//Playerが生きている状態
 int BackGround;
+int starcnt = 0;
 
 int Player_Init() {
 	remain = Result_Reborn();
@@ -54,10 +55,10 @@ int Player_Init() {
 }
 
 int Player_Dpct() {
-	//キー入力
+	starcnt = (starcnt + 1) % 120;
 
 	PlayerShot_Flg = PlayerShot_Dpct();														//Shotからフラグを受け取る
-
+	//キー入力
 	if (OnActive == true) {																	//生きていなければ動けない
 																							//←
 		if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
@@ -103,6 +104,8 @@ int Player_Dpct() {
 	}
 
 	return PlayerShot_Flg;
+
+	
 }
 
 int Player_Remain() {		//残機の処理
@@ -125,8 +128,15 @@ int Player_Hit() {
 }
 
 int Player_Draw() {
+	
+	if (starcnt < 60) {
+		DrawExtendGraph(0, 5, 1280, 700, BackGround, true);
+	}
+	else {
+		DrawExtendGraph(-10, 5, 1270, 700, BackGround, true);
+	}
 
-	DrawExtendGraph(0, 5, 1280, 700, BackGround, true);
+	
 
 	if (OnActive == true) {														//生きている時だけ表示
 
