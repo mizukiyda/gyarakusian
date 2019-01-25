@@ -90,7 +90,6 @@ int Player_Dpct() {
 	if (Player.x >= 900) {											//Player‚Ìx‚Ì“®‚«‚ð1000‚ÅŽ~‚ß‚é
 		Player.x = 900;
 	}
-
 	EnemyHit_Flg = EnemyShot_Move();									//enemy‚©‚ç‚Ì“–‚½‚è”»’è‚ð“ü‚ê‚é‚à‚Ì
 	if (OnActive == true) {
 		if (EnemyHit_Flg == true) {
