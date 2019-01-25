@@ -303,12 +303,7 @@ int Enemy_Move() {
 			}
 		}
 
-		if (epx - 9 <= enemy[i].x + 20 && epx + 18 >= enemy[i].x - 10 &&
-			epy - 17 <= enemy[i].y + 20 && epy + 15 >= enemy[i].y - 10 &&
-			enemy[i].Draw_Flg == Draw_ON && Enemy_Hit_Flg == false) {
-			Enemy_Hit_Flg = true;
-			enemy[i].Draw_Flg = Draw_Anime;
-		}
+		
 
 		cntYellow = 0;
 		for (j = 0; j < 4; j++) {
@@ -844,9 +839,15 @@ int Enemy_Attack_Move(int num) {
 		}
 
 		//画面外に行ったら、目標点更新
-		if (enemy[num].x < 100 || enemy[num].x>1180) {
+		if (enemy[num].x < 100) {
 			enemy[num].A_Mode = CHANGE;
 			P_Count[num] = 3;
+			enemy[num].x += 2;
+		}
+		if ( enemy[num].x>1180) {
+			enemy[num].A_Mode = CHANGE;
+			P_Count[num] = 3;
+			enemy[num].x -= 2;
 		}
 		//画面下に行ったときの処理
 		if (enemy[num].y > 780) {
@@ -916,7 +917,7 @@ int Enemy_POINT() {
 			if (point[j].vct == LEFT) {
 				point[j].x -= 1;
 			}
-			point[j].y = point[j].basis_y + 400;
+			point[j].y = point[j].basis_y + 300;
 			break;
 		}
 
@@ -1048,7 +1049,7 @@ int EnemyShot_Mgr() {
 
 int EnemyShot_Move() {
 
-	Enemy_Hit_Flg = Player_Hit();
+	//Enemy_Hit_Flg = Player_Hit();
 
 	for (j = 0; j < NUMSHOT; j++) {
 		enemy_shot[j].y += 3;
@@ -1068,7 +1069,26 @@ int EnemyShot_Move() {
 
 	}
 
+	for (int k = 0;k < EnemyCount;k++) {
+		if (enemy[k].mode != ATTACK) {
+			continue;
+		}
+	    if (epx - 9 <= enemy[k].x + 20 && epx + 18 >= enemy[k].x - 10 &&
+			epy - 17 <= enemy[k].y + 20 && epy + 15 >= enemy[k].y - 10 &&
+			enemy[k].Draw_Flg == Draw_ON && Enemy_Hit_Flg == false) {
+			//Enemy_Hit_Flg = true;
+			enemy[k].Draw_Flg = Draw_Anime;
+
+			cntBlow++;
+			if (cntBlow > REMITBLOW)cntBlow = 0;
+			PUSH_BLOW(cntBlow, enemy[k].x, enemy[k].y);
+
+			return true;
+		}
+	}
+
 	for (int k = 0; k < EnemyCount; k++) {
+	
 		if (enemy[k].Draw_Flg == Draw_ON) {
 			enemy[k].Draw_Flg = Player_HIT(k);
 		}
@@ -1079,6 +1099,7 @@ int EnemyShot_Move() {
 		}
 		Enemy_Score(k);
 	}
+
 	if (Enemy_Hit_Flg == true) {
 		Enemy_Hit_Flg = false;
 		return true;
@@ -1135,6 +1156,7 @@ int Enemy_Score(int killed) {
 //敵の弾の当たり判定
 int Enemy_Hit() {
 
+	Enemy_Hit_Flg = true;
 	return Enemy_Hit_Flg;
 }
 
@@ -1187,7 +1209,7 @@ int Enemy_Draw() {
 
 			DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[enemy[i].anime], true, 0, 0);
 
-			DrawBox(enemy[i].x - 10, enemy[i].y - 10, enemy[i].x + 20, enemy[i].y + 20, GetColor(255, 0, 0), false);
+			//DrawBox(enemy[i].x - 10, enemy[i].y - 10, enemy[i].x + 20, enemy[i].y + 20, GetColor(255, 0, 0), false);
 
 			break;
 		case Draw_OFF:
@@ -1218,7 +1240,7 @@ int EnemyShot_Draw() {
 		if (blow[i].onActive == true) {
 			blow[i].Blow_Cnt++;
 
-			switch (blow[i].Blow_Cnt) {
+			switch (blow[i].Blow_Cnt / 5) {
 			case 0:
 				DrawRotaGraph(blow[i].x, blow[i].y, 2.5, 0, Enemy_Handle[33], true, 0, 0);
 				break;
