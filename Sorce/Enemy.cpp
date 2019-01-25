@@ -268,7 +268,7 @@ int Enemy_Move() {
 	Enemy_control();
 
 	//左右移動
-	if ((enemy[49].x > 1080.0 || enemy[48].x < 200.0)) {
+	if ((enemy[49].x > 850.0 || enemy[48].x < 200.0)) {
 		speed *= -1;
 	}
 
@@ -488,6 +488,7 @@ int Enemy_Attack_Chose() {
 				enemy[ne].mode = ATTACK;
 				ne = 49;
 				timer = (GetRand(8) * 1000) + 4000;
+				
 				return 0;
 			}
 
@@ -673,6 +674,7 @@ int Enemy_Attack_Move(int num) {
 		case NONE:
 			break;
 		case FIRST:
+			SetGax_Sound(4);
 			if (enemy[num].x >= CENTER_X) {
 				enemy[num].pt_x = enemy[num].x + 45;
 				enemy[num].pt_y = enemy[num].y - 45;
@@ -688,20 +690,20 @@ int Enemy_Attack_Move(int num) {
 			break;
 		case R_ROLL:
 			T_Count[num] += 1;
-			enemy[num].deg += 0.015;
+			enemy[num].deg += 0.03;
 
-			enemy[num].vct_x = 60 * cos(enemy[num].deg);
-			enemy[num].vct_y = 60 * sin(enemy[num].deg);
+			enemy[num].vct_x = 40 * cos(enemy[num].deg);
+			enemy[num].vct_y = 40 * sin(enemy[num].deg);
 
 			enemy[num].x = enemy[num].pt_x + enemy[num].vct_x;
 			enemy[num].y = enemy[num].pt_y + enemy[num].vct_y;
 			break;
 		case L_ROLL:
 			T_Count[num] += 1;
-			enemy[num].deg -= 0.015;
+			enemy[num].deg -= 0.03;
 
-			enemy[num].vct_x = 60 * cos(enemy[num].deg);
-			enemy[num].vct_y = 60 * sin(enemy[num].deg);
+			enemy[num].vct_x = 40 * cos(enemy[num].deg);
+			enemy[num].vct_y = 40 * sin(enemy[num].deg);
 
 			enemy[num].x = enemy[num].pt_x + enemy[num].vct_x;
 			enemy[num].y = enemy[num].pt_y + enemy[num].vct_y;
@@ -839,12 +841,12 @@ int Enemy_Attack_Move(int num) {
 		}
 
 		//画面外に行ったら、目標点更新
-		if (enemy[num].x < 100) {
+		if (enemy[num].x < 150) {
 			enemy[num].A_Mode = CHANGE;
 			P_Count[num] = 3;
 			enemy[num].x += 2;
 		}
-		if ( enemy[num].x>1180) {
+		if ( enemy[num].x>900) {
 			enemy[num].A_Mode = CHANGE;
 			P_Count[num] = 3;
 			enemy[num].x -= 2;
@@ -858,6 +860,7 @@ int Enemy_Attack_Move(int num) {
 			P_Count[num] = 0;
 			enemy[num].pt_y = 0;
 			enemy[num].pt_x = 0;
+			SetGax_Sound(10);
 		}
 	}
 	return 0;
@@ -1080,16 +1083,17 @@ int Enemy_Score(int killed) {
 		if (enemy[killed].mode == NONE) {
 			switch (enemy[killed].Type) {
 			case 0:
-				e_score += 30;
+				e_score += 60;
+				SetGax_Sound(6);
 				break;
 			case 1:
-				e_score += 40;
-				break;
-			case 2:
 				e_score += 50;
 				break;
+			case 2:
+				e_score += 40;
+				break;
 			case 3:
-				e_score += 60;
+				e_score += 30;
 				break;
 			}
 		}
@@ -1097,6 +1101,7 @@ int Enemy_Score(int killed) {
 			switch (enemy[killed].Type) {
 			case 0:
 				e_score += 60;
+				SetGax_Sound(6);
 				break;
 			case 1:
 				e_score += 80;

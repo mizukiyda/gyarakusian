@@ -65,13 +65,13 @@ void Scene_Mgr_Draw() {
 	case E_Scene_StartMenu:
 		//スタートメニュー
 		StartMenu_Draw();
-		DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー");
+	//	DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー");
 		break;
 
 	case E_Scene_StartMenu2:
 		//エネミーのスコアの確認
 		Rule_Draw();
-		DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー2");
+		//DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー2");
 		break;
 
 	case E_Scene_Game:
@@ -83,7 +83,7 @@ void Scene_Mgr_Draw() {
 		UI_Draw();
 		Sound_Draw();
 
-		DrawFormatString(0, 00, GetColor(255, 255, 255), "ゲーム画面");
+		//DrawFormatString(0, 00, GetColor(255, 255, 255), "ゲーム画面");
 
 		break;
 	case E_Scene_Result:
@@ -91,7 +91,7 @@ void Scene_Mgr_Draw() {
 		break;
 	case E_Scene_GameMenu:
 		//ゲームメニュー
-		DrawFormatString(0, 00, GetColor(255, 255, 255), "ゲームメニュー");
+		//DrawFormatString(0, 00, GetColor(255, 255, 255), "ゲームメニュー");
 		break;
 	}
 }

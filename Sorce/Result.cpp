@@ -29,7 +29,7 @@ int Result_Init() {
 	//ここで初期化をする
 	//step_count = UI_StepCount();			UIができたらコメントをはずす
 	SelectNum = 0;
-	reborn = 2;
+	reborn = 3;
 
 	Restart = LoadGraph("Image/RESTART1.png");				//スタートを選択している画像
 	On_Restart = LoadGraph("Image/RESTART.png");				//スタートを選択していない画像

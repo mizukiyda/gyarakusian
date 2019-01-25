@@ -40,7 +40,7 @@ int Player_Init() {
 	remain = Result_Reborn();
 
 	//プレイヤーの初期位置
-	Player.x = 300;
+	Player.x = 500;
 	Player.y = 600;
 
 	//画像
@@ -87,8 +87,8 @@ int Player_Dpct() {
 		Player.x = 300;
 	}
 
-	if (Player.x >= 900) {											//Playerのxの動きを1000で止める
-		Player.x = 900;
+	if (Player.x >= 750) {											//Playerのxの動きを1000で止める
+		Player.x = 750;
 	}
 	EnemyHit_Flg = Enemy_Hit();									//enemyからの当たり判定を入れるもの
 	if (OnActive == true) {
@@ -142,7 +142,7 @@ int Player_Draw() {
 		DrawRotaGraph(Player.x, Player.y, 2.0, 0.0, Gyallaly[i], true);			//画像の拡大表示
 
 	}
-	DrawFormatString(0, 100, GetColor(255, 255, 255), "remain:%d", remain);
+	//DrawFormatString(0, 100, GetColor(255, 255, 255), "remain:%d", remain);
 	if (OnActive == false) {													//破壊された時のアニメーション
 
 		Player_Cnt++;
