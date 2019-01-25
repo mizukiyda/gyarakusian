@@ -5,12 +5,16 @@
 #include<Math.h>
 #include<time.h>
 #include<stdlib.h>
-#include "Scene_Mgr.h"
 #include"Sound.h"
+#include "Scene_Mgr.h"
 
 /********************  変数宣言  ****************************/
 
 P_Enemy enemy[50];
+
+E_POINT point[4];
+
+SHOT_FLAG shot_flg[50];
 
 POS enemy_shot[NUMSHOT];
 
@@ -19,6 +23,8 @@ Blow blow[REMITBLOW];
 POS tmpBlow[REMITBLOW];
 
 POS tmpEnemyShot[NUMSHOT];
+
+VECTORE vct;
 
 MODE mode;
 
@@ -35,10 +41,6 @@ static int h, i, j;
 
 //敵の変数
 
-//敵の移動用
-int e_count[48] = { 0 };
-int move[14] = { 0,1,3,4,4,3,1 ,0,-1,-3,-4,-4,-3,-1 };
-
 int copy_i = 0;
 
 //角度
@@ -51,7 +53,7 @@ int ne;
 
 
 //Enemyの攻撃に移るまでのタイマー
-double timer = 12000;
+double timer = 24000;
 
 //行動カウント
 
@@ -94,6 +96,10 @@ int cntBlow = 0;
 int numShot = 0;
 int cntShot = 0;
 
+
+int T_Count[EnemyCount] = { 0 };
+int P_Count[EnemyCount] = { 0 };
+
 //初期位置(x座標)
 static double first_x[50] = { 590,630,670,710					//3
 , 550,590,630,670,710,750				//9
@@ -112,6 +118,7 @@ static double first_y[50] = { 80, 80, 80, 80
 ,230,230,230,230,230,230,230,230,230,230
 ,80,80 };
 
+
 int Enemy_Init() {
 
 	//画像読み込み
@@ -125,13 +132,18 @@ int Enemy_Init() {
 		enemy[i].fx = first_x[i];
 		enemy[i].fy = first_y[i];
 		enemy[i].deg = 0;
-		enemy[i].vct = 0;
-		enemy[i].vct2 = 0;
+		enemy[i].vct_x = 0;
+		enemy[i].vct_y = 0;
+		enemy[i].pt_x = 0;
+		enemy[i].pt_y = 900;
+		enemy[i].cp_x = 0;
+		enemy[i].cp_y = 0;
 		enemy[i].speed = 1;
 		enemy[i].x = enemy[i].fx;
 		enemy[i].y = enemy[i].fy;
 		enemy[i].anime_cnt = 0;
 		enemy[i].mode = NONE;
+		enemy[i].A_Mode = NONE;
 		enemy[i].Draw_Flg = Draw_ON;
 		enemy[1].Draw_Flg = Breaken;
 		enemy[2].Draw_Flg = Breaken;
@@ -166,6 +178,11 @@ int Enemy_Init() {
 			enemy[i].anime = 24;
 			enemy[i].nx = 240;
 		}
+
+		shot_flg[i].first_shot = false;
+		shot_flg[i].second_shot = false;
+		shot_flg[i].third_shot = false;
+		shot_flg[i].fourth_shot = false;
 	}
 	timerEnemy = 0;
 	cntRed = 0;
@@ -184,6 +201,51 @@ int Enemy_Init() {
 		}
 	}
 
+	for (i = 0; i < 4; i++) {
+
+		switch (i) {
+		case 0:
+			point[i].basis_x = CENTER_X;
+			point[i].basis_y = 0;
+			point[i].vct = RIGHT;
+			point[i].deg = 0;
+			point[i].vct_x = 0;
+			point[i].vct_y = 0;
+			point[i].x = 0;
+			point[i].y = 0;
+			break;
+		case 1:
+			point[i].basis_x = CENTER_X;
+			point[i].basis_y = CENTER_Y / 2;
+			point[i].vct = LEFT;
+			point[i].deg = 0;
+			point[i].vct_x = 0;
+			point[i].vct_y = 0;
+			point[i].x = 0;
+			point[i].y = 0;
+			break;
+		case 2:
+			point[i].basis_x = CENTER_X;
+			point[i].basis_y = CENTER_Y / 2;
+			point[i].vct = RIGHT;
+			point[i].deg = 0;
+			point[i].vct_x = 0;
+			point[i].vct_y = 0;
+			point[i].x = 0;
+			point[i].y = 0;
+			break;
+		case 3:
+			point[i].basis_x = 500;
+			point[i].basis_y = CENTER_Y;
+			point[i].x = point[i].basis_x;
+			point[i].y = point[i].basis_y;
+			point[i].vct = RIGHT;
+			point[i].remit_x = 10;
+			break;
+		}
+
+	}
+
 	speed = 1;
 
 	Enemy_Hit_Flg = false;
@@ -200,6 +262,8 @@ int Enemy_Move() {
 	//プレイヤーの座標受け取り(真ん中)
 	epx = Player_Pos_Init_x();
 	epy = Player_Pos_Init_y();
+
+	Enemy_POINT();
 
 	Enemy_control();
 
@@ -223,7 +287,10 @@ int Enemy_Move() {
 				break;
 
 			case ATTACK:
-				Enemy_Attack_Move(&i);
+				if (enemy[i].A_Mode == NONE) {
+					enemy[i].A_Mode = FIRST;
+				}
+				Enemy_Attack_Move(i);
 				break;
 
 			case MOVE:
@@ -234,6 +301,13 @@ int Enemy_Move() {
 				}
 				break;
 			}
+		}
+
+		if (epx - 9 <= enemy[i].x + 20 && epx + 18 >= enemy[i].x - 10 &&
+			epy - 17 <= enemy[i].y + 20 && epy + 15 >= enemy[i].y - 10 &&
+			enemy[i].Draw_Flg == Draw_ON && Enemy_Hit_Flg == false) {
+			Enemy_Hit_Flg = true;
+			enemy[i].Draw_Flg = Draw_Anime;
 		}
 
 		cntYellow = 0;
@@ -299,14 +373,11 @@ int Enemy_control() {
 int Enemy_Move_Flg(int num_i) {
 
 	enemy[num_i].mode = ATTACK;
-	e_count[num_i] = 0;
-
-	SetGax_Sound(4);
 
 	for (j = num_i + 4; j < num_i + 7; j++) {
 		if (enemy[j].Draw_Flg == Draw_ON) {
+			SetGax_Sound(4);
 			enemy[j].mode = ATTACK;
-			e_count[j] = 0;
 			cntRed++;
 		}
 		if (cntRed >= 2) {
@@ -333,7 +404,7 @@ int Enemy_Attack_Chose() {
 	}
 
 	if (timer <= 0) {//タイマーがゼロになったら、元に戻す
-		timer = 8000;// t_a[cntAttack % 12];
+		timer = 10000;// t_a[cntAttack % 12];
 		timerEnemy++;
 
 		if (timerEnemy >= 5) {
@@ -599,57 +670,344 @@ int Enemy_Attack_Chose() {
 	return 0;
 }
 
-int Enemy_Attack_Move(int *num) {
+int Enemy_Attack_Move(int num) {
 
-	if (EnemyCount > *num && enemy[*num].Draw_Flg == Draw_ON) {
+	if (EnemyCount > num && enemy[num].Draw_Flg == Draw_ON) {
 
-		//下方向に向かって移動
-		enemy[*num].y += 1;
+		switch (enemy[num].A_Mode) {
+		case NONE:
+			break;
+		case FIRST:
+			if (enemy[num].x >= CENTER_X) {
+				enemy[num].pt_x = enemy[num].x + 45;
+				enemy[num].pt_y = enemy[num].y - 45;
+				enemy[num].A_Mode = R_ROLL;
+			}
+			if (enemy[num].x < CENTER_X) {
+				enemy[num].pt_x = enemy[num].x - 45;
+				enemy[num].pt_y = enemy[num].y - 45;
+				enemy[num].A_Mode = L_ROLL;
+			}
+			enemy[num].deg = atan2(enemy[num].y - 60, 0);
 
-		if (enemy[*num].y == 280) {
-			EnemyShot();
-			SetGax_Sound(4);
+			break;
+		case R_ROLL:
+			T_Count[num] += 1;
+			enemy[num].deg += 0.015;
 
-		}
+			enemy[num].vct_x = 60 * cos(enemy[num].deg);
+			enemy[num].vct_y = 60 * sin(enemy[num].deg);
 
-		if (enemy[*num].mode == ATTACK) {
-			e_count[*num]++;
-			if (e_count[*num] / 20 > 14) {
-				e_count[*num] = 0;
+			enemy[num].x = enemy[num].pt_x + enemy[num].vct_x;
+			enemy[num].y = enemy[num].pt_y + enemy[num].vct_y;
+			break;
+		case L_ROLL:
+			T_Count[num] += 1;
+			enemy[num].deg -= 0.015;
+
+			enemy[num].vct_x = 60 * cos(enemy[num].deg);
+			enemy[num].vct_y = 60 * sin(enemy[num].deg);
+
+			enemy[num].x = enemy[num].pt_x + enemy[num].vct_x;
+			enemy[num].y = enemy[num].pt_y + enemy[num].vct_y;
+			break;
+		case R_CURVE:
+			enemy[num].deg += 0.0001;
+
+			enemy[num].vct_x = (enemy[num].cp_x - enemy[num].pt_x + 60) * cos(enemy[num].deg);
+			enemy[num].vct_y = (enemy[num].pt_y - enemy[num].cp_y) * sin(enemy[num].deg);
+
+			enemy[num].x = enemy[num].pt_x + enemy[num].vct_x;
+			enemy[num].y = (enemy[num].cp_y + 50) + enemy[num].vct_y;
+
+			break;
+		case L_CURVE:
+			enemy[num].deg -= 0.0001;
+
+			enemy[num].vct_x = (enemy[num].pt_x - enemy[num].cp_x - 60) * cos(enemy[num].deg);
+			enemy[num].vct_y = (enemy[num].pt_y - enemy[num].cp_y) * sin(enemy[num].deg);
+
+			enemy[num].x = enemy[num].pt_x + enemy[num].vct_x;
+			enemy[num].y = (enemy[num].cp_y + 50) + enemy[num].vct_y;
+
+			break;
+		case TRACK:
+			enemy[num].deg = atan2((enemy[num].pt_y) - enemy[num].y, enemy[num].pt_x - enemy[num].x);
+
+			enemy[num].vct_x = 2 * cos(enemy[num].deg);
+			enemy[num].vct_y = 2 * sin(enemy[num].deg);
+
+			enemy[num].x += enemy[num].vct_x;// / 10;
+			enemy[num].y += enemy[num].vct_y;// / 10;
+			break;
+		case CHANGE:
+
+			if (P_Count[num] != 0) {
+				enemy[num].pt_x = point[3].x;
+				enemy[num].pt_y = point[3].y;
+
+				enemy[num].cp_x = enemy[num].x;
+				enemy[num].cp_y = enemy[num].y;
+
+				/*if ( enemy[num].x >enemy[num].pt_x) {
+				enemy[num].A_Mode = R_CURVE;
+				}
+				else {
+				enemy[num].A_Mode = L_CURVE;
+				}*/
+				if (num == 0 || num == 3) {
+					enemy[num].pt_y -= 30;
+				}
+				if (num == 4 || num == 7) {
+					enemy[num].pt_x -= 40;
+				}if (num == 6 || num == 9) {
+					enemy[num].pt_x += 40;
+				}
+				enemy[num].A_Mode = TRACK;
+				break;
 			}
 
-			enemy[*num].x += move[e_count[*num] / 20];
+			enemy[num].pt_x = point[P_Count[num]].x;
+
+			if (enemy[num].pt_x > epx + 380) {
+				P_Count[num] = 1;
+			}
+			else if (enemy[num].pt_x > epx - 380) {
+				P_Count[num] = 2;
+			}
+			else {
+				P_Count[num] = 3;
+			}
+
+			enemy[num].pt_x = point[P_Count[num]].x;
+			enemy[num].pt_y = point[P_Count[num]].y;
+
+			if (num == 0 || num == 3) {
+				enemy[num].pt_y -= 30;
+			}
+			if (num == 4 || num == 7) {
+				enemy[num].pt_x -= 40;
+			}if (num == 6 || num == 9) {
+				enemy[num].pt_x += 40;
+			}
+			enemy[num].A_Mode = TRACK;
+			break;
 		}
-		//画面外に行ったら、上に戻す
-		if (enemy[*num].x < 0 || enemy[*num].x>1280) {
-			enemy[*num].x = enemy[*num].fx;
-			enemy[*num].y = -40;
-			enemy[*num].mode = MOVE;
+
+		//円の周りを回す場合
+		//一定範囲内なら
+		if (pow(16 + 60, 2) >= pow(enemy[num].pt_x - enemy[num].x, 2) + pow(enemy[num].pt_y - enemy[num].y, 2)) {
+			if (enemy[num].A_Mode != L_ROLL && enemy[num].x >= CENTER_X) {
+				if (enemy[num].A_Mode != R_ROLL) {
+
+					//enemy[num].deg = atan2(enemy[num].y - 60, 0);
+
+				}
+				enemy[num].A_Mode = R_ROLL;
+			}
+			if (enemy[num].A_Mode != R_ROLL && enemy[num].x < CENTER_X) {
+				if (enemy[num].A_Mode != L_ROLL) {
+
+					//enemy[num].deg = atan2(enemy[num].y - 60, 0);
+
+				}
+				enemy[num].A_Mode = L_ROLL;
+			}
+		}
+
+		//円からの脱出(CHANGEに変える)
+		if (enemy[num].A_Mode == L_ROLL &&
+			enemy[num].pt_y < enemy[num].y  &&
+			enemy[num].pt_x > enemy[num].x &&
+			T_Count[num] > 10) {
+			T_Count[num] = 0;
+			enemy[num].A_Mode = CHANGE;
+		}
+		else if (enemy[num].A_Mode == R_ROLL &&
+			enemy[num].pt_y < enemy[num].y &&
+			enemy[num].pt_x < enemy[num].x &&
+			T_Count[num] > 10) {
+			T_Count[num] = 0;
+			enemy[num].A_Mode = CHANGE;
+		}
+
+		//一定範囲にいたら、中心点が移動する。
+		//pow(enemyの半径 + 目標点の半径, 2)
+		if (pow(16 + 120, 2) >= pow(enemy[num].pt_x - enemy[num].x, 2) + pow(enemy[num].pt_y - enemy[num].y, 2) &&
+			pow(16 + 60, 2) < pow(enemy[num].pt_x - enemy[num].x, 2) + pow(enemy[num].pt_y - enemy[num].y, 2)) {
+			enemy[num].A_Mode = CHANGE;
+		}
+
+		//一定範囲外なら、中心点に向かって移動する。
+		if (pow(16 + 120, 2) < pow(enemy[num].pt_x - enemy[num].x, 2) + pow(enemy[num].pt_y - enemy[num].y, 2) && enemy[num].pt_x <0) {
+			enemy[num].A_Mode = TRACK;
+		}
+
+		//画面外に行ったら、目標点更新
+		if (enemy[num].x < 100 || enemy[num].x>1180) {
+			enemy[num].A_Mode = CHANGE;
+			P_Count[num] = 3;
 		}
 		//画面下に行ったときの処理
-		if (enemy[*num].y >= 750) {
-			enemy[*num].y = -10;
-			enemy[*num].x = enemy[*num].fx;
-			enemy[*num].mode = MOVE;
-			SetGax_Sound(10);
-
+		if (enemy[num].y > 780) {
+			enemy[num].y = -10;
+			enemy[num].x = enemy[num].fx;
+			enemy[num].mode = MOVE;
+			enemy[num].A_Mode = NONE;
+			P_Count[num] = 0;
+			enemy[num].pt_y = 0;
+			enemy[num].pt_x = 0;
 		}
 	}
+	return 0;
+}
+
+int Enemy_POINT() {
+
+	for (int j = 0; j < 4; j++) {
+
+		if (j != 3) {
+
+			if (point[j].y <= point[j].basis_y + 150) {
+				if (point[j].x > point[j].basis_x) {
+					point[j].vct = LEFT;
+				}
+				else if (point[j].x < point[j].basis_x) {
+					point[j].vct = RIGHT;
+				}
+			}
+		}
+		switch (j) {
+		case 0:
+			if (point[j].vct == LEFT) {
+				//回転のスピード
+				point[j].deg += 0.01;
+			}
+			if (point[j].vct == RIGHT) {
+				point[j].deg -= 0.01;
+			}
+			break;
+		case 1:
+			if (point[j].x <= point[j].basis_x + 250) {
+				point[j].vct = RIGHT;
+			}
+			if (point[j].y >= point[3].basis_y) {//CENTER_Y * 2 + 150) {
+				point[j].vct = RIGHT;
+			}
+			break;
+		case 2:
+			if (point[j].x >= point[j].basis_x - 250) {
+				point[j].vct = LEFT;
+			}
+			if (point[j].y >= point[3].basis_y) {//CENTER_Y * 2 + 150) {
+				point[j].vct = LEFT;
+			}
+			break;
+		case 3:
+			point[j].basis_x = epx;
+			point[j].basis_y = epy;
+			if (point[j].x > point[j].basis_x + point[j].remit_x ||
+				point[j].x < point[j].basis_x - point[j].remit_x) {
+				point[j].vct *= -1;
+			}
+			if (point[j].vct == RIGHT) {
+				point[j].x += 1;
+			}
+			if (point[j].vct == LEFT) {
+				point[j].x -= 1;
+			}
+			point[j].y = point[j].basis_y + 400;
+			break;
+		}
+
+		switch (j) {
+		case 0:
+			point[j].vct_x = CENTER_X * cos(point[j].deg);
+			point[j].vct_y = (CENTER_Y * 2) * sin(point[j].deg);
+			break;
+		case 1:
+		case 2:
+			if (point[j].vct == LEFT) {
+				//回転のスピード
+				point[j].deg += 0.001;
+
+			}
+			if (point[j].vct == RIGHT) {
+				point[j].deg -= 0.001;
+			}
+
+			//円の半径　×　sin or cos
+			point[j].vct_x = CENTER_X * cos(point[j].deg);
+			point[j].vct_y = 1000 * sin(point[j].deg);
+			break;
+		}
+		if (j != 3) {
+			point[j].x = point[j].basis_x + point[j].vct_x;
+			point[j].y = point[j].basis_y + point[j].vct_y;
+		}
+
+	}
+	return 0;
+}
+
+int Enemy_M() {
+	/*for (int j = 0; j < EnemyCount; j++) {
+
+
+	enemy[i].deg = atan2(enemy[i].pt_y - enemy[i].y, enemy[i].pt_x - enemy[i].x);
+
+	int len = (enemy[i].pt_x - enemy[i].x)*(enemy[i].pt_x - enemy[i].x) + (enemy[i].pt_y - enemy[i].y)*(enemy[i].pt_y - enemy[i].y);
+
+	if (len <= ((10 + 30) * (10 + 30))) {
+
+	enemy[i].pt_x = enemy[i].x + epx / 2;
+
+	enemy[i].pt_y -= 100;
+	}
+	}*/
 	return 0;
 }
 
 int EnemyShot_Mgr() {
 
 	for (int l = 0; l < EnemyCount; l++) {
-		if ((enemy[l].y == SHOT_POINT_FIRST ||
-			enemy[l].y == SHOT_POINT_SECOND ||
-			enemy[l].y == SHOT_POINT_THIRD ||
-			enemy[l].y == SHOT_POINT_FOURTH) &&
-			enemy[l].Draw_Flg == Draw_ON) {
-			cntShot++;
-			if (cntShot > NUMSHOT)cntShot = 0;
+		if (enemy[l].Draw_Flg == Draw_ON) {
+			if (enemy[l].y >= SHOT_POINT_FIRST - N &&
+				enemy[l].y <= SHOT_POINT_FIRST + N && shot_flg[l].first_shot == false) {
+				shot_flg[l].first_shot = true;
+			}
+			if (enemy[l].y >= SHOT_POINT_SECOND - N &&
+				enemy[l].y <= SHOT_POINT_SECOND + N && shot_flg[l].second_shot == false) {
+				shot_flg[l].second_shot = true;
+			}
+			if (enemy[l].y >= SHOT_POINT_THIRD - N &&
+				enemy[l].y <= SHOT_POINT_THIRD + N && shot_flg[l].third_shot == false) {
+				shot_flg[l].third_shot = true;
+			}
+			if (enemy[l].y >= SHOT_POINT_FOURTH - N &&
+				enemy[l].y <= SHOT_POINT_FOURTH + N && shot_flg[l].fourth_shot == false) {
+				shot_flg[l].fourth_shot = true;
+			}
+			if (shot_flg[l].first_shot == true ||
+				shot_flg[l].second_shot == true ||
+				shot_flg[l].third_shot == true ||
+				shot_flg[l].fourth_shot == true) {
+				cntShot++;
+				if (cntShot > NUMSHOT)cntShot = 0;
 
-			PUSH_SHOT(cntShot, enemy[l].x, enemy[l].y);
+				PUSH_SHOT(cntShot, enemy[l].x, enemy[l].y);
+				if (shot_flg[l].first_shot == true)shot_flg[l].first_shot = NONE;
+				if (shot_flg[l].second_shot == true)shot_flg[l].second_shot = NONE;
+				if (shot_flg[l].third_shot == true)shot_flg[l].third_shot = NONE;
+				if (shot_flg[l].fourth_shot == true)shot_flg[l].fourth_shot = NONE;
+			}
+
+			if (enemy[l].y >= 720) {
+				shot_flg[l].first_shot = false;
+				shot_flg[l].second_shot = false;
+				shot_flg[l].third_shot = false;
+				shot_flg[l].fourth_shot = false;
+			}
 		}
 	}
 
@@ -680,14 +1038,11 @@ int EnemyShot_Mgr() {
 		}
 	}
 
+
 	EnemyShot_Move();
 
 	EnemyShot_Draw();
 
-	return 0;
-}
-
-int EnemyShot() {
 	return 0;
 }
 
@@ -725,11 +1080,12 @@ int EnemyShot_Move() {
 		Enemy_Score(k);
 	}
 	if (Enemy_Hit_Flg == true) {
-		//Enemy_Hit_Flg = false;
+		Enemy_Hit_Flg = false;
 		return true;
 	}
 	return false;
 }
+
 
 //プレーヤーの弾が当たったかとスコア
 int Enemy_Score(int killed) {
@@ -738,8 +1094,6 @@ int Enemy_Score(int killed) {
 			switch (enemy[killed].Type) {
 			case 0:
 				e_score += 30;
-				SetGax_Sound(6);
-
 				break;
 			case 1:
 				e_score += 40;
@@ -756,8 +1110,6 @@ int Enemy_Score(int killed) {
 			switch (enemy[killed].Type) {
 			case 0:
 				e_score += 60;
-				SetGax_Sound(6);
-
 				break;
 			case 1:
 				e_score += 80;
@@ -835,6 +1187,8 @@ int Enemy_Draw() {
 
 			DrawRotaGraph(enemy[i].x, enemy[i].y, 2.5, 0, Enemy_Handle[enemy[i].anime], true, 0, 0);
 
+			DrawBox(enemy[i].x - 10, enemy[i].y - 10, enemy[i].x + 20, enemy[i].y + 20, GetColor(255, 0, 0), false);
+
 			break;
 		case Draw_OFF:
 			break;
@@ -846,7 +1200,7 @@ int Enemy_Draw() {
 		}
 
 	}
-	//DrawBox(epx-9, epy-15, epx + 16, epy + 15, GetColor(255, 255, 255), false);
+
 	return 0;
 }
 
@@ -857,8 +1211,6 @@ int EnemyShot_Draw() {
 		if (enemy_shot[j].onActive == true) {
 			DrawRotaGraph(enemy_shot[j].x, enemy_shot[j].y, 2.5, 0, Enemy_Shot_Gyallaly[Enemy_None_Num], true, 0, 0);
 		}
-
-		//DrawBox(enemy_shot[j].x - 4, enemy_shot[j].y-5, enemy_shot[j].x, enemy_shot[j].y +3, GetColor(255, 0, 0), false);
 	}
 	for (i = 0; i < REMITBLOW; i++) {
 		//再生
@@ -866,7 +1218,7 @@ int EnemyShot_Draw() {
 		if (blow[i].onActive == true) {
 			blow[i].Blow_Cnt++;
 
-			switch (blow[i].Blow_Cnt / 5) {
+			switch (blow[i].Blow_Cnt) {
 			case 0:
 				DrawRotaGraph(blow[i].x, blow[i].y, 2.5, 0, Enemy_Handle[33], true, 0, 0);
 				break;
@@ -881,7 +1233,6 @@ int EnemyShot_Draw() {
 				break;
 			case 5:
 				DrawRotaGraph(blow[i].x, blow[i].y, 2.5, 0, Enemy_Handle[36], true, 0, 0);
-				blow[i].Blow_Cnt = 0;
 				break;
 			case 4:
 				blow[i].onActive = false;
@@ -918,6 +1269,7 @@ int Enemy_Stage_clear() {
 
 	return cntYellow;
 }
+
 
 int Enemy_Pos_Init_x(int num) {
 	return enemy[num].x;
