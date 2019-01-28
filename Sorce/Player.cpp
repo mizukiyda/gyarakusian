@@ -34,7 +34,11 @@ int Player_Image[35] = { 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6
 int Player_Cnt;							//画像表示用カウント
 int OnActive = true;					//Playerが生きている状態
 int BackGround;
+int BackGround2;
 int starcnt = 0;
+int y = 5;
+int gy = 750;
+int scl_speed = 1;
 
 int Player_Init() {
 	remain = Result_Reborn();
@@ -50,11 +54,16 @@ int Player_Init() {
 	Player_Cnt = 0;
 
 	BackGround = LoadGraph("Image/BackGround.png");
+	BackGround2 = LoadGraph("Image/BackGround2.png");
 
 	return 0;
 }
 
 int Player_Dpct() {
+
+	y += scl_speed;
+	gy += scl_speed;
+
 	starcnt = (starcnt + 1) % 120;
 
 	PlayerShot_Flg = PlayerShot_Dpct();														//Shotからフラグを受け取る
@@ -129,13 +138,28 @@ int Player_Hit() {
 int Player_Draw() {
 	
 	if (starcnt < 60) {
-		DrawExtendGraph(0, 5, 1280, 700, BackGround, true);
+		DrawExtendGraph(5, y, 1280, gy, BackGround, true);
 	}
 	else {
-		DrawExtendGraph(-10, 5, 1270, 700, BackGround, true);
+		DrawExtendGraph(-10, y, 1280, gy, BackGround, true);
 	}
 
-	
+	if (y == 700) {
+		y = 5;
+		gy = 750;
+	}
+
+	if (starcnt < 60) {
+		DrawExtendGraph(5, y-700, 1280, gy-750, BackGround2, true);
+	}
+	else {
+		DrawExtendGraph(-10, y-700, 1280, gy-750, BackGround2, true);
+	}
+
+	if (y == 700) {
+		y = 5;
+		gy = 750;
+	}
 
 	if (OnActive == true) {														//生きている時だけ表示
 
