@@ -1615,6 +1615,7 @@ int EnemyShot_Draw() {
 		}
 	}
 	DrawFormatString(375, 40, GetColor(255, 0, 0), "%d", e_score);
+	DrawFormatString(650, 40, GetColor(255, 0, 0), "%d", e_score);
 	return 0;
 }
 
