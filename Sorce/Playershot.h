@@ -17,12 +17,12 @@ typedef struct {
 
 }S_PShot;
 
-typedef enum {
+/*typedef enum {
 
 	Draw_ON,		//•\Ž¦
 	Draw_OFF,		//”ñ•\Ž¦	
 	Draw_Anime,
 	Breaken			//”j‰ó‚³‚ê‚½
 } S_EnemyType;
-
+*/
 #endif
