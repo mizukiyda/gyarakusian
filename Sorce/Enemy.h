@@ -5,8 +5,8 @@
 #define NUMSHOT 30
 #define REMITBLOW 10
 #define EnemyCount 48
-//画面サイズ1280：700
-#define CENTER_X 640
+//画面サイズ700：700
+#define CENTER_X 370
 #define CENTER_Y 350
 
 #define PUSH_BLOW(i,E_X,E_Y) 	tmpBlow[i].x = E_X; tmpBlow[i].y = E_Y; blow[i].Blow_Cnt = 0; tmpBlow[i].onActive = true;
@@ -62,6 +62,8 @@ typedef struct {
 	double nx;
 	//角度
 	double deg;
+	//プレイヤーと敵の角度
+	double deg2;
 	//目標点
 	double pt_x;
 	double pt_y;
@@ -74,6 +76,8 @@ typedef struct {
 
 	double speed;
 	int anime;
+	int anime2;
+
 	int anime_cnt;
 	int mode;
 	int A_Mode;
@@ -168,12 +172,12 @@ typedef enum {
 }SHOTPOINT;
 
 //あとで消さないとエラー
-/*typedef enum {
+typedef enum {
 
 	Draw_ON,		//表示
 	Draw_OFF,		//非表示	
 	Draw_Anime,
 	Breaken			//破壊された
-} S_EnemyType;*/
+} S_EnemyType;
 
 #endif
