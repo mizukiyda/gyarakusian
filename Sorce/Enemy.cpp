@@ -99,11 +99,11 @@ int P_Count[EnemyCount] = { 0 };
 
 //初期位置(x座標)
 static double first_x[50] = { 150,190,230,270					//3
-, 110,150,190,230,270,310				//9
-, 70, 110,150,190,230,270,310,350			//17
-, 30, 70, 110,150,190,230,270,310,350,390		//27
-, 30, 70, 110,150,190,230,270,310,350,390		//37
-, 30, 70, 110,150,190,230,270,310,350,390		//47
+, 110,150,190,230,270,310										//9
+, 70, 110,150,190,230,270,310,350								//17
+, 30, 70, 110,150,190,230,270,310,350,390						//27
+, 30, 70, 110,150,190,230,270,310,350,390						//37
+, 30, 70, 110,150,190,230,270,310,350,390						//47
 , 30,                                 390 };
 
 //初期位置(y座標)
@@ -413,7 +413,6 @@ int Enemy_Move_Flg(int num) {
 
 	for (j = num + 4; j < num + 7; j++) {
 		if (enemy[j].onActive == Draw_ON) {
-			SetGax_Sound(4);
 			enemy[j].mode = ATTACK;
 			Red++;
 		}
@@ -574,7 +573,7 @@ int Enemy_Attack_Chose() {
 			break;
 		}
 	}
-
+	SetGax_Sound(4);
 	return 0;
 }
 
@@ -665,13 +664,6 @@ int Enemy_Attack_Move(int num) {
 				enemy[num].cp_x = enemy[num].x;
 				enemy[num].cp_y = enemy[num].y;
 
-				/*if ( enemy[num].x >enemy[num].pt_x) {
-				enemy[num].A_Mode = R_CURVE;
-				}
-				else {
-				enemy[num].A_Mode = L_CURVE;
-				}*/
-
 				if (num == 0 || num == 3) {
 					enemy[num].pt_y -= 30;
 				}
@@ -736,9 +728,7 @@ int Enemy_Attack_Move(int num) {
 			}
 			if (enemy[num].A_Mode != R_ROLL && enemy[num].x < CENTER_X) {
 				if (enemy[num].A_Mode != L_ROLL) {
-
 					enemy[num].deg = atan2(enemy[num].y + 60, 0);
-
 				}
 				enemy[num].A_Mode = L_ROLL;
 			}
@@ -842,7 +832,7 @@ int Enemy_POINT() {
 			if (point[j].x <= point[j].basis_x + 250) {
 				point[j].vct = RIGHT;
 			}
-			if (point[j].y >= point[3].basis_y) {//CENTER_Y * 2 + 150) {
+			if (point[j].y >= point[3].basis_y) {
 				point[j].vct = RIGHT;
 			}
 			break;
@@ -850,7 +840,7 @@ int Enemy_POINT() {
 			if (point[j].x >= point[j].basis_x - 250) {
 				point[j].vct = LEFT;
 			}
-			if (point[j].y >= point[3].basis_y) {//CENTER_Y * 2 + 150) {
+			if (point[j].y >= point[3].basis_y) {
 				point[j].vct = LEFT;
 			}
 			break;
@@ -896,7 +886,6 @@ int Enemy_POINT() {
 			point[j].x = point[j].basis_x + point[j].vct_x;
 			point[j].y = point[j].basis_y + point[j].vct_y;
 		}
-
 	}
 	return 0;
 }
@@ -1072,6 +1061,7 @@ int Enemy_Score(int killed) {
 			switch (enemy[killed].Type) {
 			case 0:
 				e_score += 60;
+				SetGax_Sound(6);
 				break;
 			case 1:
 				e_score += 50;
@@ -1088,6 +1078,7 @@ int Enemy_Score(int killed) {
 			switch (enemy[killed].Type) {
 			case 0:
 				e_score += 200;
+				SetGax_Sound(6);
 				break;
 			case 1:
 				e_score += 100;
@@ -1576,7 +1567,6 @@ int Cnt_Blue() {
 	return 0;
 }
 
-
 //Enemyのアニメーション
 /***************************************
 関数名:Enemy_Animetion
@@ -1692,7 +1682,6 @@ int Enemy_Draw() {
 			break;
 		}
 	}
-
 	return 0;
 }
 

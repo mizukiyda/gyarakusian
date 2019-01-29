@@ -27,7 +27,6 @@ int Result;
 // Init 初期化
 int Result_Init() {
 	//ここで初期化をする
-	//step_count = UI_StepCount();			UIができたらコメントをはずす
 	SelectNum = 0;
 	reborn = 3;
 
@@ -97,13 +96,7 @@ int Result_Draw() {
 	//ここで描写
 	//こっちも毎フレーム呼ばれますが計算とは別に書きます
 
-	//DrawFormatString(100, 100, GetColor(255, 255, 255), "りざると");
 	DrawGraph(100, 100, Result, TRUE);
-
-	/*
-	for (int i = 0; i<MENU_ELEMENT_MAX; i++) { // メニュー項目を描画
-	DrawFormatString(ResultMenuElement[i].x, ResultMenuElement[i].y, GetColor(255, 255, 255), ResultMenuElement[i].name);
-	}*/
 
 	switch (SelectNum)
 	{

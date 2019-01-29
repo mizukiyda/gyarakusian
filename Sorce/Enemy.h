@@ -165,7 +165,6 @@ typedef enum {
 
 }MODE;
 
-
 //敵のタイプ
 typedef enum {
 	YELLOW,
@@ -181,8 +180,4 @@ typedef enum {
 	SHOT_POINT_THIRD = 440,
 	SHOT_POINT_FOURTH = 520
 }SHOTPOINT;
-
-//あとで消さないとエラー
-
-
 #endif

@@ -7,7 +7,6 @@
 #include "PlayerShot.h"
 #include "UI.h"
 #include "Sound.h"
-#include"Rule.h"
 
 static E_Scene Sceneflag = E_Scene_StartMenu;		//今のシーン
 static E_Scene n_Sceneflag = E_Scene_None;			//次のシーン
@@ -35,9 +34,7 @@ void Scene_Mgr_Dpct() {
 		//スタートメニュー
 		StartMenu_Dpct();
 		break;
-	case E_Scene_StartMenu2:
-		Rule_Dpct();
-		break;
+
 	case E_Scene_Game:
 		//ゲーム画面
 		Enemy_Move();
@@ -65,13 +62,6 @@ void Scene_Mgr_Draw() {
 	case E_Scene_StartMenu:
 		//スタートメニュー
 		StartMenu_Draw();
-	//	DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー");
-		break;
-
-	case E_Scene_StartMenu2:
-		//エネミーのスコアの確認
-		Rule_Draw();
-		//DrawFormatString(0, 00, GetColor(255, 255, 255), "スタートメニュー2");
 		break;
 
 	case E_Scene_Game:
@@ -82,16 +72,12 @@ void Scene_Mgr_Draw() {
 		EnemyShot_Draw();
 		UI_Draw();
 		Sound_Draw();
-
-		//DrawFormatString(0, 00, GetColor(255, 255, 255), "ゲーム画面");
-
 		break;
 	case E_Scene_Result:
 		Result_Draw();
 		break;
 	case E_Scene_GameMenu:
 		//ゲームメニュー
-		//DrawFormatString(0, 00, GetColor(255, 255, 255), "ゲームメニュー");
 		break;
 	}
 }
@@ -114,10 +100,6 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 		Result_Init();
 		break;
 
-	case E_Scene_StartMenu2:
-		Rule_Init();
-		break;
-
 	case E_Scene_Game:
 		//ゲーム画面
 
@@ -128,7 +110,6 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 		Sound_Init();
 		break;
 	case E_Scene_Result:
-		//Result_Init();
 		break;
 	case E_Scene_GameMenu:
 		//ゲームメニュー
@@ -142,10 +123,6 @@ static void Scene_Mgr_End_Module(E_Scene scene) {
 	case E_Scene_StartMenu:
 		//スタートメニュー
 		StartMenu_End();
-		break;
-
-	case E_Scene_StartMenu2:
-		Rule_End();
 		break;
 
 	case E_Scene_Game:

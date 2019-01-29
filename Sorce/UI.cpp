@@ -13,8 +13,6 @@ int tmp_Remain;			//EnemyShotからplayerに当たった時のフラグをもらい、残機を「 1 
 int SCORE_Image, REMAIN_Image, UI_Image;
 int Stock[3];
 int cnt =0;              //自機表示のループ用カウント
-//int InputHandle;      //キー入力用
-
 int HIGH_SCORE;
 int ONE_UP;
 
@@ -26,31 +24,20 @@ int UI_Init() {
 
 	SCORE_Image = LoadGraph("Image/SCORE.png");
 	REMAIN_Image = LoadGraph("Image/REMAIN.png");
-	//UI_Image = LoadGraph("Image/Galaxian_OBJ_other.png");
 	LoadDivGraph("Image/Galaxian_OBJ_other.png", 3, 3, 1, 18, 20, Stock, true); //自機１
-	
 
 	HIGH_SCORE = LoadGraph("Image/HIGH SCORE.png");
 	ONE_UP = LoadGraph("Image/1UP.png");
 	LoadDivGraph("Image/Galaxian_OBJ_other.png", 3, 3, 1, 18, 20, Stock, true); //旗
 	//自機画像の分割読み込み　画像名　分割総数　横の分割数　縦の分割数　分割した画像のx,y
 	//分割読み込みして得たグラフィックハンドルを保存するint型の配列へのポインタ　透明の反映
-
-
 		return 0;
 	
 }
 
 int UI_Dpct() {
 
-	//Score = Enemy_Score();					//playerのPlayer_Score()に入っているスコアをもらう
 	tmp_Remain = Player_Remain();		//Playerからもらったフラグを自分のフラグに入れる
-
-	/*if (Keyboard_Get(KEY_INPUT_RETURN) != 1) {
-		SetPlayer_(1);								//ポインタで返す
-		
-	}*/
-
 	return 0;
 
 }
@@ -60,10 +47,6 @@ int UI_Draw() {
 	int y = 0;
 	int Rx = 0;
 	int Ry = 0;
-
-
-	//DrawGraph(200, 0, SCORE_Image, TRUE);			 // データハンドルを使って画像を描画
-	//DrawGraph(750, 650, REMAIN_Image, TRUE);		 // データハンドルを使って画像を描画
 
 	//左上頂点の座標x,y,右下頂点x,y ＋１の座標 グラフィックハンドル、透明化の有無
 	    x = 120;

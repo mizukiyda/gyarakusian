@@ -17,7 +17,7 @@ int Player_Shot_Sound;			         // 発射の効果音
 int StartMenu_Sound;					 // スタートメニューのBGM
 int Gax_Sound = 0;						 // 効果音のSwitch ここに送れば音が流れる
 
-int i;
+int volume;
 
  //初期化
 int Sound_Init() {
@@ -97,9 +97,9 @@ int Sound_Dpct() {
 		break;
 	case 10:
 		// 敵が降ってくる音を止める徐々に小さくする
-		for (i = 255; i < 0; i--) {
+		for (volume = 255; volume < 0; volume--) {
 		
-			ChangeVolumeSoundMem(i, Enemy_Attack_Sound);
+			ChangeVolumeSoundMem(volume, Enemy_Attack_Sound);
 		}
 		Gax_Sound = 0;
 		break;
