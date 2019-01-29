@@ -44,7 +44,7 @@ int Player_Init() {
 	remain = Result_Reborn();
 
 	//プレイヤーの初期位置
-	Player.x = 500;
+	Player.x = 350;
 	Player.y = 600;
 
 	//画像
@@ -71,12 +71,12 @@ int Player_Dpct() {
 	if (OnActive == true) {																	//生きていなければ動けない
 																							//←
 		if (Keyboard_Get(KEY_INPUT_LEFT) != 0) {
-			Player.x -= 2;
+			Player.x -= 3;
 		}
 
 		//→
 		if (Keyboard_Get(KEY_INPUT_RIGHT) != 0) {
-			Player.x += 2;
+			Player.x += 3;
 		}
 	}
 
@@ -92,12 +92,12 @@ int Player_Dpct() {
 		}
 	}
 
-	if (Player.x <= 300) {											//Playerのxの動きを200で止める
-		Player.x = 300;
+	if (Player.x <= 200) {											//Playerのxの動きを200で止める
+		Player.x = 200;
 	}
 
-	if (Player.x >= 750) {											//Playerのxの動きを1000で止める
-		Player.x = 750;
+	if (Player.x >= 650) {											//Playerのxの動きを1000で止める
+		Player.x = 650;
 	}
 	EnemyHit_Flg = Enemy_Hit();									//enemyからの当たり判定を入れるもの
 	if (OnActive == true) {
@@ -112,8 +112,6 @@ int Player_Dpct() {
 	}
 
 	return PlayerShot_Flg;
-
-	
 }
 
 int Player_Remain() {		//残機の処理
@@ -195,7 +193,7 @@ int Player_Draw() {
 
 		}
 		if (Player_Cnt > 400) {		//もしカウントが200を
-			Player.x = 600;			//プレイヤーの復活場所をx座標の300にする。
+			Player.x = 350;			//プレイヤーの復活場所をx座標の300にする。
 			Player_Cnt = 0;			//カウントを0にする
 			OnActive = true;		//playerが復活した時
 		}

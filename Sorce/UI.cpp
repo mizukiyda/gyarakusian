@@ -66,9 +66,9 @@ int UI_Draw() {
 	//DrawGraph(750, 650, REMAIN_Image, TRUE);		 // データハンドルを使って画像を描画
 
 	//左上頂点の座標x,y,右下頂点x,y ＋１の座標 グラフィックハンドル、透明化の有無
-	    x = 280;
+	    x = 120;
 		y = 650;
-		Rx = 330;
+		Rx = 170;
 		Ry = 700;
 	for (int i = 0; i < tmp_Remain; i++) {
 		
@@ -79,8 +79,8 @@ int UI_Draw() {
 		cnt++;
 	};
 
-	DrawGraph(350, 0, HIGH_SCORE, TRUE);
-	DrawGraph(250, 0, ONE_UP, TRUE);
+	DrawGraph(160, 0, HIGH_SCORE, TRUE);
+	DrawGraph(60, 0, ONE_UP, TRUE);
 	
 	DrawExtendGraph(800, 635, 850, 680, Stock[1], true);   //右のステージ数に応じて増える旗
 	//Extendを付けると拡大表示できる サイズは指定する必要がある
