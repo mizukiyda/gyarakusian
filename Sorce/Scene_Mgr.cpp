@@ -44,7 +44,7 @@ void Scene_Mgr_Dpct() {
 		PlayerShot_Dpct();
 		EnemyShot_Move();
 		Player_Dpct();
-		Enemy_Stage_clear();
+		Enemy_Stage_Clear();
 		UI_Dpct();
 		Sound_Dpct();
 		Player_Remain();

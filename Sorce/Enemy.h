@@ -22,17 +22,20 @@
 extern int Enemy_Init();
 extern int Enemy_Move();
 extern int Enemy_Move_Flg(int);
-extern int Enemy_control();
+extern int Enemy_Control();
 extern int Enemy_Attack_Chose();
 extern int Enemy_Attack_Move(int);
 extern int Enemy_Draw();
+//スコア関数
 extern int Enemy_Score(int);
+//当たり判定
 extern int Enemy_Hit();
 
+//敵のアニメーション関連と攻撃時の円運動
 extern int Enemy_POINT();
-
-//extern int Enemy_M();
-//extern int Enemy_deg(int *);
+extern int Enemy_Satellite(int);
+extern int Enemy_Deg(int);
+extern int Enemy_Animetion(int);
 
 //敵の弾関連の定義
 extern int EnemyShot_Mgr();
@@ -40,13 +43,18 @@ extern int EnemyShot_Move();
 extern int EnemyShot_Move();
 extern int EnemyShot_Draw();
 
-extern int Enemy_Stage_clear();
+extern int Enemy_Stage_Clear();
 extern int Enemy_Pos_Init_x(int);
 extern int Enemy_Pos_Init_y(int);
 extern int Enemy_State_Init(int);
 extern int Enemy_End();
 
 extern int Create_Blow();
+
+extern int Cnt_Yellow();
+extern int Cnt_Red();
+extern int Cnt_Pourple();
+extern int Cnt_Blue();
 
 
 typedef struct {
@@ -81,7 +89,7 @@ typedef struct {
 	int anime_cnt;
 	int mode;
 	int A_Mode;
-	int Draw_Flg;
+	int onActive;
 }P_Enemy;	//Enemy Position
 
 
@@ -104,6 +112,7 @@ typedef struct {
 	int remit_x;
 	int remit_y;
 	double deg;
+	double rad;
 }E_POINT;
 
 typedef struct {
@@ -151,7 +160,9 @@ typedef enum {
 	FIRST,
 	//曲がるとき
 	R_CURVE,
-	L_CURVE
+	L_CURVE,
+	BACK
+
 }MODE;
 
 
@@ -172,12 +183,6 @@ typedef enum {
 }SHOTPOINT;
 
 //あとで消さないとエラー
-typedef enum {
 
-	Draw_ON,		//表示
-	Draw_OFF,		//非表示	
-	Draw_Anime,
-	Breaken			//破壊された
-} S_EnemyType;
 
 #endif

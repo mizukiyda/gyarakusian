@@ -46,11 +46,11 @@ int StartMenu_Draw() {
 	}
 
 	if (count < 50) {
-		DrawGraph(200, 500, Image.Start, TRUE);							//“_–Å
+		DrawGraph(-30, 500, Image.Start, TRUE);							//“_–Å
 	}
-	DrawGraph(50, 650, Image.CREDIT, TRUE);
-	DrawGraph(350, 0, Image.HIGH_SCORE, TRUE);
-	DrawGraph(250, 0, Image.ONE_UP, TRUE);
+	DrawGraph(-70, 650, Image.CREDIT, TRUE);
+	DrawGraph(160, 0, Image.HIGH_SCORE, TRUE);
+	DrawGraph(60, 0, Image.ONE_UP, TRUE);
 
 	return 0;
 }
