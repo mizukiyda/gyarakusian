@@ -1749,7 +1749,7 @@ int Enemy_Stage_Clear() {
 			return -1;
 		}
 	}
-	//Scene_Mgr_ChangeScene(E_Scene_Result);
+	Scene_Mgr_ChangeScene(E_Scene_Result);
 
 	//黄色以外が全部撃破されてたら…
 	Cnt_Yellow();

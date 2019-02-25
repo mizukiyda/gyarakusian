@@ -11,10 +11,10 @@ int starcount = 0;
 
 int StartMenu_Init() {
 
-	Image.Start = LoadGraph("Image/PUSH SPACE BUTTON.png");				//âÊëúÇÃèKìæ	
-	Image.CREDIT = LoadGraph("Image/CREDIT.png");
-	Image.HIGH_SCORE = LoadGraph("Image/HIGH SCORE.png");
-	Image.ONE_UP = LoadGraph("Image/1UP.png");
+	Image.Start = LoadGraph("Image/PUSH SPACE BUTTONdot.png");				//âÊëúÇÃèKìæ	
+	Image.CREDIT = LoadGraph("Image/CREDITdot.png");
+	Image.HIGH_SCORE = LoadGraph("Image/HIGH SCOREdot.png");
+	Image.ONE_UP = LoadGraph("Image/1UPdot.png");
 	star = LoadGraph("Image/BackGround.png");
 
 	return 0;
@@ -49,7 +49,7 @@ int StartMenu_Draw() {
 		DrawGraph(-30, 500, Image.Start, TRUE);							//ì_ñ≈
 	}
 	DrawGraph(-70, 650, Image.CREDIT, TRUE);
-	DrawGraph(160, 0, Image.HIGH_SCORE, TRUE);
+	DrawGraph(160, -30, Image.HIGH_SCORE, TRUE);
 	DrawGraph(60, 0, Image.ONE_UP, TRUE);
 
 	return 0;

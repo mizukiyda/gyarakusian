@@ -22,12 +22,12 @@ int UI_Init() {
 	Remain = 3;		//初期の残機
 	cnt = 0;        //画像のカウント
 
-	SCORE_Image = LoadGraph("Image/SCORE.png");
+	SCORE_Image = LoadGraph("Image/SCOREdot.png");
 	REMAIN_Image = LoadGraph("Image/REMAIN.png");
 	LoadDivGraph("Image/Galaxian_OBJ_other.png", 3, 3, 1, 18, 20, Stock, true); //自機１
 
-	HIGH_SCORE = LoadGraph("Image/HIGH SCORE.png");
-	ONE_UP = LoadGraph("Image/1UP.png");
+	HIGH_SCORE = LoadGraph("Image/HIGH SCOREdot.png");
+	ONE_UP = LoadGraph("Image/1UPdot.png");
 	LoadDivGraph("Image/Galaxian_OBJ_other.png", 3, 3, 1, 18, 20, Stock, true); //旗
 	//自機画像の分割読み込み　画像名　分割総数　横の分割数　縦の分割数　分割した画像のx,y
 	//分割読み込みして得たグラフィックハンドルを保存するint型の配列へのポインタ　透明の反映
@@ -62,7 +62,7 @@ int UI_Draw() {
 		cnt++;
 	};
 
-	DrawGraph(160, 0, HIGH_SCORE, TRUE);
+	DrawGraph(160, -30, HIGH_SCORE, TRUE);
 	DrawGraph(60, 0, ONE_UP, TRUE);
 	
 	DrawExtendGraph(800, 635, 850, 680, Stock[1], true);   //右のステージ数に応じて増える旗
